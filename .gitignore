@@ -60,3 +60,4 @@ buck-out/
 
 # Husky
 .husky
+.vscode/
