@@ -12,7 +12,7 @@ export default function Header({navigation}) {
     /*
     <Appbar.Header>
       <Appbar.Content title="RESKUE"/>
-      <Appbar.Action icon="dots-vertical" onPress={}/>
+      <Appbar.Action icon="dots-vertical" onPress={createAlarm}/>
     </Appbar.Header>
     */
   );
