@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "format": "prettier --write index.js App.js",
+    "format": "prettier --write index.js src/**/*",
     "postinstall": "husky install"
   },
   "dependencies": {
