@@ -1,18 +1,16 @@
-import {React} from 'react';
-import {Text} from 'react-native';
-import {Header} from './Header'
-import {NavigationBar} from './NavigationBar'
+import React from 'react';
+import {View, Text} from 'react-native';
+import {Header} from './Header';
+import {NavigationBar} from './NavigationBar';
 
 export default function Scaffold({navigation}) {
   return (
     <View>
-      <Header navigation={navigation}/>
+      <Header navigation={navigation} />
       <View>
         <Text>Scaffold</Text>
       </View>
-      <NavigationBar navigation={navigation}/>
+      <NavigationBar navigation={navigation} />
     </View>
-    
   );
-  
 }

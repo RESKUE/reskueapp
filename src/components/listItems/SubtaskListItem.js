@@ -1,26 +1,18 @@
-import {React} from 'react';
-import {
-    Text,
-    View,
+import React from 'react';
+import {Text, View} from 'react-native';
 
-} from 'react-native';
-
-
-export default function SubtaskListItem({ entity }) {
-    return(
-        <View style={
-            {
-                backgroundColor: '#f9c2ff',
-                padding: 20,
-                marginVertical: 8,
-                marginHorizontal: 16,
-            }
-            }>
-            <Text
-                onPress={() => entity.id++}
-                style={{fontSize: 24}}>
-                {entity.text} {entity.id}
-            </Text>
-        </View>
-    );
-};
+export default function SubtaskListItem({entity}) {
+  return (
+    <View
+      style={{
+        backgroundColor: '#f9c2ff',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+      }}>
+      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
+        {entity.text} {entity.id}
+      </Text>
+    </View>
+  );
+}

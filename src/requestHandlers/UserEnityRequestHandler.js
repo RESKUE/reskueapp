@@ -1,7 +1,3 @@
-const UserEntityRequestHandler = () => {
+const UserEntityRequestHandler = () => {};
 
-}
-
-const GetAllUserEntities = ({filter, sort}) => {
-
-}
+const GetAllUserEntities = ({filter, sort}) => {};
