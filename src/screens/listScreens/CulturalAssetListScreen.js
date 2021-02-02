@@ -1,8 +1,16 @@
 import React from 'react';
 import {Text, Button} from 'react-native';
 
-export default function CulturalAssetListScreen() {
-  return <Text>Cultural Asset List Screen</Text>;
+export default function CulturalAssetListScreen({navigation}) {
+  return (
+    <>
+      <Text>Cultural Asset List Screen</Text>
+      <Button
+        title="Goto detail screen"
+        onPress={() => navigation.push('CulturalAssetDetailScreen', {id: 42})}
+      />
+    </>
+  );
 }
 
 const culturalAssetData = [

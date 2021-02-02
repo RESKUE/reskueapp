@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text} from 'react-native';
+import Router from './routing/Router';
 
-export default function () {
-  return <Text>RESKUE App</Text>;
+export default function App() {
+  return <Router />;
 }
