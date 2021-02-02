@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import CulturalAssetListScreen from '../screens/listScreens/CulturalAssetListScreen';
-import CulturalAssetDetailScreen from '../screens/detailScreens/CulturalAssetDetailScreen';
+import CulturalAssetListScreen from '../screens/list/CulturalAssetListScreen';
+import CulturalAssetDetailScreen from '../screens/detail/CulturalAssetDetailScreen';
 
 const Stack = createStackNavigator();
 
