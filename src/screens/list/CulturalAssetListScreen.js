@@ -1,7 +1,10 @@
 import React from 'react';
 import {Text, Button} from 'react-native-paper';
+import {AuthContext} from '@ilt-pse/react-native-kueres';
 
 export default function CulturalAssetListScreen({navigation}) {
+  const {authService} = React.useContext(AuthContext);
+
   return (
     <>
       <Text>Cultural Asset List Screen</Text>
@@ -10,6 +13,7 @@ export default function CulturalAssetListScreen({navigation}) {
         onPress={() => navigation.push('CulturalAssetDetailScreen', {id: 42})}>
         Hello
       </Button>
+      <Button onPress={() => authService.logout()}>Logout</Button>
     </>
   );
 }
