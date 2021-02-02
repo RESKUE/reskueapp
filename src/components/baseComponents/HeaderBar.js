@@ -2,7 +2,7 @@ import React from 'react';
 import {Text} from 'react-native';
 //import { Appbar } from 'react-native-paper';
 
-export default function Header({navigation}) {
+export default function HeaderBar({navigation}) {
   const createAlarm = () => navigation.navigate();
 
   return (
