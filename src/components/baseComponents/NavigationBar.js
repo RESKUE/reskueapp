@@ -2,13 +2,16 @@ import React from 'react';
 import {Text} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
+import {AuthContext} from '@ilt-pse/react-native-kueres';
 
 export default function NavigationBar({navigation}) {
-  const logout = () => navigation.navigate();
-  const goMap = () => navigation.navigate();
-  const goHome = () => navigation.navigate();
-  const goMyTask = () => navigation.navigate();
-  const goNotification = () => navigation.navigate();
+  const {authService} = React.useContext(AuthContext);
+
+  const logout = () => authService.logout();
+  const goMap = () => navigation.navigate('CulturalAssetMapScreen');
+  const goHome = () => navigation.navigate('CulturalAssetListScreen');
+  const goMyTask = () => navigation.navigate('MyTaskListScreen');
+  const goNotification = () => navigation.navigate('NotificationListScreen');
 
   return (
     //<Text>Login Screen</Text>
