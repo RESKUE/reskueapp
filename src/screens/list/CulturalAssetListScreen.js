@@ -3,28 +3,28 @@ import {Text, Button, View} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 
-
 export default function CulturalAssetListScreen({navigation}) {
   const {authService} = React.useContext(AuthContext);
 
   return (
-    <Scaffold 
+    <Scaffold
       navigation={navigation}
-      content = {
+      content={
         <>
-        <Text>Cultural Asset List Screen</Text>
-        <Button
-          mode="contained"
-          onPress={() => navigation.push('CulturalAssetDetailScreen', {id: 42})}>
-          Hello
-        </Button>
-        <Button onPress={() => authService.logout()}>Logout</Button>
-      </>
+          <Text>Cultural Asset List Screen</Text>
+          <Button
+            mode="contained"
+            onPress={() =>
+              navigation.push('CulturalAssetDetailScreen', {id: 42})
+            }>
+            Hello
+          </Button>
+          <Button onPress={() => authService.logout()}>Logout</Button>
+        </>
       }
     />
-      
+
     //</Scaffold>
-    
   );
 }
 

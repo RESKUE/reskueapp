@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text} from 'react-native';
-import { Appbar } from 'react-native-paper';
+import {Appbar} from 'react-native-paper';
 
 export default function HeaderBar({navigation}) {
   const createAlarm = () => navigation.navigate();
@@ -8,11 +8,9 @@ export default function HeaderBar({navigation}) {
   return (
     //<Text>Login Screen</Text>
 
-    
     <Appbar.Header>
-      <Appbar.Content title="RESKUE"/>
-      <Appbar.Action icon="dots-vertical" onPress={createAlarm}/>
+      <Appbar.Content title="RESKUE" />
+      <Appbar.Action icon="dots-vertical" onPress={createAlarm} />
     </Appbar.Header>
-    
   );
 }

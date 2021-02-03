@@ -5,13 +5,10 @@ import HeaderBar from './HeaderBar';
 import NavigationBar from './NavigationBar';
 
 export default function Scaffold({navigation, content}) {
-
   return (
     <View style={styles.container}>
       <HeaderBar navigation={navigation} />
-      <View>
-        {content}
-      </View>
+      <View>{content}</View>
       <View style={styles.bottom}>
         <NavigationBar navigation={navigation} />
       </View>
@@ -27,6 +24,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
   },
 });

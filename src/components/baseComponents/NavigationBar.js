@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {StyleSheet} from 'react-native';
-import { Appbar } from 'react-native-paper';
+import {Appbar} from 'react-native-paper';
 
 export default function NavigationBar({navigation}) {
   const logout = () => navigation.navigate();
@@ -12,15 +12,14 @@ export default function NavigationBar({navigation}) {
 
   return (
     //<Text>Login Screen</Text>
-    
+
     <Appbar style={styles.bottom}>
-      <Appbar.Action icon="dots-vertical" onPress={logout}/>
-      <Appbar.Action icon="dots-vertical" onPress={goMap}/>
-      <Appbar.Action icon="dots-vertical" onPress={goHome}/>
-      <Appbar.Action icon="dots-vertical" onPress={goMyTask}/>
-      <Appbar.Action icon="dots-vertical" onPress={goNotification}/>
-    </Appbar>  
-    
+      <Appbar.Action icon="dots-vertical" onPress={logout} />
+      <Appbar.Action icon="dots-vertical" onPress={goMap} />
+      <Appbar.Action icon="dots-vertical" onPress={goHome} />
+      <Appbar.Action icon="dots-vertical" onPress={goMyTask} />
+      <Appbar.Action icon="dots-vertical" onPress={goNotification} />
+    </Appbar>
   );
 }
 
