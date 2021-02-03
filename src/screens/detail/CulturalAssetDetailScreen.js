@@ -7,11 +7,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     <Scaffold
       navigation={navigation}
       content={
-        <Text>
-          Cultural Asset Detail Screen for id: {route.params.id}
-        </Text>
+        <Text>Cultural Asset Detail Screen for id: {route.params.id}</Text>
       }
     />
   );
-  
 }

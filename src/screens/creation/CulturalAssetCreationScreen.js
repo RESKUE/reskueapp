@@ -6,11 +6,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   return (
     <Scaffold
       navigation={navigation}
-      content={
-        <Text>
-          Here you can create a cultural asset
-        </Text>
-      }
+      content={<Text>Here you can create a cultural asset</Text>}
     />
-  ); 
+  );
 }
