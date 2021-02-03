@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 
+
 export default function NavigationBar({navigation}) {
   const {authService} = React.useContext(AuthContext);
 
@@ -17,20 +18,23 @@ export default function NavigationBar({navigation}) {
     //<Text>Login Screen</Text>
 
     <Appbar style={styles.bottom}>
-      <Appbar.Action icon="dots-vertical" onPress={logout} />
-      <Appbar.Action icon="dots-vertical" onPress={goMap} />
-      <Appbar.Action icon="dots-vertical" onPress={goHome} />
-      <Appbar.Action icon="dots-vertical" onPress={goMyTask} />
-      <Appbar.Action icon="dots-vertical" onPress={goNotification} />
+      <Appbar.Action icon="close-circle-outline" onPress={logout} />
+      <Appbar.Action icon="map-outline" onPress={goMap} />
+      <Appbar.Action icon="home" onPress={goHome} />
+      <Appbar.Action icon="view-list" onPress={goMyTask} />
+      <Appbar.Action icon="bell-outline" onPress={goNotification} />
     </Appbar>
   );
 }
 
 const styles = StyleSheet.create({
   bottom: {
+    backgroundColor:"#168A60",
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
