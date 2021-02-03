@@ -10,14 +10,14 @@ export default function HeaderBar({navigation}) {
     //<Text>Login Screen</Text>
 
     <Appbar.Header style={styles.head}>
-      <Appbar.Content  title="RESKUE" />
-      <Appbar.Action  icon="bell" color="red" onPress={createAlarm} />
+      <Appbar.Content title="RESKUE" />
+      <Appbar.Action icon="bell" color="red" onPress={createAlarm} />
     </Appbar.Header>
   );
 }
 
 const styles = StyleSheet.create({
-  head:{
-    backgroundColor:"#FFFFFF" 
+  head: {
+    backgroundColor: '#FFFFFF',
   },
 });

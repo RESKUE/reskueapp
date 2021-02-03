@@ -14,6 +14,7 @@ export default function AppStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        animationEnabled: false,
       }}>
       <Stack.Screen
         name="CulturalAssetListScreen"

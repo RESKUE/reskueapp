@@ -4,7 +4,6 @@ import {StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 
-
 export default function NavigationBar({navigation}) {
   const {authService} = React.useContext(AuthContext);
 
@@ -29,7 +28,7 @@ export default function NavigationBar({navigation}) {
 
 const styles = StyleSheet.create({
   bottom: {
-    backgroundColor:"#168A60",
+    backgroundColor: '#168A60',
     position: 'absolute',
     left: 0,
     right: 0,
