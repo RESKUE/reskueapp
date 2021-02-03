@@ -6,7 +6,8 @@ import {AuthContext} from '@ilt-pse/react-native-kueres';
 export default function CulturalAssetListScreen({navigation}) {
   const {authService} = React.useContext(AuthContext);
 
-  const goDetails = () => navigation.push('CulturalAssetDetailScreen', {id: 42});
+  const goDetails = () =>
+    navigation.push('CulturalAssetDetailScreen', {id: 42});
   const goCreation = () => navigation.push('CulturalAssetCreationScreen');
 
   return (
@@ -15,14 +16,10 @@ export default function CulturalAssetListScreen({navigation}) {
       content={
         <>
           <Text>Cultural Asset List Screen</Text>
-          <Button
-            mode="contained"
-            onPress={goDetails}>
+          <Button mode="contained" onPress={goDetails}>
             Go to details
           </Button>
-          <Button
-            mode="contained"
-            onPress={goCreation}>
+          <Button mode="contained" onPress={goCreation}>
             Create a new cultural asset
           </Button>
           <Button onPress={() => authService.logout()}>Logout</Button>
