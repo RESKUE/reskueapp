@@ -2,5 +2,5 @@ import React from 'react';
 import {Text} from 'react-native';
 
 export default function CulturalAssetCreationScreen() {
-  return <Text>Login Screen</Text>;
+  return <Text>Here you can create a cultural asset</Text>;
 }
