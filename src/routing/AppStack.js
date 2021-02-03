@@ -7,7 +7,10 @@ const Stack = createStackNavigator();
 
 export default function AppStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator 
+      screenOptions={{
+        headerShown: false
+      }}>
       <Stack.Screen
         name="CulturalAssetListScreen"
         component={CulturalAssetListScreen}
