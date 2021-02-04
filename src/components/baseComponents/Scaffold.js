@@ -4,7 +4,7 @@ import {View, ScrollView, StyleSheet} from 'react-native';
 export default function Scaffold({children}) {
   return (
     <View style={styles.scaffold}>
-      <ScrollView style={styles.content}>{children}</ScrollView>
+      <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
     </View>
   );
 }
