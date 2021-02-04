@@ -32,7 +32,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     updatedCulturalAsset.description = description;
     setCulturalAsset(updatedCulturalAsset);
   };
-  const onChangeAddress = (address) => setAddress(address);
+  const onChangeAddress = (newAddress) => setAddress(newAddress);
   const onChangePeculiarity = (peculiarity) => {
     const updatedCulturalAsset = {culturalAsset};
     updatedCulturalAsset.label = peculiarity;
