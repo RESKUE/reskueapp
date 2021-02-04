@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import CulturalAssetCreationScreen from '../screens/creation/CulturalAssetCreationScreen';
+import TaskCreationScreen from '../screens/creation/TaskCreationScreen';
 import UsergroupCreationScreen from '../screens/creation/UsergroupCreationScreen';
 import CulturalAssetDetailScreen from '../screens/detail/CulturalAssetDetailScreen';
 import MyTaskListScreen from '../screens/list/MyTaskListScreen';
@@ -28,6 +29,7 @@ export default function ScreenStack() {
         name="CulturalAssetDetailScreen"
         component={CulturalAssetDetailScreen}
       />
+      <Stack.Screen name="TaskCreationScreen" component={TaskCreationScreen} />
       <Stack.Screen
         name="CulturalAssetCreationScreen"
         component={CulturalAssetCreationScreen}
