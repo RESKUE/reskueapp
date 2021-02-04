@@ -6,15 +6,19 @@ export default function HeaderBar({navigation}) {
   const createAlarm = () => navigation.navigate();
 
   return (
-    <Appbar.Header style={styles.head}>
-      <Appbar.Content title="RESKUE" />
+    <Appbar.Header style={styles.header}>
+      <Appbar.Action />
+      <Appbar.Content title="RESKUE" style={styles.content} />
       <Appbar.Action icon="bell" color="red" onPress={createAlarm} />
     </Appbar.Header>
   );
 }
 
 const styles = StyleSheet.create({
-  head: {
+  header: {
     backgroundColor: '#FFFFFF',
+  },
+  content: {
+    alignItems: 'center',
   },
 });
