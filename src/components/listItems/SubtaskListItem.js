@@ -9,7 +9,7 @@ export default function SubtaskListItem({data}) {
   return (
     <List.Item
       key={data.id}
-      title={data.name}
+      title={data.text}
       description={data.description}
       left={(props) => <List.Icon icon="checkbox-blank-outline" />}
       onPress={onPress}
