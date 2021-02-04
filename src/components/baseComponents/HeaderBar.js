@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet,Image} from 'react-native';
 import {Appbar} from 'react-native-paper';
 
 export default function HeaderBar({navigation}) {
@@ -8,7 +8,18 @@ export default function HeaderBar({navigation}) {
   return (
     <Appbar.Header style={styles.header}>
       <Appbar.Action />
-      <Appbar.Content title="RESKUE" style={styles.content} />
+      <Appbar.Content title={
+        <Image source={require("../../assets/logo.png")}
+               style={{
+                 
+                 height:28,
+                 width:155,
+               }}
+               resizeMode="contain" 
+        />
+      } 
+      
+      style={styles.content} />
       <Appbar.Action icon="bell" color="#a51d01" onPress={createAlarm} />
     </Appbar.Header>
   );
@@ -22,5 +33,6 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
+    paddingBottom: 10,
   },
 });
