@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {AuthContext} from '@ilt-pse/react-native-kueres';
 import CulturalAssetCreationScreen from '../screens/creation/CulturalAssetCreationScreen';
 import CulturalAssetDetailScreen from '../screens/detail/CulturalAssetDetailScreen';
 import CulturalAssetListScreen from '../screens/list/CulturalAssetListScreen';
@@ -19,25 +20,22 @@ const Bottom = createBottomTabNavigator();
 
 function SwipeScreens() {
   return (
-    <Swipe.Navigator
-      initialRouteName="CulturalAssetListScreen"
-      tabBar={HeaderBar}>
-      <Swipe.Screen
-        name="UsergroupListScreen"
-        component={UsergroupListScreen}
-      />
-      <Swipe.Screen
-        name="CulturalAssetListScreen"
-        component={CulturalAssetListScreen}
-      />
-      <Swipe.Screen name="TaskListScreen" component={TaskListScreen} />
+    <Swipe.Navigator initialRouteName="CulturalAsset">
+      <Swipe.Screen name="Usergroup" component={UsergroupListScreen} />
+      <Swipe.Screen name="CulturalAsset" component={CulturalAssetListScreen} />
+      <Swipe.Screen name="Task" component={TaskListScreen} />
     </Swipe.Navigator>
   );
 }
 
 export default function AppStack() {
+  const {authService} = React.useContext(AuthContext);
   return (
-    <Bottom.Navigator initialRouteName="SwipeScreens" tabBar={NavigationBar}>
+    <Bottom.Navigator
+      initialRouteName="StackScreens"
+      tabBar={() => {
+        <NavigationBar auth={authService} />;
+      }}>
       <Bottom.Screen name="StackScreens" component={StackScreens} />
     </Bottom.Navigator>
   );
@@ -49,11 +47,7 @@ function StackScreens() {
       screenOptions={{
         header: (props) => <HeaderBar {...props} />,
       }}>
-      <Stack.Screen
-        name="SwipeScreens"
-        component={SwipeScreens}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name="SwipeScreens" component={SwipeScreens} />
       <Stack.Screen
         name="CulturalAssetDetailScreen"
         component={CulturalAssetDetailScreen}

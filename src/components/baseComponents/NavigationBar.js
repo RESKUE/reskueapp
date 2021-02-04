@@ -4,14 +4,13 @@ import {StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 
-export default function NavigationBar({navigation}) {
-  //const {authService} = React.useContext(AuthContext);
-  const logout = () => navigation.navigate('CulturalAssetMapScreen');
-  //const logout = () => authService.logout();
+export default function NavigationBar({auth, navigation}) {
+  const {authService} = auth;
+  //const logout = () => navigation.navigate('CulturalAssetMapScreen');
+  const logout = () => authService.logout();
   const goMap = () =>
     navigation.navigate('StackScreens', {screen: 'CulturalAssetMapScreen'});
-  const goHome = () =>
-    navigation.navigate('StackScreens', {screen: 'CulturalAssetListScreen'});
+  const goHome = () => navigation.navigate('CulturalAssetListScreen');
   const goMyTask = () =>
     navigation.navigate('StackScreens', {screen: 'MyTaskListScreen'});
   const goNotification = () =>
