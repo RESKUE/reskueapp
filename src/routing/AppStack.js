@@ -44,9 +44,11 @@ export default function AppStack() {
 function StackScreens() {
   return (
     <Stack.Navigator
+      initialRouteName="SwipeScreens"
       screenOptions={{
         header: (props) => <HeaderBar {...props} />,
-      }}>
+      }}
+      headerMode="float">
       <Stack.Screen name="SwipeScreens" component={SwipeScreens} />
       <Stack.Screen
         name="CulturalAssetDetailScreen"
