@@ -7,13 +7,11 @@ import {AuthContext} from '@ilt-pse/react-native-kueres';
 export default function NavigationBar({authService, navigation}) {
   //const logout = () => navigation.navigate('CulturalAssetMapScreen');
   const logout = () => authService.logout();
-  const goMap = () =>
-    navigation.navigate('StackScreens', {screen: 'CulturalAssetMapScreen'});
-  const goHome = () => navigation.navigate('CulturalAssetListScreen');
-  const goMyTask = () =>
-    navigation.navigate('StackScreens', {screen: 'MyTaskListScreen'});
-  const goNotification = () =>
-    navigation.navigate('StackScreens', {screen: 'NotificationListScreen'});
+  const goMap = () => navigation.navigate('CulturalAssetMapScreen');
+  const goHome = () =>
+    navigation.navigate('SwipeScreens', {screen: 'CulturalAsset'});
+  const goMyTask = () => navigation.navigate('MyTaskListScreen');
+  const goNotification = () => navigation.navigate('NotificationListScreen');
 
   return (
     //<Text>Login Screen</Text>
