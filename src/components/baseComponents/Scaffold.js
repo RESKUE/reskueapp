@@ -7,11 +7,7 @@ import NavigationBar from './NavigationBar';
 export default function Scaffold({navigation, content}) {
   return (
     <View style={styles.container}>
-      <HeaderBar navigation={navigation} />
       <View>{content}</View>
-      <View style={styles.bottom}>
-        <NavigationBar navigation={navigation} />
-      </View>
     </View>
   );
 }

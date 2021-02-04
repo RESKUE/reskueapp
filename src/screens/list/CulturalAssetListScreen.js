@@ -9,7 +9,10 @@ export default function CulturalAssetListScreen({navigation}) {
 
   const goDetails = () =>
     navigation.push('CulturalAssetDetailScreen', {id: 42});
-  const goCreation = () => navigation.push('CulturalAssetCreationScreen');
+  const goCreation = () =>
+    navigation.navigate('StackScreens', {
+      screen: 'CulturalAssetCreationScreen',
+    });
 
   return (
     <Scaffold

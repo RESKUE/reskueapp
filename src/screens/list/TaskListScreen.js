@@ -1,8 +1,18 @@
 import React from 'react';
 import {Text} from 'react-native';
+import Scaffold from '../../components/baseComponents/Scaffold';
 
-export default function TaskListScreen() {
-  return <Text>Login Screen</Text>;
+export default function TaskListScreen({navigation}) {
+  return (
+    <Scaffold
+      navigation={navigation}
+      content={
+        <>
+          <Text>Hier stehen alle Aufgaben</Text>
+        </>
+      }
+    />
+  );
 }
 
 const taskData = [
