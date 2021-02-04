@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Button, Chip, TextInput} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 
@@ -49,67 +49,51 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   return (
     <Scaffold>
       <TextInput
-        key="name"
         label="Name"
         value={culturalAsset.name}
         onChangeText={onChangeName}
       />
       <TextInput
-        key="description"
         label="Beschreibung"
         value={culturalAsset.description}
         onChangeText={onChangeDescription}
       />
       <TextInput
-        key="address"
         label="Adresse"
         value={address}
         onChangeText={onChangeAddress}
       />
 
       <TextInput
-        key="parent"
         label="Obergruppe"
         value={culturalAsset.parent.id}
         onChangeParent={onChangeParent}
-        style={{marginTop: 25}}
+        style={styles.inputSpacing}
       />
       <TextInput
-        key="comments"
         label="Besonderheiten"
         value={culturalAsset.label}
         onChangeText={onChangePeculiarity}
       />
-      <View style={{flex: 1, marginTop: 25, marginBottom: 25}}>
-        <Text style={{marginLeft: 10}}>Wähle Priorität:</Text>
-        {priorities.map((prio, index) => {
-          return (
-            <View
-              key={prio}
-              style={{
-                margin: 2,
-                flexWrap: 'wrap',
-              }}>
-              <Chip
-                icon="alert-circle"
-                mode="flat"
-                height={30}
-                selected={index === priority}
-                onPress={() => setPriority(index)}>
-                {prio}
-              </Chip>
-            </View>
-          );
-        })}
+      <View style={styles.priorityBox}>
+        <Text>Wähle Priorität:</Text>
+        {priorities.map((prio, index) => (
+          <View key={prio} style={styles.chipWrapper}>
+            <Chip
+              icon="alert-circle"
+              mode="flat"
+              height={30}
+              selected={index === priority}
+              onPress={() => setPriority(index)}>
+              {prio}
+            </Chip>
+          </View>
+        ))}
       </View>
-      <Button icon="camera" mode="contained" style={{marginBottom: 20}}>
+      <Button icon="camera" mode="contained" style={styles.buttonSpacing}>
         Füge Medien hinzu
       </Button>
-      <Button
-        icon="check"
-        mode="contained"
-        onPress={finishCreation}
-        style={{marginBottom: 50}}>
+      <Button icon="check" mode="contained" onPress={finishCreation}>
         Fertig
       </Button>
     </Scaffold>
@@ -123,3 +107,10 @@ const priorities = [
   'Hohe Priorität',
   'Höchste Priorität',
 ];
+
+const styles = StyleSheet.create({
+  inputSpacing: {marginTop: 24},
+  buttonSpacing: {marginBottom: 16},
+  priorityBox: {marginVertical: 24},
+  chipWrapper: {margin: 2, flexWrap: 'wrap'},
+});
