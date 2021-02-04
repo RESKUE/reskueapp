@@ -1,9 +1,26 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import MyTaskListItem from '../../components/listItems/MyTaskListItem';
+import {FancyList} from '@ilt-pse/react-native-kueres';
 
-export default function MyTaskListScreen({navigation}) {
-  return <Text>Here you can see all your current tasks</Text>;
+export default function MyTaskListScreen() {
+  return (
+    <View style={styles.view}>
+      <FancyList
+        title="Meine Aufgaben"
+        data={taskData}
+        component={MyTaskListItem}
+      />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  view: {
+    marginVertical: 24,
+    marginHorizontal: 16,
+  },
+});
 
 const taskData = [
   {
