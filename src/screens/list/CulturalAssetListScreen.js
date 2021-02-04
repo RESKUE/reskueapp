@@ -1,28 +1,17 @@
 import React from 'react';
-import {Text, Button, View} from 'react-native-paper';
-import {AuthContext} from '@ilt-pse/react-native-kueres';
-import {StyleSheet} from 'react-native';
+import {FancyList} from '@ilt-pse/react-native-kueres';
+import Scaffold from '../../components/baseComponents/Scaffold';
+import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 
 export default function CulturalAssetListScreen({navigation}) {
-  const {authService} = React.useContext(AuthContext);
-
-  const goDetails = () =>
-    navigation.push('CulturalAssetDetailScreen', {id: 42});
-  const goCreation = () => navigation.push('CulturalAssetCreationScreen');
-
   return (
-    <>
-      <Text style={{color: '#168A60', marginLeft: 25}}>
-        Cultural Asset List Screen
-      </Text>
-      <Button style={styles.buttonTop} mode="contained" onPress={goDetails}>
-        <Text style={{color: '#000'}}>Go to details</Text>
-      </Button>
-      <Button style={styles.buttonBottom} mode="contained" onPress={goCreation}>
-        <Text style={{color: '#000'}}>Create a new cultural asset</Text>
-      </Button>
-      <Button onPress={() => authService.logout()}>Logout</Button>
-    </>
+    <Scaffold>
+      <FancyList
+        title="Kulturgüter"
+        data={culturalAssetData}
+        component={CulturalAssetListItem}
+      />
+    </Scaffold>
   );
 }
 
@@ -88,27 +77,3 @@ const culturalAssetData = [
     tasks: [{}],
   },
 ];
-
-const styles = StyleSheet.create({
-  buttonTop: {
-    backgroundColor: '#FFFFFF',
-    padding: 15,
-    borderWidth: 6 / 10,
-    borderColor: '#168A60',
-    marginLeft: 20,
-    marginRight: 20,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-
-  buttonBottom: {
-    backgroundColor: '#FFFFFF',
-    padding: 15,
-    borderWidth: 6 / 10,
-    borderColor: '#168A60',
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-});

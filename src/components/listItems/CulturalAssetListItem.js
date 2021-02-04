@@ -1,18 +1,20 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {List} from 'react-native-paper';
 
-export default function CulturalAssetListItem({entity}) {
+export default function CulturalAssetListItem({data}) {
+  const navigation = useNavigation();
+
+  function onPress() {
+    navigation.push('CulturalAssetDetailScreen', {id: data.id});
+  }
+
   return (
-    <View
-      style={{
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      }}>
-      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
-        {entity.name} {entity.id}
-      </Text>
-    </View>
+    <List.Item
+      key={data.id}
+      title={data.name}
+      description={data.description}
+      onPress={onPress}
+    />
   );
 }
