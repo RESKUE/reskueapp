@@ -1,18 +1,6 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
 
-export default function MediaListItem({entity}) {
-  return (
-    <View
-      style={{
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      }}>
-      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
-        {entity.altText} {entity.id}
-      </Text>
-    </View>
-  );
+export default function MediaListItem({data}) {
+  return <Text>Media list item {data.id}</Text>;
 }

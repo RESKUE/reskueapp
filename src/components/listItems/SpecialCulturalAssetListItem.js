@@ -1,18 +1,6 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
 
-export default function SpecialCulturalAssetListItem({entity}) {
-  return (
-    <View
-      style={{
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      }}>
-      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
-        {entity.name} {entity.id}
-      </Text>
-    </View>
-  );
+export default function SpecialCulturalAssetListItem({data}) {
+  return <Text>Special asset: {data.id}</Text>;
 }

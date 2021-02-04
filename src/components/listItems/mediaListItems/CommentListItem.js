@@ -1,18 +1,11 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
 
-export default function CommentListItem({entity}) {
+export default function CommentListItem({data}) {
   return (
-    <View
-      style={{
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      }}>
-      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
-        {entity.text} {entity.id}
-      </Text>
-    </View>
+    <Text>
+      Author: {data.author}
+      Text: {data.text}
+    </Text>
   );
 }

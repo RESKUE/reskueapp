@@ -1,18 +1,10 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {List} from 'react-native-paper';
 
-export default function UserListItem({entity}) {
-  return (
-    <View
-      style={{
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      }}>
-      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
-        {entity.name} {entity.id}
-      </Text>
-    </View>
-  );
+export default function UserListItem({data}) {
+  function onPress() {
+    console.log('Tapped user', data.id);
+  }
+
+  return <List.Item key={data.id} title={data.name} onPress={onPress} />;
 }
