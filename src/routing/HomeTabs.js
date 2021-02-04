@@ -12,17 +12,17 @@ export default function HomeTabs() {
       <Swipe.Screen
         name="UsergroupListScreen"
         component={UsergroupListScreen}
-        options={{tabBarLabel: 'Usergroup'}}
+        options={{tabBarLabel: 'Groups'}}
       />
       <Swipe.Screen
         name="CulturalAssetListScreen"
         component={CulturalAssetListScreen}
-        options={{tabBarLabel: 'CulturalAsset'}}
+        options={{tabBarLabel: 'Assets'}}
       />
       <Swipe.Screen
         name="TaskListScreen"
         component={TaskListScreen}
-        options={{tabBarLabel: 'Usergroup'}}
+        options={{tabBarLabel: 'Tasks'}}
       />
     </Swipe.Navigator>
   );
