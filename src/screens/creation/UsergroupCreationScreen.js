@@ -1,12 +1,20 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Button, Divider, TextInput} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {
+  useTheme,
+  IconButton,
+  Button,
+  Divider,
+  TextInput,
+} from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserListItem from '../../components/listItems/UserListItem';
 import {userData} from '../../../testdata';
+import ListActions from '../../components/ListActions';
 
 export default function UsergroupCreationScreen({navigation}) {
+  const {colors} = useTheme();
   const [usergroup, setUserGroup] = React.useState({
     name: '',
     users: userData,
@@ -31,10 +39,18 @@ export default function UsergroupCreationScreen({navigation}) {
         value={usergroup.name}
         onChangeText={onChangeName}
       />
-      <View style={{flexDirection: 'row-reverse'}}>
-        <Button icon="trash-can-outline" onPress={removeUsers} />
-        <Button icon="account-plus-outline" onPress={addUsers} />
-      </View>
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="account-plus-outline"
+          onPress={addUsers}
+        />
+        <IconButton
+          color={colors.primary}
+          icon="trash-can-outline"
+          onPress={removeUsers}
+        />
+      </ListActions>
       <Divider style={styles.dividerStyle} />
       <FancyList
         title="Mitglieder"

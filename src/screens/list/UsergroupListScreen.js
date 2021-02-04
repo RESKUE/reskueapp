@@ -1,19 +1,24 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Button} from 'react-native-paper';
+import {useTheme, IconButton} from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
 import {usergroupData} from '../../../testdata';
+import ListActions from '../../components/ListActions';
 
 export default function UsergroupListScreen({navigation}) {
   const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
+  const {colors} = useTheme();
 
   return (
     <Scaffold>
-      <View style={{flexDirection: 'row-reverse'}}>
-        <Button icon="plus-circle-outline" onPress={goGroupCreation} />
-      </View>
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="plus-circle-outline"
+          onPress={goGroupCreation}
+        />
+      </ListActions>
       <FancyList
         title="Gruppen"
         data={usergroupData}
