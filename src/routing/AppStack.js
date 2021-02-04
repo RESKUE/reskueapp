@@ -33,9 +33,7 @@ export default function AppStack() {
   return (
     <Bottom.Navigator
       initialRouteName="StackScreens"
-      tabBar={() => {
-        <NavigationBar auth={authService} />;
-      }}>
+      tabBar={() => <NavigationBar authService={authService} /> }>
       <Bottom.Screen name="StackScreens" component={StackScreens} />
     </Bottom.Navigator>
   );

@@ -4,8 +4,7 @@ import {StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 
-export default function NavigationBar({auth, navigation}) {
-  const {authService} = auth;
+export default function NavigationBar({authService, navigation}) {
   //const logout = () => navigation.navigate('CulturalAssetMapScreen');
   const logout = () => authService.logout();
   const goMap = () =>
