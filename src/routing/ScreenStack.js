@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import CulturalAssetCreationScreen from '../screens/creation/CulturalAssetCreationScreen';
+import UsergroupCreationScreen from '../screens/creation/UsergroupCreationScreen';
 import CulturalAssetDetailScreen from '../screens/detail/CulturalAssetDetailScreen';
 import MyTaskListScreen from '../screens/list/MyTaskListScreen';
 import NotificationListScreen from '../screens/list/NotificationListScreen';
@@ -19,6 +20,10 @@ export default function ScreenStack() {
       }}
       headerMode="float">
       <Stack.Screen name="HomeTabs" component={HomeTabs} />
+      <Stack.Screen
+        name="UsergroupCreationScreen"
+        component={UsergroupCreationScreen}
+      />
       <Stack.Screen
         name="CulturalAssetDetailScreen"
         component={CulturalAssetDetailScreen}

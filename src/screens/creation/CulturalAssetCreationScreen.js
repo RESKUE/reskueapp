@@ -90,10 +90,14 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
           </View>
         ))}
       </View>
-      <Button icon="camera" mode="contained" style={styles.buttonSpacing}>
+      <Button icon="camera" mode="contained">
         Füge Medien hinzu
       </Button>
-      <Button icon="check" mode="contained" onPress={finishCreation}>
+      <Button
+        icon="check"
+        mode="contained"
+        onPress={finishCreation}
+        style={styles.buttonSpacing}>
         Fertig
       </Button>
     </Scaffold>
@@ -110,7 +114,7 @@ const priorities = [
 
 const styles = StyleSheet.create({
   inputSpacing: {marginTop: 24},
-  buttonSpacing: {marginBottom: 16},
+  buttonSpacing: {marginTop: 16},
   priorityBox: {marginVertical: 24},
   chipWrapper: {margin: 2, flexWrap: 'wrap'},
 });
