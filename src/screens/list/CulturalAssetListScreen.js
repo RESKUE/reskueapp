@@ -1,6 +1,5 @@
 import React from 'react';
 import {Text, Button, View} from 'react-native-paper';
-import Scaffold from '../../components/baseComponents/Scaffold';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 import {StyleSheet} from 'react-native';
 
@@ -12,26 +11,18 @@ export default function CulturalAssetListScreen({navigation}) {
   const goCreation = () => navigation.push('CulturalAssetCreationScreen');
 
   return (
-    <Scaffold
-      navigation={navigation}
-      content={
-        <>
-          <Text style={{color: '#168A60', marginLeft: 25}}>
-            Cultural Asset List Screen
-          </Text>
-          <Button style={styles.buttonTop} mode="contained" onPress={goDetails}>
-            <Text style={{color: '#000'}}>Go to details</Text>
-          </Button>
-          <Button
-            style={styles.buttonBottom}
-            mode="contained"
-            onPress={goCreation}>
-            <Text style={{color: '#000'}}>Create a new cultural asset</Text>
-          </Button>
-          <Button onPress={() => authService.logout()}>Logout</Button>
-        </>
-      }
-    />
+    <>
+      <Text style={{color: '#168A60', marginLeft: 25}}>
+        Cultural Asset List Screen
+      </Text>
+      <Button style={styles.buttonTop} mode="contained" onPress={goDetails}>
+        <Text style={{color: '#000'}}>Go to details</Text>
+      </Button>
+      <Button style={styles.buttonBottom} mode="contained" onPress={goCreation}>
+        <Text style={{color: '#000'}}>Create a new cultural asset</Text>
+      </Button>
+      <Button onPress={() => authService.logout()}>Logout</Button>
+    </>
   );
 }
 
