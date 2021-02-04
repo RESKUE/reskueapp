@@ -23,7 +23,7 @@ export default function LoginScreen() {
           labelStyle={styles.buttonLabel}
           contentStyle={styles.buttonContent}
           mode="contained"
-          onPress={authService.login}>
+          onPress={() => authService.login()}>
           Anmelden
         </Button>
       </View>
