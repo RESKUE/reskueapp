@@ -17,6 +17,8 @@ export default function HeaderBar({navigation}) {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#FFFFFF',
+    elevation: 0,
+    shadowOpacity: 0,
   },
   content: {
     alignItems: 'center',
