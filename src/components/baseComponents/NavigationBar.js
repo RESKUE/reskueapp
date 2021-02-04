@@ -1,8 +1,6 @@
 import React from 'react';
-import {Text} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Appbar} from 'react-native-paper';
-import {AuthContext} from '@ilt-pse/react-native-kueres';
 
 export default function NavigationBar({authService, navigation}) {
   const logout = () => authService.logout();
@@ -14,7 +12,7 @@ export default function NavigationBar({authService, navigation}) {
   const goHome = () =>
     navigation.reset({
       index: 0,
-      routes: [{name: 'SwipeScreens'}],
+      routes: [{name: 'HomeTabs'}],
     });
   const goMyTask = () =>
     navigation.reset({
