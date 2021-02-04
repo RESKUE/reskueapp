@@ -9,7 +9,7 @@ export default function HeaderBar({navigation}) {
     <Appbar.Header style={styles.header}>
       <Appbar.Action />
       <Appbar.Content title="RESKUE" style={styles.content} />
-      <Appbar.Action icon="bell" color="red" onPress={createAlarm} />
+      <Appbar.Action icon="bell" color="#a51d01" onPress={createAlarm} />
     </Appbar.Header>
   );
 }
