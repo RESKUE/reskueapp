@@ -5,17 +5,29 @@ import {Appbar} from 'react-native-paper';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 
 export default function NavigationBar({authService, navigation}) {
-  //const logout = () => navigation.navigate('CulturalAssetMapScreen');
   const logout = () => authService.logout();
-  const goMap = () => navigation.navigate('CulturalAssetMapScreen');
+  const goMap = () =>
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'CulturalAssetMapScreen'}],
+    });
   const goHome = () =>
-    navigation.navigate('SwipeScreens', {screen: 'CulturalAsset'});
-  const goMyTask = () => navigation.navigate('MyTaskListScreen');
-  const goNotification = () => navigation.navigate('NotificationListScreen');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'SwipeScreens'}],
+    });
+  const goMyTask = () =>
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'MyTaskListScreen'}],
+    });
+  const goNotification = () =>
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'NotificationListScreen'}],
+    });
 
   return (
-    //<Text>Login Screen</Text>
-
     <Appbar style={styles.bottom}>
       <Appbar.Action icon="close-circle-outline" onPress={logout} />
       <Appbar.Action icon="map-outline" onPress={goMap} />

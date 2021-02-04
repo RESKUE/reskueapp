@@ -18,16 +18,6 @@ const Stack = createStackNavigator();
 const Swipe = createMaterialTopTabNavigator();
 const Bottom = createBottomTabNavigator();
 
-function SwipeScreens() {
-  return (
-    <Swipe.Navigator initialRouteName="CulturalAsset">
-      <Swipe.Screen name="Usergroup" component={UsergroupListScreen} />
-      <Swipe.Screen name="CulturalAsset" component={CulturalAssetListScreen} />
-      <Swipe.Screen name="Task" component={TaskListScreen} />
-    </Swipe.Navigator>
-  );
-}
-
 export default function AppStack() {
   const {authService} = React.useContext(AuthContext);
   return (
@@ -68,5 +58,15 @@ function StackScreens() {
         component={NotificationListScreen}
       />
     </Stack.Navigator>
+  );
+}
+
+function SwipeScreens() {
+  return (
+    <Swipe.Navigator initialRouteName="CulturalAsset">
+      <Swipe.Screen name="Usergroup" component={UsergroupListScreen} />
+      <Swipe.Screen name="CulturalAsset" component={CulturalAssetListScreen} />
+      <Swipe.Screen name="Task" component={TaskListScreen} />
+    </Swipe.Navigator>
   );
 }
