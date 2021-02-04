@@ -1,8 +1,7 @@
-const UsergroupEntityRequestHandler = () => {};
-
-const GetAllUsergroupEntities = ({filter, sort}) => {};
-const GetAllUsergroupEntitiesForUser = (userId) => {};
-const GetUsergroupEntity = ({usergroupId}) => {};
-const PostUsergroupEntity = ({usergroup}) => {};
-const PatchUsergroupEntity = ({usergroup}) => {};
-const DeleteUsergroupEntity = ({usergroupId}) => {};
+export const UsergroupEntityRequestHandler = () => {};
+export const GetAllUsergroupEntities = ({filter, sort}) => {};
+export const GetAllUsergroupEntitiesForUser = (userId) => {};
+export const GetUsergroupEntity = ({usergroupId}) => {};
+export const PostUsergroupEntity = ({usergroup}) => {};
+export const PatchUsergroupEntity = ({usergroup}) => {};
+export const DeleteUsergroupEntity = ({usergroupId}) => {};

@@ -1,7 +1,6 @@
-const SubtaskEntityRequestHandler = () => {};
-
-const GetAllSubtaskEntities = ({taskId}) => {};
-const GetSubtaskEntity = ({subtaskId}) => {};
-const PostSubtaskEntity = ({subtask}) => {};
-const PatchSubtaskEntity = ({subtask}) => {};
-const DeleteSubtaskEntity = ({subtaskId}) => {};
+export const SubtaskEntityRequestHandler = () => {};
+export const GetAllSubtaskEntities = ({taskId}) => {};
+export const GetSubtaskEntity = ({subtaskId}) => {};
+export const PostSubtaskEntity = ({subtask}) => {};
+export const PatchSubtaskEntity = ({subtask}) => {};
+export const DeleteSubtaskEntity = ({subtaskId}) => {};

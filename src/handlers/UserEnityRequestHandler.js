@@ -1,3 +1,2 @@
-const UserEntityRequestHandler = () => {};
-
-const GetAllUserEntities = ({filter, sort}) => {};
+export const UserEntityRequestHandler = () => {};
+export const GetAllUserEntities = ({filter, sort}) => {};
