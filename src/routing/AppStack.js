@@ -38,7 +38,6 @@ function SwipeScreens() {
 export default function AppStack() {
   return (
     <Bottom.Navigator initialRouteName="SwipeScreens" tabBar={NavigationBar}>
-      <Bottom.Screen name="SwipeScreens" component={SwipeScreens} />
       <Bottom.Screen name="StackScreens" component={StackScreens} />
     </Bottom.Navigator>
   );
@@ -51,8 +50,9 @@ function StackScreens() {
         header: (props) => <HeaderBar {...props} />,
       }}>
       <Stack.Screen
-        name="CulturalAssetListScreen"
-        component={CulturalAssetListScreen}
+        name="SwipeScreens"
+        component={SwipeScreens}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="CulturalAssetDetailScreen"
