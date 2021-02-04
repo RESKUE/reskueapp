@@ -1,26 +1,19 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import MyTaskListItem from '../../components/listItems/MyTaskListItem';
 import {FancyList} from '@ilt-pse/react-native-kueres';
+import Scaffold from '../../components/baseComponents/Scaffold';
+import MyTaskListItem from '../../components/listItems/MyTaskListItem';
 
 export default function MyTaskListScreen() {
   return (
-    <View style={styles.view}>
+    <Scaffold>
       <FancyList
         title="Meine Aufgaben"
         data={taskData}
         component={MyTaskListItem}
       />
-    </View>
+    </Scaffold>
   );
 }
-
-const styles = StyleSheet.create({
-  view: {
-    marginVertical: 24,
-    marginHorizontal: 16,
-  },
-});
 
 const taskData = [
   {
