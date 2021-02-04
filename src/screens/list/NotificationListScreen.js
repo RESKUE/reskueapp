@@ -2,6 +2,7 @@ import React from 'react';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import NotificationListItem from '../../components/listItems/NotificationListItem';
+import {notificationData} from '../../../testdata';
 
 export default function NotificationListScreen({navigation}) {
   return (
@@ -14,16 +15,3 @@ export default function NotificationListScreen({navigation}) {
     </Scaffold>
   );
 }
-
-const notificationData = [
-  {
-    id: 1,
-    title: 'Waldbrand',
-    message: 'Nähe Wildparkstadion, Berufsfeuerwehr unterwegs',
-  },
-  {
-    id: 2,
-    title: 'Kernschmelze Campus Nord',
-    message: 'Wichtig: Den Studenten nicht frei geben',
-  },
-];
