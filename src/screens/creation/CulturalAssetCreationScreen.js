@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
-import {Button, Chip, HelperText, TextInput} from 'react-native-paper';
+import React from 'react';
+import {Text, View} from 'react-native';
+import {Button, Chip, TextInput} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
@@ -48,69 +48,65 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   return (
     <Scaffold>
-      <SafeAreaView>
-        <ScrollView>
-          <TextInput
-            label="Name"
-            value={culturalAsset.name}
-            onChangeText={onChangeName}
-          />
-          <TextInput
-            label="Beschreibung"
-            value={culturalAsset.description}
-            onChangeText={onChangeDescription}
-          />
-          <TextInput
-            label="Adresse"
-            value={address}
-            onChangeText={onChangeAddress}
-          />
+      <TextInput
+        label="Name"
+        value={culturalAsset.name}
+        onChangeText={onChangeName}
+      />
+      <TextInput
+        label="Beschreibung"
+        value={culturalAsset.description}
+        onChangeText={onChangeDescription}
+      />
+      <TextInput
+        label="Adresse"
+        value={address}
+        onChangeText={onChangeAddress}
+      />
 
-          <TextInput
-            label="Obergruppe"
-            value={culturalAsset.parent.id}
-            onChangeParent={onChangeParent}
-            style={{marginTop: 25}}
-          />
-          <TextInput
-            label="Besonderheiten"
-            value={culturalAsset.label}
-            onChangeText={onChangePeculiarity}
-          />
-          <View style={{flex: 1, marginTop: 25, marginBottom: 25}}>
-            <Text style={{marginLeft: 10}}>Wähle Priorität:</Text>
-            {priorities.map((prio, index) => {
-              return (
-                <View
-                  style={{
-                    margin: 2,
-                    flexWrap: 'wrap',
-                  }}>
-                  <Chip
-                    icon="alert-circle"
-                    key={prio}
-                    mode="flat"
-                    height={30}
-                    selected={index === priority}
-                    onPress={() => setPriority(index)}>
-                    {prio}
-                  </Chip>
-                </View>
-              );
-            })}
-          </View>
-          <Button icon="camera" mode="contained" style={{marginBottom: 20}}>
-            Füge Medien hinzu
-          </Button>
-          <Button
-            icon="check"
-            mode="contained"
-            onPress={finishCreation}
-            style={{marginBottom: 50}}>
-            Fertig
-          </Button>
-        </ScrollView>
-      </SafeAreaView>
+      <TextInput
+        label="Obergruppe"
+        value={culturalAsset.parent.id}
+        onChangeParent={onChangeParent}
+        style={{marginTop: 25}}
+      />
+      <TextInput
+        label="Besonderheiten"
+        value={culturalAsset.label}
+        onChangeText={onChangePeculiarity}
+      />
+      <View style={{flex: 1, marginTop: 25, marginBottom: 25}}>
+        <Text style={{marginLeft: 10}}>Wähle Priorität:</Text>
+        {priorities.map((prio, index) => {
+          return (
+            <View
+              style={{
+                margin: 2,
+                flexWrap: 'wrap',
+              }}>
+              <Chip
+                icon="alert-circle"
+                key={prio}
+                mode="flat"
+                height={30}
+                selected={index === priority}
+                onPress={() => setPriority(index)}>
+                {prio}
+              </Chip>
+            </View>
+          );
+        })}
+      </View>
+      <Button icon="camera" mode="contained" style={{marginBottom: 20}}>
+        Füge Medien hinzu
+      </Button>
+      <Button
+        icon="check"
+        mode="contained"
+        onPress={finishCreation}
+        style={{marginBottom: 50}}>
+        Fertig
+      </Button>
     </Scaffold>
   );
 }

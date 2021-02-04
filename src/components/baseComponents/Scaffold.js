@@ -1,13 +1,18 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, ScrollView, StyleSheet} from 'react-native';
 
 export default function Scaffold({children}) {
-  return <View style={styles.scaffold}>{children}</View>;
+  return (
+    <View style={styles.scaffold}>
+      <ScrollView style={styles.content}>{children}</ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  scaffold: {
-    marginVertical: 24,
-    marginHorizontal: 16,
+  scaffold: {},
+  content: {
+    paddingVertical: 24,
+    paddingHorizontal: 16,
   },
 });
