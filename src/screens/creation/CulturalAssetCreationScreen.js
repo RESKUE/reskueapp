@@ -49,28 +49,33 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   return (
     <Scaffold>
       <TextInput
+        key="name"
         label="Name"
         value={culturalAsset.name}
         onChangeText={onChangeName}
       />
       <TextInput
+        key="description"
         label="Beschreibung"
         value={culturalAsset.description}
         onChangeText={onChangeDescription}
       />
       <TextInput
+        key="address"
         label="Adresse"
         value={address}
         onChangeText={onChangeAddress}
       />
 
       <TextInput
+        key="parent"
         label="Obergruppe"
         value={culturalAsset.parent.id}
         onChangeParent={onChangeParent}
         style={{marginTop: 25}}
       />
       <TextInput
+        key="comments"
         label="Besonderheiten"
         value={culturalAsset.label}
         onChangeText={onChangePeculiarity}
@@ -80,13 +85,13 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         {priorities.map((prio, index) => {
           return (
             <View
+              key={prio}
               style={{
                 margin: 2,
                 flexWrap: 'wrap',
               }}>
               <Chip
                 icon="alert-circle"
-                key={prio}
                 mode="flat"
                 height={30}
                 selected={index === priority}
