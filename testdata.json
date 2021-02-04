@@ -1,4 +1,18 @@
 {
+  "usergroupData": [
+    {
+      "id": 1,
+      "name": "Berufsfeuerwehr KA"
+    },
+    {
+      "id": 2,
+      "name": "Freiwillige Feuerwehr KA"
+    },
+    {
+      "id": 3,
+      "name": "THW Landesverband Württemberg"
+    }
+  ],
   "notificationData": [
     {
       "id": 1,

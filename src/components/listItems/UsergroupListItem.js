@@ -1,18 +1,17 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {List} from 'react-native-paper';
 
-export default function UsergroupListItem({entity}) {
+export default function UsergroupListItem({data}) {
+  function onPress() {
+    console.log('Goto group', data.id);
+  }
+
   return (
-    <View
-      style={{
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      }}>
-      <Text onPress={() => entity.id++} style={{fontSize: 24}}>
-        {entity.name} {entity.id}
-      </Text>
-    </View>
+    <List.Item
+      key={data.id}
+      title={data.name}
+      description={data.description}
+      onPress={onPress}
+    />
   );
 }

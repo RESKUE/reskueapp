@@ -1,6 +1,17 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {FancyList} from '@ilt-pse/react-native-kueres';
+import Scaffold from '../../components/baseComponents/Scaffold';
+import UsergroupListItem from '../../components/listItems/UsergroupListItem';
+import {usergroupData} from '../../../testdata';
 
-export default function UsergroupListScreen({navigation}) {
-  return <Text>Hier stehen alle Benutzergruppen</Text>;
+export default function UsergroupListScreen() {
+  return (
+    <Scaffold>
+      <FancyList
+        title="Gruppen"
+        data={usergroupData}
+        component={UsergroupListItem}
+      />
+    </Scaffold>
+  );
 }
