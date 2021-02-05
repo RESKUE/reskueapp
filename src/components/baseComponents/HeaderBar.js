@@ -12,10 +12,7 @@ export default function HeaderBar({navigation}) {
         title={
           <Image
             source={require('../../assets/logo.png')}
-            style={{
-              height: 28,
-              width: 155,
-            }}
+            style={styles.image}
             resizeMode="contain"
           />
         }
@@ -35,5 +32,9 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     paddingBottom: 10,
+  },
+  image: {
+    height: 28,
+    width: 155,
   },
 });

@@ -1,18 +1,20 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {StyleSheet, View, Image} from 'react-native';
-import {culturalAssetData} from '../../../testdata';
-import {Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
+import {Button, IconButton} from 'react-native-paper';
+import Scaffold from '../../components/baseComponents/Scaffold';
+import ListActions from '../../components/ListActions';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
-  const goMap = () =>
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'CulturalAssetMapScreen'}],
-    });
+  const goMap = () => navigation.push('CulturalAssetMapScreen');
+  const goAssetGroup = () => console.log('Go to AssetGroup');
+  const deleteAsset = () => console.log('Deleted Asset');
+  const goCreation = () => console.log('Edited Asset');
+  const goMedia = () => console.log('Go to MediaList');
+  const goComments = () => console.log('Go to CommentList');
 
   return (
-    <View>
+    <Scaffold>
       <View style={styles.header}>
         <Image
           style={styles.logo}
@@ -26,24 +28,24 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           <Button color="#535353" icon="map-marker" onPress={goMap}>
             Location
           </Button>
-          <Button color="#535353" icon="apps">
+          <Button color="#535353" icon="apps" onPress={goAssetGroup}>
             Louvre
           </Button>
         </Text>
-        <View style={{flexDirection: 'row-reverse', marginTop: -20}}>
-          <Button color="#535353" icon="circle-edit-outline"></Button>
-          <Button
+        <ListActions>
+          <IconButton
+            color="#535353"
+            icon="circle-edit-outline"
+            onPress={goCreation}
+          />
+          <IconButton
             color="#535353"
             icon="trash-can-outline"
-            style={{position: 'absolute', marginRight: 20}}></Button>
-        </View>
+            onPress={deleteAsset}
+          />
+        </ListActions>
         <View
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: 0.5,
-            marginLeft: 20,
-            marginRight: 20,
-          }}
+          style={styles.randomView} //give proper name
         />
         <Text style={styles.subtitle}>Informationen:</Text>
         <Text style={styles.text}>
@@ -51,33 +53,26 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           der Hochphase der italienischen Renaissance Anfang des 16.
           Jahrhunderts.
         </Text>
-        <View style={{flexDirection: 'row', marginTop: 40}}>
-          <Text style={{color: '#919191', marginLeft: 20}}>
-            Weitere Medien anzeigen ...{' '}
-          </Text>
+        <View style={styles.mediaBox}>
+          <Text style={styles.mediaText}>Weitere Medien anzeigen ... </Text>
           <Button
             color="#919191"
             icon="arrow-right"
-            style={{marginTop: -8}}></Button>
+            onPress={goMedia}
+            style={styles.mediaButton}
+          />
         </View>
-        <View
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: 0.5,
-            marginLeft: 20,
-            marginRight: 20,
-          }}
-        />
+        <View style={styles.randomView} />
         <View style={styles.center}>
-          <Button style={styles.box}>
+          <Button style={styles.box} onPress={goComments}>
             {' '}
-            <Text style={{color: '#000', fontSize: 13}}>
+            <Text style={styles.commentText}>
               Weiter zu den Kommentaren
             </Text>{' '}
           </Button>
         </View>
       </View>
-    </View>
+    </Scaffold>
   );
 }
 
@@ -95,7 +90,7 @@ const styles = StyleSheet.create({
   buttons: {fontSize: 14, fontWeight: 'bold', marginLeft: 10, marginTop: -8},
   subtitle: {fontSize: 18, fontWeight: 'bold', marginLeft: 20, marginTop: 5},
   text: {fontSize: 14, marginLeft: 20, marginRight: 20, marginTop: 5},
-  logo: {marginTop: 300, width: '100%'},
+  logo: {marginTop: 80, width: '100%'},
   center: {
     position: 'relative',
     top: 0,
@@ -116,5 +111,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 4,
+  },
+  randomView: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 0.5,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  mediaBox: {
+    flexDirection: 'row',
+    marginTop: 40,
+  },
+  mediaText: {
+    color: '#919191',
+    marginLeft: 20,
+  },
+  mediaButton: {
+    marginTop: -8,
+  },
+  commentText: {
+    color: '#000',
+    fontSize: 13,
   },
 });
