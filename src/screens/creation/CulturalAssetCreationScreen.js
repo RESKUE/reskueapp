@@ -3,23 +3,10 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Button, Chip, TextInput} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAsset from '../../models/CulturalAsset';
+import {culturalAssetData} from '../../../testdata';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
-  const testData = {
-    id: 0,
-    name: '',
-    description: '',
-    tags: ['Keine Priorität'],
-    comments: [{}],
-    media: [{}],
-    label: '',
-    longitude: 0.0,
-    latitude: 0.0,
-    level: 0,
-    parent: {},
-    children: [],
-    tasks: [{}],
-  };
+  const testData = culturalAssetData.find((asset) => asset.id === -1);
 
   const [culturalAsset, setCulturalAsset] = React.useState(
     new CulturalAsset(testData),
