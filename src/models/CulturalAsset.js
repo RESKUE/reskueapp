@@ -39,7 +39,7 @@ export default class CulturalAsset {
     }
   }
   getSpecial() {
-    return this.data.label === '';
+    return this.data.label !== '';
   }
   setSpecial() {
     //Remove special-tag if it exists
