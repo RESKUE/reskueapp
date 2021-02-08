@@ -4,22 +4,22 @@ export default class CulturalAsset {
   }
 
   getPriority() {
-    for (var i = 0; i < priorities.length; i++) {
-      if (this.data.tags.includes(priorities[i])) {
-        return priorities[i];
+    for (const prio of priorities) {
+      if (this.data.tags.includes(prio.value)) {
+        return prio.value;
       }
     }
 
     return 'Fehler';
   }
 
-  setPriority(prio) {
+  setPriority(priorityValue) {
     var currentPriority = this.getPriority();
     var index = this.data.tags.indexOf(currentPriority);
     if (index > -1) {
-      this.data.tags[index] = prio;
+      this.data.tags[index] = priorityValue;
     } else {
-      this.data.tags.push(prio);
+      this.data.tags.push(priorityValue);
     }
   }
 
@@ -60,9 +60,9 @@ export default class CulturalAsset {
 }
 
 const priorities = [
-  'Keine Priorität',
-  'Geringe Priorität',
-  'Normale Priorität',
-  'Hohe Priorität',
-  'Höchste Priorität',
+  {value: 'p0', name: 'Keine Priorität'},
+  {value: 'p1', name: 'Geringe Priorität'},
+  {value: 'p2', name: 'Normale Priorität'},
+  {value: 'p3', name: 'Hohe Priorität'},
+  {value: 'p4', name: 'Höchste Priorität'},
 ];

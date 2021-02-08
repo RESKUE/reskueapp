@@ -81,14 +81,14 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       <View style={styles.priorityBox}>
         <Text>Wähle Priorität:</Text>
         {priorities.map((prio, index) => (
-          <View key={prio} style={styles.chipWrapper}>
+          <View key={prio.value} style={styles.chipWrapper}>
             <Chip
               icon="alert-circle"
               mode="flat"
               height={30}
-              selected={prio === culturalAsset.getPriority()}
-              onPress={() => onChangePriority(prio)}>
-              {prio}
+              selected={prio.value === culturalAsset.getPriority()}
+              onPress={() => onChangePriority(prio.value)}>
+              {prio.name}
             </Chip>
           </View>
         ))}
@@ -108,11 +108,11 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 }
 
 const priorities = [
-  'Keine Priorität',
-  'Geringe Priorität',
-  'Normale Priorität',
-  'Hohe Priorität',
-  'Höchste Priorität',
+  {value: 'p0', name: 'Keine Priorität'},
+  {value: 'p1', name: 'Geringe Priorität'},
+  {value: 'p2', name: 'Normale Priorität'},
+  {value: 'p3', name: 'Hohe Priorität'},
+  {value: 'p4', name: 'Höchste Priorität'},
 ];
 
 const styles = StyleSheet.create({
