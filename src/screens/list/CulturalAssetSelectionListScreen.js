@@ -2,13 +2,22 @@ import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import CulturalAssetSelectionListItem from '../../components/listItems/CulturalAssetSelectionListItem';
+import CulturalAssetParentSelectionListItem from '../../components/listItems/CulturalAssetParentSelectionListItem';
+import CulturalAssetChildSelectionListItem from '../../components/listItems/CulturalAssetChildSelectionListItem';
 import ListActions from '../../components/ListActions';
 import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function CulturalAssetSelectionListScreen({navigation, route}) {
   const {colors} = useTheme();
   const {requestAllAssets, result} = useAllAssets();
+
+  const selectionType = route.params.selectionType;
+
+  const title = selectionType === 'parent' ? 'Obergruppe' : 'Teil-Kulturgut';
+  const component =
+    selectionType === 'parent'
+      ? CulturalAssetParentSelectionListItem
+      : CulturalAssetChildSelectionListItem;
 
   React.useEffect(() => {
     console.log(result.source, 'response received');
@@ -27,11 +36,7 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
           onPress={() => requestAllAssets()}
         />
       </ListActions>
-      <FancyList
-        title="Kulturgüter"
-        data={result.data}
-        component={CulturalAssetSelectionListItem}
-      />
+      <FancyList title={title} data={result.data} component={component} />
     </Scaffold>
   );
 }

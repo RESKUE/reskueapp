@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
+import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import CulturalAsset from '../../models/CulturalAsset';
 import {culturalAssetData} from '../../../testdata';
@@ -18,10 +18,12 @@ import useAllAssets from '../../handlers/AllAssetsHook';
 export default function CulturalAssetCreationScreen({navigation, route}) {
   const testData = culturalAssetData.find((asset) => asset.id === -1);
 
-  const [parentAsset, setParentAsset] = React.useState([]);
   const [culturalAsset, setCulturalAsset] = React.useState(
     new CulturalAsset(testData),
   );
+  const [parentAsset, setParentAsset] = React.useState([]);
+  const [childrenAssets, setChildrenAssets] = React.useState([]);
+
   const {colors} = useTheme();
   const {requestAllAssets, result} = useAllAssets();
 
@@ -39,6 +41,13 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       onChangeParent(routeParentId);
     }
   }, [routeParentId, onChangeParent]);
+
+  const routeChildId = route.params?.childId;
+  React.useEffect(() => {
+    if (routeChildId != null) {
+      addChild(routeChildId);
+    }
+  }, [routeChildId, addChild]);
 
   const onChangeName = (name) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -64,6 +73,23 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     },
     [result, culturalAsset.data],
   );
+  const addChild = React.useCallback(
+    (childId) => {
+      if (culturalAsset.data.children.some((asset) => asset.id === childId)) {
+        console.log('This asset is already a child');
+        return;
+      }
+      const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+      updatedCulturalAsset.data.children.push({id: childId});
+      const updatedChildrenAssets = childrenAssets;
+      updatedChildrenAssets.push(
+        result.data.find((asset) => asset.id === childId),
+      );
+      setChildrenAssets(updatedChildrenAssets);
+      setCulturalAsset(updatedCulturalAsset);
+    },
+    [result, culturalAsset.data, childrenAssets],
+  );
   const onChangePeculiarity = (peculiarity) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.data.label = peculiarity;
@@ -76,8 +102,16 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     setCulturalAsset(updatedCulturalAsset);
   };
 
-  const goSelection = () => {
-    navigation.push('CulturalAssetSelectionListScreen');
+  const goParentSelection = () => {
+    navigation.push('CulturalAssetSelectionListScreen', {
+      selectionType: 'parent',
+    });
+  };
+
+  const goChildSelection = () => {
+    navigation.push('CulturalAssetSelectionListScreen', {
+      selectionType: 'child',
+    });
   };
 
   const finishCreation = () => {
@@ -113,13 +147,25 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         <IconButton
           color={colors.primary}
           icon="plus-circle-outline"
-          onPress={goSelection}
+          onPress={goParentSelection}
         />
       </ListActions>
       <FancyList
         title="Obergruppe"
         data={parentAsset}
-        component={CulturalAssetListItem}
+        component={CulturalAssetUnpressableListItem}
+      />
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="plus-circle-outline"
+          onPress={goChildSelection}
+        />
+      </ListActions>
+      <FancyList
+        title="Teil-Kulturgüter"
+        data={childrenAssets}
+        component={CulturalAssetUnpressableListItem}
       />
       <View style={styles.priorityBox}>
         <Text>Wähle Priorität:</Text>
