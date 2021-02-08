@@ -24,16 +24,16 @@ export default class CulturalAsset {
   }
 
   getEndangered() {
-    return this.data.tags.includes('endangered');
+    return this.data.tags.includes(ENDANGERED_KEY);
   }
   addEndangered() {
-    var index = this.data.tags.indexOf('endagered');
+    var index = this.data.tags.indexOf(ENDANGERED_KEY);
     if (index === -1) {
-      this.data.tags.push('endangered');
+      this.data.tags.push(ENDANGERED_KEY);
     }
   }
   removeEndangered() {
-    var index = this.data.tags.indexOf('endagered');
+    var index = this.data.tags.indexOf(ENDANGERED_KEY);
     if (index > -1) {
       this.data.tags.splice(index, 1);
     }
@@ -44,20 +44,23 @@ export default class CulturalAsset {
   setSpecial() {
     //Remove special-tag if it exists
     if (this.data.label === '') {
-      var index = this.data.tags.indexOf('special');
+      var index = this.data.tags.indexOf(SPECIAL_KEY);
       if (index > -1) {
         this.data.tags.splice(index, 1);
       }
     }
     //Add special-tag if it doesn't exist
     else {
-      var index = this.data.tags.indexOf('special');
+      var index = this.data.tags.indexOf(SPECIAL_KEY);
       if (index === -1) {
-        this.data.tags.push('special');
+        this.data.tags.push(SPECIAL_KEY);
       }
     }
   }
 }
+
+const ENDANGERED_KEY = 'endangered';
+const SPECIAL_KEY = 'special';
 
 const priorities = [
   {value: 'p0', name: 'Keine Priorität'},
