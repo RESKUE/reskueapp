@@ -59,7 +59,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     (parentId) => {
       const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
       updatedCulturalAsset.data.parent = {id: parentId};
-      setParentAsset([result.data[parentId]]);
+      setParentAsset([result.data.find((asset) => asset.id === parentId)]);
       setCulturalAsset(updatedCulturalAsset);
     },
     [result, culturalAsset.data],
