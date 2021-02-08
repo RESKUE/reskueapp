@@ -2,12 +2,14 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Button, Chip, TextInput} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
+import CulturalAsset from '../../models/CulturalAsset';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
-  const [culturalAsset, setCulturalAsset] = React.useState({
+  const testData = {
+    id: 0,
     name: '',
     description: '',
-    tags: [],
+    tags: ['Keine Priorität'],
     comments: [{}],
     media: [{}],
     label: '',
@@ -17,62 +19,76 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     parent: {},
     children: [],
     tasks: [{}],
-  });
+  };
 
-  const [address, setAddress] = React.useState('');
-  const [priority, setPriority] = React.useState(0);
+  const [culturalAsset, setCulturalAsset] = React.useState(
+    new CulturalAsset(testData),
+  );
 
   const onChangeName = (name) => {
-    const updatedCulturalAsset = {culturalAsset};
-    updatedCulturalAsset.name = name;
+    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+    updatedCulturalAsset.data.name = name;
     setCulturalAsset(updatedCulturalAsset);
   };
   const onChangeDescription = (description) => {
-    const updatedCulturalAsset = {culturalAsset};
-    updatedCulturalAsset.description = description;
+    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+    updatedCulturalAsset.data.description = description;
     setCulturalAsset(updatedCulturalAsset);
   };
-  const onChangeAddress = (newAddress) => setAddress(newAddress);
-  const onChangePeculiarity = (peculiarity) => {
-    const updatedCulturalAsset = {culturalAsset};
-    updatedCulturalAsset.label = peculiarity;
+  const onChangeAddress = (newAddress) => {
+    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+    updatedCulturalAsset.data.address = newAddress;
     setCulturalAsset(updatedCulturalAsset);
   };
   const onChangeParent = (parentId) => {
-    const updatedCulturalAsset = {culturalAsset};
-    updatedCulturalAsset.parent = {id: parentId};
+    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+    updatedCulturalAsset.data.parent = {id: parentId};
+    setCulturalAsset(updatedCulturalAsset);
+  };
+  const onChangePeculiarity = (peculiarity) => {
+    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+    updatedCulturalAsset.data.label = peculiarity;
+    updatedCulturalAsset.setSpecial();
+    setCulturalAsset(updatedCulturalAsset);
+  };
+  const onChangePriority = (prio) => {
+    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+    updatedCulturalAsset.setPriority(prio);
     setCulturalAsset(updatedCulturalAsset);
   };
 
-  const finishCreation = () => navigation.goBack();
+  const finishCreation = () => {
+    console.log(culturalAsset);
+    navigation.goBack();
+  };
 
   return (
     <Scaffold>
       <TextInput
         label="Name"
-        value={culturalAsset.name}
+        value={culturalAsset.data.name}
         onChangeText={onChangeName}
       />
       <TextInput
         label="Beschreibung"
-        value={culturalAsset.description}
+        value={culturalAsset.data.description}
         onChangeText={onChangeDescription}
       />
       <TextInput
         label="Adresse"
-        value={address}
+        value={culturalAsset.data.address}
         onChangeText={onChangeAddress}
       />
 
       <TextInput
         label="Obergruppe"
-        value={culturalAsset.parent.id}
+        value={culturalAsset.data.parent.id}
         onChangeParent={onChangeParent}
         style={styles.inputSpacing}
       />
       <TextInput
         label="Besonderheiten"
-        value={culturalAsset.label}
+        value={culturalAsset.data.label}
         onChangeText={onChangePeculiarity}
       />
       <View style={styles.priorityBox}>
@@ -83,8 +99,8 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
               icon="alert-circle"
               mode="flat"
               height={30}
-              selected={index === priority}
-              onPress={() => setPriority(index)}>
+              selected={prio === culturalAsset.getPriority()}
+              onPress={() => onChangePriority(prio)}>
               {prio}
             </Chip>
           </View>
