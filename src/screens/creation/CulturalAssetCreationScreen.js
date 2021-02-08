@@ -1,16 +1,44 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Button, Chip, TextInput} from 'react-native-paper';
+import {
+  Button,
+  Chip,
+  IconButton,
+  TextInput,
+  useTheme,
+} from 'react-native-paper';
+import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
+import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
+import ListActions from '../../components/ListActions';
 import CulturalAsset from '../../models/CulturalAsset';
 import {culturalAssetData} from '../../../testdata';
+import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
   const testData = culturalAssetData.find((asset) => asset.id === -1);
 
+  const [parentAsset, setParentAsset] = React.useState([]);
   const [culturalAsset, setCulturalAsset] = React.useState(
     new CulturalAsset(testData),
   );
+  const {colors} = useTheme();
+  const {requestAllAssets, result} = useAllAssets();
+
+  React.useEffect(() => {
+    console.log(result.source, 'response received');
+  }, [result]);
+
+  React.useEffect(() => {
+    requestAllAssets();
+  }, [requestAllAssets]);
+
+  const routeParentId = route.params?.parentId;
+  React.useEffect(() => {
+    if (routeParentId != null) {
+      onChangeParent(routeParentId);
+    }
+  }, [routeParentId, onChangeParent]);
 
   const onChangeName = (name) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -27,11 +55,15 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     updatedCulturalAsset.data.address = newAddress;
     setCulturalAsset(updatedCulturalAsset);
   };
-  const onChangeParent = (parentId) => {
-    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.parent = {id: parentId};
-    setCulturalAsset(updatedCulturalAsset);
-  };
+  const onChangeParent = React.useCallback(
+    (parentId) => {
+      const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+      updatedCulturalAsset.data.parent = {id: parentId};
+      setParentAsset([result.data[parentId]]);
+      setCulturalAsset(updatedCulturalAsset);
+    },
+    [result, culturalAsset.data],
+  );
   const onChangePeculiarity = (peculiarity) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.data.label = peculiarity;
@@ -42,6 +74,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.setPriority(prio);
     setCulturalAsset(updatedCulturalAsset);
+  };
+
+  const goSelection = () => {
+    navigation.push('CulturalAssetSelectionListScreen');
   };
 
   const finishCreation = () => {
@@ -66,17 +102,24 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         value={culturalAsset.data.address}
         onChangeText={onChangeAddress}
       />
-
-      <TextInput
-        label="Obergruppe"
-        value={culturalAsset.data.parent.id}
-        onChangeParent={onChangeParent}
-        style={styles.inputSpacing}
-      />
       <TextInput
         label="Besonderheiten"
         value={culturalAsset.data.label}
         onChangeText={onChangePeculiarity}
+        style={styles.inputSpacing}
+      />
+
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="plus-circle-outline"
+          onPress={goSelection}
+        />
+      </ListActions>
+      <FancyList
+        title="Obergruppe"
+        data={parentAsset}
+        component={CulturalAssetListItem}
       />
       <View style={styles.priorityBox}>
         <Text>Wähle Priorität:</Text>
@@ -116,7 +159,7 @@ const priorities = [
 ];
 
 const styles = StyleSheet.create({
-  inputSpacing: {marginTop: 24},
+  inputSpacing: {marginBottom: 24},
   buttonSpacing: {marginTop: 16},
   priorityBox: {marginVertical: 24},
   chipWrapper: {margin: 2, flexWrap: 'wrap'},
