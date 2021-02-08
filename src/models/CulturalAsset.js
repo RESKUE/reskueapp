@@ -23,36 +23,25 @@ export default class CulturalAsset {
     }
   }
 
-  getEndangered() {
+  isEndangered() {
     return this.data.tags.includes(ENDANGERED_KEY);
   }
   addEndangered() {
-    var index = this.data.tags.indexOf(ENDANGERED_KEY);
-    if (index === -1) {
+    if (!this.isEndangered()) {
       this.data.tags.push(ENDANGERED_KEY);
     }
   }
   removeEndangered() {
-    var index = this.data.tags.indexOf(ENDANGERED_KEY);
-    if (index > -1) {
-      this.data.tags.splice(index, 1);
-    }
+    this.data.filter((tag) => tag !== ENDANGERED_KEY);
   }
-  getSpecial() {
+  isSpecial() {
     return this.data.label !== '';
   }
   setSpecial() {
-    //Remove special-tag if it exists
-    if (this.data.label === '') {
-      var index = this.data.tags.indexOf(SPECIAL_KEY);
-      if (index > -1) {
-        this.data.tags.splice(index, 1);
-      }
-    }
-    //Add special-tag if it doesn't exist
-    else {
-      var index = this.data.tags.indexOf(SPECIAL_KEY);
-      if (index === -1) {
+    if (!this.isSpecial()) {
+      this.data.filter((tag) => tag !== SPECIAL_KEY);
+    } else {
+      if (!this.data.tags.includes(SPECIAL_KEY)) {
         this.data.tags.push(SPECIAL_KEY);
       }
     }
