@@ -20,6 +20,9 @@ before_script:
   - set +o pipefail
   - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
   - set -o pipefail
+  # Authenticate with the react-native-kueres NPM registry
+  - npm config set @${CI_PROJECT_ROOT_NAMESPACE}:registry https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2563/packages/npm/
+  - npm config set "//gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2563/packages/npm/:_authToken" "${CI_JOB_TOKEN}"
   # Setup NodeJS and install the projects dependencies
   - curl -sL https://deb.nodesource.com/setup_10.x | bash
   - apt-get install -y nodejs
