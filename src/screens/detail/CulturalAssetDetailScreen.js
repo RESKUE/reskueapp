@@ -12,58 +12,71 @@ import {
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
-//import TaskListItem from '../../components/listItems/TaskListItem';
+import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import CulturalAsset from '../../models/CulturalAsset';
 import useAllAssets from '../../handlers/AllAssetsHook';
+import useAllTasks from '../../handlers/AllTasksHook';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
   const [culturalAsset, setCulturalAsset] = React.useState(null);
   const [parentAsset, setParentAsset] = React.useState(null);
   const [childrenAssets, setChildrenAssets] = React.useState(null);
-  //const [tasks, setTasks] = React.useState();
+  const [tasks, setTasks] = React.useState(null);
 
   const {colors} = useTheme();
-  const {requestAllAssets, result} = useAllAssets();
+  const {requestAllAssets, result: assetResult} = useAllAssets();
+  const {requestAllTasks, result: taskResult} = useAllTasks();
 
   React.useEffect(() => {
     requestAllAssets();
   }, [requestAllAssets]);
 
+  React.useEffect(() => {
+    requestAllTasks();
+  }, [requestAllTasks]);
+
   const routeAssetId = route.params.id;
   React.useEffect(() => {
-    console.log(result.source, 'response received');
-    if (result.source) {
+    console.log(assetResult.source, 'response received');
+    if (assetResult.source) {
       setCulturalAsset(
         new CulturalAsset(
-          result?.data.find((asset) => asset.id === routeAssetId),
+          assetResult?.data.find((asset) => asset.id === routeAssetId),
         ),
       );
     }
-  }, [result, routeAssetId]);
+  }, [assetResult, routeAssetId]);
 
   React.useEffect(() => {
-    if (result && culturalAsset) {
-      console.log(culturalAsset);
+    console.log(taskResult.source, 'task response received');
+    if (taskResult.source && culturalAsset) {
+      const taskIds = culturalAsset.data.tasks.map((task) => task.id);
+      const foundTasks = taskResult?.data.filter((task) =>
+        taskIds.includes(task.id),
+      );
+      setTasks(foundTasks);
+    }
+  }, [culturalAsset, taskResult]);
+
+  React.useEffect(() => {
+    if (assetResult && culturalAsset) {
       const parentId = culturalAsset.data.parent.id;
       if (parentId != null) {
-        const parent = result?.data.find((asset) => asset.id === parentId);
+        const parent = assetResult?.data.find((asset) => asset.id === parentId);
         setParentAsset(parent);
       } else {
         setParentAsset({});
       }
-      console.log(parentId);
 
       const childrenIds = culturalAsset.data.children.map((child) => child.id);
-      const children = result?.data.filter((asset) =>
+      const children = assetResult?.data.filter((asset) =>
         childrenIds.includes(asset.id),
       );
-      console.log(childrenIds);
-      console.log(children);
       setChildrenAssets(children);
     }
-  }, [culturalAsset, result]);
+  }, [culturalAsset, assetResult]);
 
   const goMap = () => navigation.push('CulturalAssetMapScreen');
   const goAssetGroup = () =>
@@ -77,7 +90,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     <Scaffold>
       {culturalAsset === null ||
       childrenAssets === null ||
-      parentAsset === null ? (
+      parentAsset === null ||
+      tasks === null ? (
         <ActivityIndicator animating={true} color={colors.primary} />
       ) : (
         <>
@@ -133,6 +147,16 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
               />
             )}
           </View>
+          <View>
+            {tasks.length === 0 ? null : (
+              <FancyList
+                title="Aufgaben"
+                data={tasks}
+                component={TaskListItem}
+              />
+            )}
+          </View>
+
           <View style={styles.center}>
             <FloatingWhiteButton
               onPress={goMedia}
