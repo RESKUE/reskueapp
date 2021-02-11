@@ -61,7 +61,7 @@
       "level": 0,
       "parent": {},
       "children": [],
-      "tasks": [{}],
+      "tasks": [{}]
     },
     {
       "id": 0,
@@ -74,7 +74,7 @@
       "longitude": 32.0,
       "latitude": 32.0,
       "level": 1,
-      "parent": {},
+      "parent": {"id": 4},
       "children": [{"id": 1}, {"id": 2}],
       "tasks": [{}]
     },
@@ -91,7 +91,7 @@
       "level": 0,
       "parent": {"id": 0},
       "children": [{}],
-      "tasks": [{}]
+      "tasks": [{"id": 100}, {"id": 101}]
     },
     {
       "id": 2,
@@ -121,6 +121,21 @@
       "level": 0,
       "parent": {},
       "children": [{}],
+      "tasks": [{}]
+    },
+    {
+      "id": 4,
+      "name": "Museen in Paris",
+      "description": "Sammlung von allen Museen in Paris",
+      "tags": ["p0"],
+      "comments": [{}],
+      "media": [{}],
+      "label": "",
+      "longitude": 32.0,
+      "latitude": 32.0,
+      "level": 2,
+      "parent": {},
+      "children": [{"id": 0}],
       "tasks": [{}]
     }
   ],
