@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, AuthContext} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 import ListActions from '../../components/ListActions';
@@ -8,6 +8,7 @@ import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function CulturalAssetListScreen({navigation}) {
   const goAssetCreation = () => navigation.push('CulturalAssetCreationScreen');
+  const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
   const {requestAllAssets, result} = useAllAssets();
 
@@ -22,6 +23,16 @@ export default function CulturalAssetListScreen({navigation}) {
   return (
     <Scaffold>
       <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="security"
+          onPress={async () => console.log("ID TOKEN:", await authService.getIdToken())}
+        />
+        <IconButton
+          color={colors.primary}
+          icon="key-outline"
+          onPress={() => authService.refresh()}
+        />
         <IconButton
           color={colors.primary}
           icon="reload"
