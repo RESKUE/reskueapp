@@ -9,27 +9,53 @@ import {
 } from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import UserListItem from '../../components/listItems/UserListItem';
-import {userData} from '../../../testdata';
+import UserEditableListItem from '../../components/listItems/UserEditableListItem';
 import ListActions from '../../components/ListActions';
+import useAllUsers from '../../handlers/AllUsersHook';
 
-export default function UsergroupCreationScreen({navigation}) {
+export default function UsergroupCreationScreen({navigation, route}) {
   const {colors} = useTheme();
   const [usergroup, setUserGroup] = React.useState({
     name: '',
-    users: userData,
+    users: [],
   });
+  const {requestAllUsers, result: userResult} = useAllUsers();
+
+  React.useEffect(() => {
+    console.log(userResult.source, 'user response received');
+  }, [userResult]);
+
+  React.useEffect(() => {
+    requestAllUsers();
+  }, [requestAllUsers]);
+
+  const routeUserId = route.params?.userId;
+  React.useEffect(() => {
+    if (routeUserId != null) {
+      addUser(routeUserId);
+    }
+  }, [routeUserId, addUser]);
 
   const onChangeName = (name) => {
     const updatedUsergroup = {usergroup};
     updatedUsergroup.name = name;
-    updatedUsergroup.users = usergroup.users; //
+    updatedUsergroup.users = usergroup.users;
     setUserGroup(updatedUsergroup);
   };
 
-  const addUsers = () => console.log('Added users');
-  const removeUsers = () => console.log('Removed users');
+  const addUser = React.useCallback(
+    (userId) => {
+      const addedUser = userResult.data.find((user) => user.id === userId);
+      const updatedUserList = [...usergroup.users, addedUser];
+      const updatedUsergroup = {name: usergroup.name, users: updatedUserList};
+      setUserGroup(updatedUsergroup);
+    },
+    [userResult, usergroup],
+  );
 
+  const goUserSelection = () => {
+    navigation.push('UserSelectionListScreen');
+  };
   const finishCreation = () => navigation.goBack();
 
   return (
@@ -43,19 +69,14 @@ export default function UsergroupCreationScreen({navigation}) {
         <IconButton
           color={colors.primary}
           icon="account-plus-outline"
-          onPress={addUsers}
-        />
-        <IconButton
-          color={colors.primary}
-          icon="trash-can-outline"
-          onPress={removeUsers}
+          onPress={goUserSelection}
         />
       </ListActions>
       <Divider style={styles.dividerStyle} />
       <FancyList
         title="Mitglieder"
         data={usergroup.users}
-        component={UserListItem}
+        component={UserEditableListItem}
       />
       <Button
         icon="check"
