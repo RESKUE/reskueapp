@@ -9,26 +9,32 @@ import {
   Paragraph,
   useTheme,
 } from 'react-native-paper';
-//import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
+import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
+//import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import CulturalAsset from '../../models/CulturalAsset';
 import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  const [culturalAsset, setCulturalAsset] = React.useState();
+  const [culturalAsset, setCulturalAsset] = React.useState(null);
+  const [parentAsset, setParentAsset] = React.useState(null);
+  const [childrenAssets, setChildrenAssets] = React.useState(null);
+  //const [tasks, setTasks] = React.useState();
 
   const {colors} = useTheme();
   const {requestAllAssets, result} = useAllAssets();
 
+  React.useEffect(() => {
+    requestAllAssets();
+  }, [requestAllAssets]);
+
   const routeAssetId = route.params.id;
   React.useEffect(() => {
     console.log(result.source, 'response received');
-    if (result.source === 'cache') {
-      setIsLoading(false);
+    if (result.source) {
       setCulturalAsset(
         new CulturalAsset(
           result?.data.find((asset) => asset.id === routeAssetId),
@@ -38,11 +44,30 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }, [result, routeAssetId]);
 
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    if (result && culturalAsset) {
+      console.log(culturalAsset);
+      const parentId = culturalAsset.data.parent.id;
+      if (parentId != null) {
+        const parent = result?.data.find((asset) => asset.id === parentId);
+        setParentAsset(parent);
+      } else {
+        setParentAsset({});
+      }
+      console.log(parentId);
+
+      const childrenIds = culturalAsset.data.children.map((child) => child.id);
+      const children = result?.data.filter((asset) =>
+        childrenIds.includes(asset.id),
+      );
+      console.log(childrenIds);
+      console.log(children);
+      setChildrenAssets(children);
+    }
+  }, [culturalAsset, result]);
 
   const goMap = () => navigation.push('CulturalAssetMapScreen');
-  const goAssetGroup = () => console.log('Go to AssetGroup');
+  const goAssetGroup = () =>
+    navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
   const deleteAsset = () => console.log('Deleted Asset');
   const goCreation = () => console.log('Edited Asset');
   const goMedia = () => console.log('Go to MediaList');
@@ -50,7 +75,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   return (
     <Scaffold>
-      {isLoading ? (
+      {culturalAsset === null ||
+      childrenAssets === null ||
+      parentAsset === null ? (
         <ActivityIndicator animating={true} color={colors.primary} />
       ) : (
         <>
@@ -61,28 +88,32 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           <Title style={styles.title}>{culturalAsset.data.name}</Title>
           <View style={styles.buttonContainer}>
             <Button
-              color={GRAY_COLOR_CODE}
+              color={colors.primary}
               icon="map-marker"
               onPress={goMap}
               style={styles.bold}>
               Location
             </Button>
-            <Button
-              color={GRAY_COLOR_CODE}
-              icon="apps"
-              onPress={goAssetGroup}
-              style={styles.bold}>
-              Louvre
-            </Button>
+            <View>
+              {parentAsset.name ? (
+                <Button
+                  color={colors.primary}
+                  icon="apps"
+                  onPress={goAssetGroup}
+                  style={styles.bold}>
+                  {parentAsset.name}
+                </Button>
+              ) : null}
+            </View>
           </View>
           <ListActions>
             <IconButton
-              color={GRAY_COLOR_CODE}
+              color={colors.primary}
               icon="circle-edit-outline"
               onPress={goCreation}
             />
             <IconButton
-              color={GRAY_COLOR_CODE}
+              color={colors.primary}
               icon="trash-can-outline"
               onPress={deleteAsset}
             />
@@ -90,13 +121,18 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           <Divider style={styles.divider} />
           <View style={styles.descriptionContainer}>
             <Title style={styles.bold}>Beschreibung:</Title>
-            <Paragraph>
-              Mona Lisa ist ein weltberühmtes Ölgemälde von Leonardo da Vinci
-              aus der Hochphase der italienischen Renaissance Anfang des 16.
-              Jahrhunderts.
-            </Paragraph>
+            <Paragraph>{culturalAsset.data.description}</Paragraph>
           </View>
           <Divider style={styles.divider} />
+          <View>
+            {childrenAssets.length === 0 ? null : (
+              <FancyList
+                title="Teil-Kulturgüter"
+                data={childrenAssets}
+                component={CulturalAssetListItem}
+              />
+            )}
+          </View>
           <View style={styles.center}>
             <FloatingWhiteButton
               onPress={goMedia}
@@ -112,8 +148,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     </Scaffold>
   );
 }
-
-const GRAY_COLOR_CODE = '#535353';
 
 const styles = StyleSheet.create({
   image: {
