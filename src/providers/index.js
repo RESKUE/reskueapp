@@ -1,9 +1,14 @@
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
-import {AuthProvider, AuthService} from '@ilt-pse/react-native-kueres';
+import {
+  AuthProvider,
+  AuthService,
+  TokenStorage,
+} from '@ilt-pse/react-native-kueres';
+import authConfig from '../../auth.config.json';
 import theme from './Theme';
 
-const authService = new AuthService({});
+const authService = new AuthService(authConfig, new TokenStorage());
 
 export default function Providers({children}) {
   return (

@@ -21,6 +21,10 @@ One needs to [authenticate with our private Package Registry](https://docs.gitla
 1. Clone the repository
 2. Run `npm i` inside the `reskueapp` folder
 
+### OpenID/OAuth2 with Keycloak
+
+Configure `com.reskueapp:/callback` as `Valid Redirect URI` in Keycloak under `Clients > Reskue > Settings > Valid Redirect URIs`.
+
 ## Development
 
 1. Enter the `reskueapp` folder
