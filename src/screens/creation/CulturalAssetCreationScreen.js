@@ -28,10 +28,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   const {requestAllAssets, result} = useAllAssets();
 
   React.useEffect(() => {
-    console.log(result.source, 'response received');
-  }, [result]);
-
-  React.useEffect(() => {
     requestAllAssets();
   }, [requestAllAssets]);
 

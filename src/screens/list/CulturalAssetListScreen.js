@@ -13,10 +13,6 @@ export default function CulturalAssetListScreen({navigation}) {
   const {requestAllAssets, result} = useAllAssets();
 
   React.useEffect(() => {
-    console.log(result.source, 'response received');
-  }, [result]);
-
-  React.useEffect(() => {
     requestAllAssets();
   }, [requestAllAssets]);
 
@@ -26,7 +22,9 @@ export default function CulturalAssetListScreen({navigation}) {
         <IconButton
           color={colors.primary}
           icon="security"
-          onPress={async () => console.log("ID TOKEN:", await authService.getIdToken())}
+          onPress={async () =>
+            console.log('ID TOKEN:', await authService.getIdToken())
+          }
         />
         <IconButton
           color={colors.primary}
@@ -46,7 +44,7 @@ export default function CulturalAssetListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Kulturgüter"
-        data={result.data}
+        data={result?.data}
         component={CulturalAssetListItem}
       />
     </Scaffold>

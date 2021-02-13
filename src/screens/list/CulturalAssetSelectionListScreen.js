@@ -20,10 +20,6 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
       : CulturalAssetChildSelectionListItem;
 
   React.useEffect(() => {
-    console.log(result.source, 'response received');
-  }, [result]);
-
-  React.useEffect(() => {
     requestAllAssets();
   }, [requestAllAssets]);
 
@@ -36,7 +32,7 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
           onPress={() => requestAllAssets()}
         />
       </ListActions>
-      <FancyList title={title} data={result.data} component={component} />
+      <FancyList title={title} data={result?.data} component={component} />
     </Scaffold>
   );
 }
