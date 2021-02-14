@@ -83,7 +83,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
   const deleteAsset = () => console.log('Deleted Asset');
   const goCreation = () => console.log('Edited Asset');
-  const goMedia = () => console.log('Go to MediaList');
+  const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
   return (
