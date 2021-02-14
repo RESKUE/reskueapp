@@ -8,6 +8,7 @@ import MyTaskListScreen from '../screens/list/MyTaskListScreen';
 import NotificationListScreen from '../screens/list/NotificationListScreen';
 import CulturalAssetSelectionListScreen from '../screens/list/CulturalAssetSelectionListScreen';
 import CulturalAssetMapScreen from '../screens/map/CulturalAssetMapScreen';
+import MediaDetailScreen from '../screens/detail/MediaDetailScreen';
 import HeaderBar from '../components/baseComponents/HeaderBar';
 import HomeTabs from './HomeTabs';
 
@@ -48,6 +49,7 @@ export default function ScreenStack() {
         name="NotificationListScreen"
         component={NotificationListScreen}
       />
+      <Stack.Screen name="MediaDetailScreen" component={MediaDetailScreen} />
     </Stack.Navigator>
   );
 }
