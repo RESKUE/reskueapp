@@ -39,8 +39,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   const routeAssetId = route.params.id;
   React.useEffect(() => {
-    console.log(assetResult.source, 'response received');
-    if (assetResult.source) {
+    if (assetResult) {
       setCulturalAsset(
         new CulturalAsset(
           assetResult?.data.find((asset) => asset.id === routeAssetId),
@@ -50,8 +49,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }, [assetResult, routeAssetId]);
 
   React.useEffect(() => {
-    console.log(taskResult.source, 'task response received');
-    if (taskResult.source && culturalAsset) {
+    if (taskResult && culturalAsset) {
       const taskIds = culturalAsset.data.tasks.map((task) => task.id);
       const foundTasks = taskResult?.data.filter((task) =>
         taskIds.includes(task.id),
