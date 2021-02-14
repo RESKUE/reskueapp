@@ -12,9 +12,10 @@
     "postinstall": "npx husky install"
   },
   "dependencies": {
-    "@ilt-pse/react-native-kueres": "^1.4.0",
+    "@ilt-pse/react-native-kueres": "^1.5.0",
     "@react-native-async-storage/async-storage": "^1.13.4",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/slider": "^3.0.3",
     "@react-navigation/bottom-tabs": "^5.11.7",
     "@react-navigation/material-bottom-tabs": "^5.3.13",
     "@react-navigation/material-top-tabs": "^5.3.13",
@@ -30,7 +31,8 @@
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.17.1",
     "react-native-tab-view": "^2.15.2",
-    "react-native-vector-icons": "^8.0.0"
+    "react-native-vector-icons": "^8.0.0",
+    "react-native-video": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
