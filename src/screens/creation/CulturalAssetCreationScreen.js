@@ -11,7 +11,7 @@ import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
-import CulturalAsset from '../../models/CulturalAsset';
+import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
 import {culturalAssetData} from '../../../testdata';
 import useAllAssets from '../../handlers/AllAssetsHook';
 
@@ -165,7 +165,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       />
       <View style={styles.priorityBox}>
         <Text>Wähle Priorität:</Text>
-        {priorities.map((prio, index) => (
+        {Priorities.map((prio, index) => (
           <View key={prio.value} style={styles.chipWrapper}>
             <Chip
               icon="alert-circle"
@@ -191,14 +191,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
-
-const priorities = [
-  {value: 'p0', name: 'Keine Priorität'},
-  {value: 'p1', name: 'Geringe Priorität'},
-  {value: 'p2', name: 'Normale Priorität'},
-  {value: 'p3', name: 'Hohe Priorität'},
-  {value: 'p4', name: 'Höchste Priorität'},
-];
 
 const styles = StyleSheet.create({
   inputSpacing: {marginBottom: 24},

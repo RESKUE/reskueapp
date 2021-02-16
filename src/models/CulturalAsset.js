@@ -4,7 +4,7 @@ export default class CulturalAsset {
   }
 
   getPriority() {
-    for (const prio of priorities) {
+    for (const prio of Priorities) {
       if (this.data.tags.includes(prio.value)) {
         return prio.value;
       }
@@ -48,10 +48,10 @@ export default class CulturalAsset {
   }
 }
 
-const ENDANGERED_KEY = 'endangered';
-const SPECIAL_KEY = 'special';
+export const ENDANGERED_KEY = 'endangered';
+export const SPECIAL_KEY = 'special';
 
-const priorities = [
+export const Priorities = [
   {value: 'p0', name: 'Keine Priorität'},
   {value: 'p1', name: 'Geringe Priorität'},
   {value: 'p2', name: 'Normale Priorität'},
