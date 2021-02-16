@@ -10,7 +10,7 @@ export default function useMedia(id) {
   const requestMedia = React.useCallback(async () => {
     const url = `https://lunaless.com/reskue/media/${id}.json`;
     await client.request(url, options, policy);
-  }, [client]);
+  }, [client, id]);
 
   return {result, requestMedia};
 }

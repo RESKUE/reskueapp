@@ -1,5 +1,9 @@
 import React from 'react';
-import {MediaType, MediaViewer, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  MediaType,
+  MediaViewer,
+  LoadingIndicator,
+} from '@ilt-pse/react-native-kueres';
 import useMedia from '../../handlers/MediaHook';
 
 export default function MediaDetailScreen({route}) {
