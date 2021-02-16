@@ -4,7 +4,7 @@ export default class Task {
   }
 
   getTaskStateName() {
-    for (const state of taskState) {
+    for (const state of TaskStates) {
       if (this.data.state === state.value) {
         return state.name;
       }
@@ -27,7 +27,7 @@ export default class Task {
   }
 }
 
-const taskState = [
+const TaskStates = [
   {value: 0, name: 'Nicht angefangen'},
   {value: 1, name: 'Angefangen'},
   {value: 2, name: 'Abgebrochen'},
