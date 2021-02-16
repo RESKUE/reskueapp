@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import SubtaskListItem from '../../components/listItems/SubtaskListItem';
+import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationListItem';
 import {subtaskData} from '../../../testdata';
 import ListActions from '../../components/ListActions';
 
@@ -71,7 +71,7 @@ export default function TaskCreationScreen({navigation}) {
       <FancyList
         title="Teilaufgaben"
         data={task.subtasks}
-        component={SubtaskListItem}
+        component={SubtaskCreationListItem}
       />
       <Button
         icon="check"
