@@ -7,5 +7,7 @@ export default {
   colors: {
     ...DefaultTheme.colors,
     primary: RESKUE_GREEN,
+    highlightBG: '#02d487',
+    highlightFG: '#ffffff',
   },
 };
