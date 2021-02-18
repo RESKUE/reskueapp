@@ -2,15 +2,18 @@
   "usergroupData": [
     {
       "id": 1,
-      "name": "Berufsfeuerwehr KA"
+      "name": "Berufsfeuerwehr KA",
+      "users": [{"id":1}, {"id":3}, {"id":4}]
     },
     {
       "id": 2,
-      "name": "Freiwillige Feuerwehr KA"
+      "name": "Freiwillige Feuerwehr KA",
+      "users": [{"id":1}, {"id":2}, {"id":5}]
     },
     {
       "id": 3,
-      "name": "THW Landesverband Württemberg"
+      "name": "THW Landesverband Württemberg",
+      "users": []
     }
   ],
   "userData": [
