@@ -7,7 +7,7 @@ import {
   Divider,
   TextInput,
 } from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserEditableListItem from '../../components/listItems/UserEditableListItem';
 import ListActions from '../../components/ListActions';
@@ -20,10 +20,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
     users: [],
   });
   const {requestAllUsers, result: userResult} = useAllUsers();
-
-  React.useEffect(() => {
-    console.log(userResult.source, 'user response received');
-  }, [userResult]);
 
   React.useEffect(() => {
     requestAllUsers();
@@ -57,6 +53,10 @@ export default function UsergroupCreationScreen({navigation, route}) {
     navigation.push('UserSelectionListScreen');
   };
   const finishCreation = () => navigation.goBack();
+
+  if (userResult === null) {
+    return <LoadingIndicator />;
+  }
 
   return (
     <Scaffold>

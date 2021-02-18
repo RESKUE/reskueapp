@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {
-  ActivityIndicator,
   Button,
   Divider,
   IconButton,
@@ -9,7 +8,7 @@ import {
   Paragraph,
   useTheme,
 } from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 import TaskListItem from '../../components/listItems/TaskListItem';
@@ -88,90 +87,86 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
+  if (
+    culturalAsset === null ||
+    childrenAssets === null ||
+    parentAsset === null ||
+    tasks === null
+  ) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <Scaffold>
-      {culturalAsset === null ||
-      childrenAssets === null ||
-      parentAsset === null ||
-      tasks === null ? (
-        <ActivityIndicator animating={true} color={colors.primary} />
-      ) : (
-        <>
-          <Image
-            style={styles.image}
-            source={require('../../assets/MonaLisa.jpg')}
-          />
-          <Title style={styles.title}>{culturalAsset.data.name}</Title>
-          <View style={styles.buttonContainer}>
+      <Image
+        style={styles.image}
+        source={require('../../assets/MonaLisa.jpg')}
+      />
+      <Title style={styles.title}>{culturalAsset.data.name}</Title>
+      <View style={styles.buttonContainer}>
+        <Button
+          color={colors.primary}
+          icon="map-marker"
+          onPress={goMap}
+          style={styles.bold}>
+          Location
+        </Button>
+        <View>
+          {parentAsset.name ? (
             <Button
               color={colors.primary}
-              icon="map-marker"
-              onPress={goMap}
+              icon="apps"
+              onPress={goAssetGroup}
               style={styles.bold}>
-              Location
+              {parentAsset.name}
             </Button>
-            <View>
-              {parentAsset.name ? (
-                <Button
-                  color={colors.primary}
-                  icon="apps"
-                  onPress={goAssetGroup}
-                  style={styles.bold}>
-                  {parentAsset.name}
-                </Button>
-              ) : null}
-            </View>
-          </View>
-          <ListActions>
-            <IconButton
-              color={colors.primary}
-              icon="circle-edit-outline"
-              onPress={goCreation}
-            />
-            <IconButton
-              color={colors.primary}
-              icon="trash-can-outline"
-              onPress={deleteAsset}
-            />
-          </ListActions>
-          <Divider style={styles.divider} />
-          <View style={styles.descriptionContainer}>
-            <Title style={styles.bold}>Beschreibung:</Title>
-            <Paragraph>{culturalAsset.data.description}</Paragraph>
-          </View>
-          <Divider style={styles.divider} />
-          <View>
-            {childrenAssets.length === 0 ? null : (
-              <FancyList
-                title="Teil-Kulturgüter"
-                data={childrenAssets}
-                component={CulturalAssetListItem}
-              />
-            )}
-          </View>
-          <View>
-            <ListActions>
-              <IconButton
-                color={colors.primary}
-                icon="plus-circle-outline"
-                onPress={goTaskCreation}
-              />
-            </ListActions>
-            <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
-          </View>
-
-          <View style={styles.center}>
-            <FloatingWhiteButton
-              onPress={goMedia}
-              content="Weiter zu den Medien"
-            />
-            <FloatingWhiteButton
-              onPress={goComments}
-              content="Weiter zu den Kommentaren"
-            />
-          </View>
-        </>
-      )}
+          ) : null}
+        </View>
+      </View>
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="circle-edit-outline"
+          onPress={goCreation}
+        />
+        <IconButton
+          color={colors.primary}
+          icon="trash-can-outline"
+          onPress={deleteAsset}
+        />
+      </ListActions>
+      <Divider style={styles.divider} />
+      <View style={styles.descriptionContainer}>
+        <Title style={styles.bold}>Beschreibung:</Title>
+        <Paragraph>{culturalAsset.data.description}</Paragraph>
+      </View>
+      <Divider style={styles.divider} />
+      <View>
+        {childrenAssets.length === 0 ? null : (
+          <FancyList
+            title="Teil-Kulturgüter"
+            data={childrenAssets}
+            component={CulturalAssetListItem}
+          />
+        )}
+      </View>
+      <View>
+        <ListActions>
+          <IconButton
+            color={colors.primary}
+            icon="plus-circle-outline"
+            onPress={goTaskCreation}
+          />
+        </ListActions>
+        <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
+      </View>
+      <View style={styles.center}>
+        <FloatingWhiteButton onPress={goMedia} content="Weiter zu den Medien" />
+        <FloatingWhiteButton
+          onPress={goComments}
+          content="Weiter zu den Kommentaren"
+        />
+      </View>
     </Scaffold>
   );
 }

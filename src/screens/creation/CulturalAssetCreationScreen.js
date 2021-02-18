@@ -7,7 +7,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
@@ -114,6 +114,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     console.log(culturalAsset);
     navigation.goBack();
   };
+
+  if (result === null) {
+    return <LoadingIndicator />;
+  }
 
   return (
     <Scaffold>
