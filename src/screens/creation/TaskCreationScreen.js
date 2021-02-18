@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme, IconButton, Button, TextInput} from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationListItem';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
@@ -10,19 +10,6 @@ import Task from '../../models/Task';
 import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function TaskCreationScreen({navigation, route}) {
-  const emptyTask = {
-    name: '',
-    description: '',
-    tags: ['rescue'],
-    comments: [{}],
-    media: [{}],
-    state: 0,
-    numOfHelpersRecommended: 1,
-    subtasks: [],
-    culturalAsset: {},
-    helper: [{}],
-    contact: {},
-  };
   const [task, setTask] = React.useState(new Task(emptyTask));
   const [asset, setAsset] = React.useState([]);
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
@@ -39,7 +26,7 @@ export default function TaskCreationScreen({navigation, route}) {
     if (routeAssetId != null) {
       onChangeAsset(routeAssetId);
     }
-  }, [routeAssetId, onChangeAsset]);
+  }, [routeAssetId, onChangeAsset, result]);
 
   const onChangeName = (name) => {
     const updatedTask = new Task(task.data);
@@ -119,6 +106,10 @@ export default function TaskCreationScreen({navigation, route}) {
     navigation.goBack();
   };
 
+  if (result === null) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <Scaffold>
       <TextInput
@@ -170,6 +161,20 @@ export default function TaskCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
+
+const emptyTask = {
+  name: '',
+  description: '',
+  tags: [],
+  comments: [{}],
+  media: [{}],
+  state: 0,
+  numOfHelpersRecommended: 1,
+  subtasks: [],
+  culturalAsset: {},
+  helper: [{}],
+  contact: {},
+};
 
 const styles = StyleSheet.create({
   dividerStyle: {marginBottom: 24, backgroundColor: 'black'},
