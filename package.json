@@ -8,6 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --max-warnings=0",
+    "coverage": "jest --collect-coverage",
     "format": "prettier --write index.js src/**/*.js",
     "postinstall": "npx husky install"
   },
