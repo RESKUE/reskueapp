@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "eslint --max-warnings=0 index.js 'src/**/*.js'",
     "coverage": "jest --collect-coverage",
     "format": "prettier --write index.js src/**/*.js",
     "postinstall": "npx husky install"
