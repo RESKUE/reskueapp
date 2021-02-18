@@ -38,6 +38,11 @@ export default function TaskCreationScreen({navigation, route}) {
     updatedTask.data.description = description;
     setTask(updatedTask);
   };
+  const onChangeNumOfHelpersRecommended = (numOfHelpersRecommended) => {
+    const updatedTask = new Task(task.data);
+    updatedTask.data.numOfHelpersRecommended = numOfHelpersRecommended;
+    setTask(updatedTask);
+  };
 
   const onChangeAsset = React.useCallback(
     (assetId) => {
@@ -122,6 +127,11 @@ export default function TaskCreationScreen({navigation, route}) {
         value={task.data.description}
         onChangeText={onChangeDescription}
       />
+      <TextInput
+        label="Empfohlene Helferanzahl"
+        value={task.data.numOfHelpersRecommended}
+        onChangeText={onChangeNumOfHelpersRecommended}
+      />
       <ListActions>
         <IconButton
           color={colors.primary}
@@ -169,7 +179,7 @@ const emptyTask = {
   comments: [{}],
   media: [{}],
   state: 0,
-  numOfHelpersRecommended: 1,
+  numOfHelpersRecommended: '1',
   subtasks: [],
   culturalAsset: {},
   helper: [{}],
