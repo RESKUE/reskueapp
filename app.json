@@ -1,4 +1,11 @@
 {
   "name": "reskueapp",
-  "displayName": "reskueapp"
+  "displayName": "reskueapp",
+  "auth": {
+    "issuer": "http://10.0.2.2:5436/auth/realms/reskue",
+    "clientId": "reskue",
+    "redirectUrl": "com.reskueapp:/callback",
+    "scopes": ["openid", "profile", "email", "offline_access"],
+    "dangerouslyAllowInsecureHttpRequests": true
+  }
 }
