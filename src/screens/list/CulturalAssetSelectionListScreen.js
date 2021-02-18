@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetSelectionListItem from '../../components/listItems/CulturalAssetSelectionListItem';
 import ListActions from '../../components/ListActions';
@@ -8,7 +8,7 @@ import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function CulturalAssetSelectionListScreen({navigation, route}) {
   const {colors} = useTheme();
-  const {requestAllAssets, result} = useAllAssets();
+  const {requestAllAssets, result: assetResult} = useAllAssets();
 
   const selectionType = route.params.selectionType;
 
@@ -37,6 +37,10 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
     requestAllAssets();
   }, [requestAllAssets]);
 
+  if (assetResult === null) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <Scaffold>
       <ListActions>
@@ -48,7 +52,7 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
       </ListActions>
       <FancyList
         title={getTitle(selectionType)}
-        data={result?.data}
+        data={assetResult?.data}
         extraData={{callback: getCallback()}}
         component={CulturalAssetSelectionListItem}
       />
