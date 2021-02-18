@@ -3,12 +3,18 @@ import {useTheme, IconButton} from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
-import {usergroupData} from '../../../testdata';
 import ListActions from '../../components/ListActions';
+import useAllUsergroups from '../../handlers/AllUsergroupsHook';
 
 export default function UsergroupListScreen({navigation}) {
-  const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
   const {colors} = useTheme();
+  const {requestAllUsergroups, result: usergroupResult} = useAllUsergroups();
+
+  React.useEffect(() => {
+    requestAllUsergroups();
+  }, [requestAllUsergroups]);
+
+  const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
 
   return (
     <Scaffold>
@@ -21,7 +27,7 @@ export default function UsergroupListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Gruppen"
-        data={usergroupData}
+        data={usergroupResult?.data || []}
         component={UsergroupListItem}
       />
     </Scaffold>
