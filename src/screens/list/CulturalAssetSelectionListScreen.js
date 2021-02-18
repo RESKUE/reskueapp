@@ -12,16 +12,6 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
 
   const selectionType = route.params.selectionType;
 
-  const getTitle = () => {
-    if (selectionType === 'parent') {
-      return 'Obergruppe';
-    } else if (selectionType === 'child') {
-      return 'Teil-Kulturgut';
-    } else {
-      return 'Kulturgut';
-    }
-  };
-
   const getCallback = () => {
     if (selectionType === 'parent') {
       return (id) => {
@@ -57,11 +47,21 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
         />
       </ListActions>
       <FancyList
-        title={getTitle()}
+        title={getTitle(selectionType)}
         data={result?.data}
         extraData={{callback: getCallback()}}
         component={CulturalAssetSelectionListItem}
       />
     </Scaffold>
   );
+}
+
+function getTitle(selectionType) {
+  if (selectionType === 'parent') {
+    return 'Obergruppe';
+  } else if (selectionType === 'child') {
+    return 'Teil-Kulturgut';
+  } else {
+    return 'Kulturgut';
+  }
 }

@@ -13,8 +13,12 @@ export default class Subtask {
     return 'Fehler';
   }
 
+  isIncomplete() {
+    return this.data.state === 0;
+  }
+  
   isNeededToComplete() {
-    return this.data.isRequired && this.data.state === 0;
+    return this.data.isRequired && this.isIncomplete();
   }
 }
 
