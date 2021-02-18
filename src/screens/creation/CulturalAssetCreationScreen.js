@@ -25,7 +25,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   const [childrenAssets, setChildrenAssets] = React.useState([]);
 
   const {colors} = useTheme();
-  const {requestAllAssets, result} = useAllAssets();
+  const {requestAllAssets, result: assetResult} = useAllAssets();
 
   React.useEffect(() => {
     requestAllAssets();
@@ -64,10 +64,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     (parentId) => {
       const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
       updatedCulturalAsset.data.parent = {id: parentId};
-      setParentAsset([result.data.find((asset) => asset.id === parentId)]);
+      setParentAsset([assetResult.data.find((asset) => asset.id === parentId)]);
       setCulturalAsset(updatedCulturalAsset);
     },
-    [result, culturalAsset.data],
+    [assetResult, culturalAsset.data],
   );
   const addChild = React.useCallback(
     (childId) => {
@@ -79,12 +79,12 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       updatedCulturalAsset.data.children.push({id: childId});
       const updatedChildrenAssets = childrenAssets;
       updatedChildrenAssets.push(
-        result.data.find((asset) => asset.id === childId),
+        assetResult.data.find((asset) => asset.id === childId),
       );
       setChildrenAssets(updatedChildrenAssets);
       setCulturalAsset(updatedCulturalAsset);
     },
-    [result, culturalAsset.data, childrenAssets],
+    [assetResult, culturalAsset.data, childrenAssets],
   );
   const onChangePeculiarity = (peculiarity) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -115,7 +115,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     navigation.goBack();
   };
 
-  if (result === null) {
+  if (assetResult === null) {
     return <LoadingIndicator />;
   }
 

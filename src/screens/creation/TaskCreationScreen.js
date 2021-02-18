@@ -15,7 +15,7 @@ export default function TaskCreationScreen({navigation, route}) {
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
   const {colors} = useTheme();
-  const {requestAllAssets, result} = useAllAssets();
+  const {requestAllAssets, result: assetResult} = useAllAssets();
 
   React.useEffect(() => {
     requestAllAssets();
@@ -26,7 +26,7 @@ export default function TaskCreationScreen({navigation, route}) {
     if (routeAssetId != null) {
       onChangeAsset(routeAssetId);
     }
-  }, [routeAssetId, onChangeAsset, result]);
+  }, [routeAssetId, onChangeAsset, assetResult]);
 
   const onChangeName = (name) => {
     const updatedTask = new Task(task.data);
@@ -48,14 +48,16 @@ export default function TaskCreationScreen({navigation, route}) {
     (assetId) => {
       const updatedTask = new Task(task.data);
       updatedTask.data.culturalAsset = {id: assetId};
-      if (result) {
+      if (assetResult) {
         setAsset([
-          result.data.find((culturalAsset) => culturalAsset.id === assetId),
+          assetResult.data.find(
+            (culturalAsset) => culturalAsset.id === assetId,
+          ),
         ]);
       }
       setTask(updatedTask);
     },
-    [result, task.data],
+    [assetResult, task.data],
   );
 
   const addSubtask = () => {
@@ -111,7 +113,7 @@ export default function TaskCreationScreen({navigation, route}) {
     navigation.goBack();
   };
 
-  if (result === null) {
+  if (assetResult === null) {
     return <LoadingIndicator />;
   }
 
