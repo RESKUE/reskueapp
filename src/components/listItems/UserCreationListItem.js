@@ -1,7 +1,7 @@
 import React from 'react';
 import {useTheme, IconButton, List} from 'react-native-paper';
 
-export default function UserEditableListItem({data, extraData}) {
+export default function UserCreationListItem({data, extraData}) {
   const {colors} = useTheme();
 
   function removeUser() {

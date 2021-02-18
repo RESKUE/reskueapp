@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import UserEditableListItem from '../../components/listItems/UserEditableListItem';
+import UserCreationListItem from '../../components/listItems/UserCreationListItem';
 import ListActions from '../../components/ListActions';
 import useAllUsers from '../../handlers/AllUsersHook';
 
@@ -87,7 +87,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         title="Mitglieder"
         data={usergroup.users}
         extraData={{removeCallback: removeUser}}
-        component={UserEditableListItem}
+        component={UserCreationListItem}
       />
       <Button
         icon="check"
