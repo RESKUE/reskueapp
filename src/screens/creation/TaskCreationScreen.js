@@ -29,29 +29,60 @@ export default function TaskCreationScreen({navigation}) {
     contact: {},
   };
   const [task, setTask] = React.useState(new Task(emptyTask));
+  //const [asset, setAsset] = React.useState([]);
+  const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
   const onChangeName = (name) => {
-    const updatedTask = task;
+    const updatedTask = new Task(task.data);
     updatedTask.data.name = name;
     setTask(updatedTask);
   };
   const onChangeDescription = (description) => {
-    const updatedTask = task;
+    const updatedTask = new Task(task.data);
     updatedTask.data.description = description;
     setTask(updatedTask);
   };
 
   const addSubtask = () => {
     const emptySubtask = {
+      id: subtaskIdCounter,
       state: 0,
       text: '',
-      isRequired: false,
+      isRequired: true,
     };
     const updatedTask = new Task(task.data);
     updatedTask.data.subtasks.push(emptySubtask);
+    setSubtaskIdCounter(subtaskIdCounter + 1);
     setTask(updatedTask);
-    console.log(task.data.subtasks);
-    console.log(updatedTask.data.subtasks);
+  };
+
+  const onChangeSubtaskText = (subtaskId, text) => {
+    const updatedTask = new Task(task.data);
+    const index = updatedTask.data.subtasks.findIndex(
+      (subtask) => subtask.id === subtaskId,
+    );
+    updatedTask.data.subtasks[index].text = text;
+    setTask(updatedTask);
+  };
+
+  const onChangeSubtaskIsRequired = (subtaskId, isRequired) => {
+    const updatedTask = new Task(task.data);
+    const index = updatedTask.data.subtasks.findIndex(
+      (subtask) => subtask.id === subtaskId,
+    );
+    updatedTask.data.subtasks[index].isRequired = isRequired;
+    setTask(updatedTask);
+  };
+
+  const removeSubtask = (subtaskId) => {
+    const updatedTask = new Task(task.data);
+    updatedTask.data.subtasks.splice(
+      updatedTask.data.subtasks.findIndex(
+        (subtask) => subtask.id === subtaskId,
+      ),
+      1,
+    );
+    setTask(updatedTask);
   };
 
   const finishCreation = () => {
@@ -82,6 +113,11 @@ export default function TaskCreationScreen({navigation}) {
       <FancyList
         title="Teilaufgaben"
         data={task.data.subtasks}
+        extraData={{
+          removeCallback: removeSubtask,
+          changeTextCallback: onChangeSubtaskText,
+          changeIsRequiredCallback: onChangeSubtaskIsRequired,
+        }}
         component={SubtaskCreationListItem}
       />
       <Button

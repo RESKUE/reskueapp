@@ -1,48 +1,68 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useTheme, IconButton, List, Text} from 'react-native-paper';
+import {
+  useTheme,
+  Checkbox,
+  IconButton,
+  Text,
+  TextInput,
+} from 'react-native-paper';
 
-export default function SubtaskCreationListItem({data}) {
+export default function SubtaskCreationListItem({data, extraData}) {
   const {colors} = useTheme();
-  function markOptional() {
-    console.log('Mark optional', data.id);
+
+  function setIsRequired(state) {
+    extraData.changeIsRequiredCallback(data.id, state);
+  }
+  function onChangeText(updatedText) {
+    extraData.changeTextCallback(data.id, updatedText);
   }
   function deleteSubtask() {
-    console.log('Delete subtask', data.id);
+    extraData.removeCallback(data.id);
   }
 
   return (
-    <List.Item
-      key={data.id}
-      title={data.text}
-      description={data.description}
-      left={(props) => (
-        <View style={styles.column}>
-          <IconButton
-            icon="checkbox-blank-outline"
-            color={colors.primary}
-            onPress={markOptional}
-          />
-          <Text style={styles.optionalText}>optional</Text>
-        </View>
-      )}
-      right={(props) => (
-        <IconButton
-          icon="close"
+    <View style={styles.row}>
+      <View style={styles.column}>
+        <Checkbox
           color={colors.primary}
-          onPress={deleteSubtask}
+          uncheckedColor={colors.primary}
+          status={data.isRequired ? 'unchecked' : 'checked'}
+          onPress={() => setIsRequired(!data.isRequired)}
         />
-      )}
-    />
+        <Text style={styles.optionalText}>optional</Text>
+      </View>
+      <TextInput
+        label="Name"
+        value={data.text}
+        onChangeText={(text) => onChangeText(text)}
+        style={styles.textInput}
+        mode="outlined"
+      />
+      <IconButton icon="close" color={colors.primary} onPress={deleteSubtask} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 3,
+  },
   column: {
     flexDirection: 'column',
     marginVertical: -8,
+    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optionalText: {marginTop: -12, color: '#aaaaaa'},
+  textInput: {
+    alignSelf: 'stretch',
+    flex: 4,
+    marginLeft: 5,
+    height: 45,
+    fontSize: 14,
+  },
 });
