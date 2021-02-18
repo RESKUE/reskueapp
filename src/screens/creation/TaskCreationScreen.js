@@ -10,12 +10,12 @@ import {
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationListItem';
-import {subtaskData} from '../../../testdata';
 import ListActions from '../../components/ListActions';
+import Task from '../../models/Task';
 
 export default function TaskCreationScreen({navigation}) {
   const {colors} = useTheme();
-  const [task, setTask] = React.useState({
+  const emptyTask = {
     name: '',
     description: '',
     tags: ['rescue'],
@@ -23,36 +23,52 @@ export default function TaskCreationScreen({navigation}) {
     media: [{}],
     state: 0,
     numOfHelpersRecommended: 2,
-    subtasks: subtaskData,
+    subtasks: [],
     culturalAsset: {id: 1},
     helper: [{}],
     contact: {},
-  });
+  };
+  const [task, setTask] = React.useState(new Task(emptyTask));
 
   const onChangeName = (name) => {
-    const updatedTask = {task};
-    updatedTask.name = name;
-    updatedTask.subtasks = task.subtasks;
+    const updatedTask = task;
+    updatedTask.data.name = name;
     setTask(updatedTask);
   };
   const onChangeDescription = (description) => {
-    const updatedTask = {task};
-    updatedTask.description = description;
-    updatedTask.subtasks = task.subtasks;
+    const updatedTask = task;
+    updatedTask.data.description = description;
     setTask(updatedTask);
   };
 
-  const addSubtask = () => console.log('Added subtask');
-  const removeSubtask = () => console.log('Removed subtask');
+  const addSubtask = () => {
+    const emptySubtask = {
+      state: 0,
+      text: '',
+      isRequired: false,
+    };
+    const updatedTask = new Task(task.data);
+    updatedTask.data.subtasks.push(emptySubtask);
+    setTask(updatedTask);
+    console.log(task.data.subtasks);
+    console.log(updatedTask.data.subtasks);
+  };
 
-  const finishCreation = () => navigation.goBack();
+  const finishCreation = () => {
+    console.log(task);
+    navigation.goBack();
+  };
 
   return (
     <Scaffold>
-      <TextInput label="Name" value={task.name} onChangeText={onChangeName} />
+      <TextInput
+        label="Name"
+        value={task.data.name}
+        onChangeText={onChangeName}
+      />
       <TextInput
         label="Beschreibung"
-        value={task.description}
+        value={task.data.description}
         onChangeParent={onChangeDescription}
       />
       <ListActions>
@@ -61,16 +77,11 @@ export default function TaskCreationScreen({navigation}) {
           icon="plus-circle-outline"
           onPress={addSubtask}
         />
-        <IconButton
-          color={colors.primary}
-          icon="trash-can-outline"
-          onPress={removeSubtask}
-        />
       </ListActions>
       <Divider style={styles.dividerStyle} />
       <FancyList
         title="Teilaufgaben"
-        data={task.subtasks}
+        data={task.data.subtasks}
         component={SubtaskCreationListItem}
       />
       <Button
