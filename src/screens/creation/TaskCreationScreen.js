@@ -1,20 +1,15 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {
-  useTheme,
-  IconButton,
-  Button,
-  Divider,
-  TextInput,
-} from 'react-native-paper';
+import {useTheme, IconButton, Button, TextInput} from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationListItem';
+import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import Task from '../../models/Task';
+import useAllAssets from '../../handlers/AllAssetsHook';
 
-export default function TaskCreationScreen({navigation}) {
-  const {colors} = useTheme();
+export default function TaskCreationScreen({navigation, route}) {
   const emptyTask = {
     name: '',
     description: '',
@@ -24,13 +19,27 @@ export default function TaskCreationScreen({navigation}) {
     state: 0,
     numOfHelpersRecommended: 2,
     subtasks: [],
-    culturalAsset: {id: 1},
+    culturalAsset: {},
     helper: [{}],
     contact: {},
   };
   const [task, setTask] = React.useState(new Task(emptyTask));
-  //const [asset, setAsset] = React.useState([]);
+  const [asset, setAsset] = React.useState([]);
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
+
+  const {colors} = useTheme();
+  const {requestAllAssets, result} = useAllAssets();
+
+  React.useEffect(() => {
+    requestAllAssets();
+  }, [requestAllAssets]);
+
+  const routeAssetId = route.params?.assetId;
+  React.useEffect(() => {
+    if (routeAssetId != null) {
+      onChangeAsset(routeAssetId);
+    }
+  }, [routeAssetId, onChangeAsset]);
 
   const onChangeName = (name) => {
     const updatedTask = new Task(task.data);
@@ -42,6 +51,18 @@ export default function TaskCreationScreen({navigation}) {
     updatedTask.data.description = description;
     setTask(updatedTask);
   };
+
+  const onChangeAsset = React.useCallback(
+    (assetId) => {
+      const updatedTask = new Task(task.data);
+      updatedTask.data.culturalAsset = {id: assetId};
+      setAsset([
+        result.data.find((culturalAsset) => culturalAsset.id === assetId),
+      ]);
+      setTask(updatedTask);
+    },
+    [result, task.data],
+  );
 
   const addSubtask = () => {
     const emptySubtask = {
@@ -85,6 +106,12 @@ export default function TaskCreationScreen({navigation}) {
     setTask(updatedTask);
   };
 
+  const goAssetSelection = () => {
+    navigation.push('CulturalAssetSelectionListScreen', {
+      selectionType: 'task',
+    });
+  };
+
   const finishCreation = () => {
     console.log(task);
     navigation.goBack();
@@ -106,10 +133,21 @@ export default function TaskCreationScreen({navigation}) {
         <IconButton
           color={colors.primary}
           icon="plus-circle-outline"
+          onPress={goAssetSelection}
+        />
+      </ListActions>
+      <FancyList
+        title="Kulturgut"
+        data={asset}
+        component={CulturalAssetUnpressableListItem}
+      />
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="plus-circle-outline"
           onPress={addSubtask}
         />
       </ListActions>
-      <Divider style={styles.dividerStyle} />
       <FancyList
         title="Teilaufgaben"
         data={task.data.subtasks}

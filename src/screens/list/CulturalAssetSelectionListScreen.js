@@ -36,8 +36,10 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
         });
       };
     } else {
-      return () => {
-        navigation.back();
+      return (id) => {
+        navigation.navigate('TaskCreationScreen', {
+          assetId: id,
+        });
       };
     }
   };
