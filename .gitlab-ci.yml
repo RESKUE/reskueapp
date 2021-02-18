@@ -30,7 +30,22 @@ before_script:
   - npm install
 
 stages:
+  - test
   - build
+
+lint:
+  stage: test
+  tags:
+    - ILT
+  script:
+    - npm run lint
+
+test:
+  stage: test
+  tags:
+    - ILT
+  script:
+    - npm run test
 
 assembleDebug:
   stage: build
