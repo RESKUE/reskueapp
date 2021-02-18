@@ -17,7 +17,7 @@ export default function TaskCreationScreen({navigation, route}) {
     comments: [{}],
     media: [{}],
     state: 0,
-    numOfHelpersRecommended: 2,
+    numOfHelpersRecommended: 1,
     subtasks: [],
     culturalAsset: {},
     helper: [{}],
@@ -56,9 +56,11 @@ export default function TaskCreationScreen({navigation, route}) {
     (assetId) => {
       const updatedTask = new Task(task.data);
       updatedTask.data.culturalAsset = {id: assetId};
-      setAsset([
-        result.data.find((culturalAsset) => culturalAsset.id === assetId),
-      ]);
+      if (result) {
+        setAsset([
+          result.data.find((culturalAsset) => culturalAsset.id === assetId),
+        ]);
+      }
       setTask(updatedTask);
     },
     [result, task.data],
@@ -127,7 +129,7 @@ export default function TaskCreationScreen({navigation, route}) {
       <TextInput
         label="Beschreibung"
         value={task.data.description}
-        onChangeParent={onChangeDescription}
+        onChangeText={onChangeDescription}
       />
       <ListActions>
         <IconButton

@@ -81,6 +81,10 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
   const deleteAsset = () => console.log('Deleted Asset');
   const goCreation = () => console.log('Edited Asset');
+  const goTaskCreation = () =>
+    navigation.push('TaskCreationScreen', {
+      assetId: culturalAsset.data.id,
+    });
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
@@ -146,13 +150,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
             )}
           </View>
           <View>
-            {tasks.length === 0 ? null : (
-              <FancyList
-                title="Aufgaben"
-                data={tasks}
-                component={TaskListItem}
+            <ListActions>
+              <IconButton
+                color={colors.primary}
+                icon="plus-circle-outline"
+                onPress={goTaskCreation}
               />
-            )}
+            </ListActions>
+            <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
           </View>
 
           <View style={styles.center}>
