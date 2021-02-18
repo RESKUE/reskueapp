@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {useTheme, IconButton, Button, Divider, Title} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import UserListItem from '../../components/listItems/UserListItem';
+import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import useAllUsers from '../../handlers/AllUsersHook';
 import useAllUsergroups from '../../handlers/AllUsergroupsHook';
@@ -67,7 +67,11 @@ export default function UsergroupDetailScreen({navigation, route}) {
         />
       </ListActions>
       <Divider style={styles.dividerStyle} />
-      <FancyList title="Mitglieder" data={users} component={UserListItem} />
+      <FancyList
+        title="Mitglieder"
+        data={users}
+        component={UserUnpressableListItem}
+      />
       <Button
         icon="check"
         mode="contained"
