@@ -16,7 +16,7 @@ export default class Subtask {
   isIncomplete() {
     return this.data.state === 0;
   }
-  
+
   isNeededToComplete() {
     return this.data.isRequired && this.isIncomplete();
   }
