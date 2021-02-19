@@ -49,15 +49,13 @@ export default function UsergroupCreationScreen({navigation, route}) {
     [userResult, usergroup],
   );
 
-  const removeUser = (userId) => {
-    const updatedUserList = [...usergroup.users];
-    updatedUserList.splice(
-      updatedUserList.findIndex((user) => user.id === userId),
-      1,
+  function removeUser(userId) {
+    const updatedUserList = usergroup.users.filter(
+      (user) => user.id !== userId,
     );
     const updatedUsergroup = {name: usergroup.name, users: updatedUserList};
     setUserGroup(updatedUsergroup);
-  };
+  }
 
   const goUserSelection = () => {
     navigation.push('UserSelectionListScreen');
