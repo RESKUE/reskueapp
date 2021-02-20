@@ -118,7 +118,7 @@ export default function CulturalAssetListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Kulturgüter"
-        data={result?.data || []}
+        data={result?.data?.content || []}
         component={CulturalAssetListItem}
       />
     </Scaffold>
