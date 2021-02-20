@@ -1,11 +1,37 @@
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
-import {Button} from 'react-native-paper';
+import {
+  Surface,
+  TextInput,
+  Button,
+  useTheme,
+  Snackbar,
+} from 'react-native-paper';
 import {AuthContext} from '@ilt-pse/react-native-kueres';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default function LoginScreen() {
+  const {colors} = useTheme();
   const {authService} = React.useContext(AuthContext);
+  const [username, setUsername] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const [snackbar, setSnackbar] = React.useState(false);
+
+  function showSnackbar() {
+    setSnackbar(true);
+  }
+
+  function hideSnackbar() {
+    setSnackbar(false);
+  }
+
+  function login() {
+    authService.login(username, password).then((success) => {
+      if (!success) {
+        showSnackbar();
+      }
+    });
+  }
 
   return (
     <View>
@@ -18,22 +44,57 @@ export default function LoginScreen() {
       </View>
       <LinearGradient colors={['#00a569', '#18895e']} style={styles.footer} />
       <View style={styles.center}>
-        <Button
-          style={styles.button}
-          labelStyle={styles.buttonLabel}
-          contentStyle={styles.buttonContent}
-          mode="contained"
-          onPress={() => authService.login()}>
-          Anmelden
-        </Button>
+        <Surface style={styles.surface}>
+          <TextInput
+            style={styles.element}
+            mode="outlined"
+            dense={true}
+            value={username}
+            onChangeText={setUsername}
+            autoCompleteType="username"
+            label="Benutzername"
+          />
+          <TextInput
+            style={styles.element}
+            mode="outlined"
+            dense={true}
+            value={password}
+            onChangeText={setPassword}
+            autoCompleteType="password"
+            secureTextEntry={true}
+            label="Passwort"
+          />
+          <Button
+            style={styles.element}
+            color={colors.primary}
+            mode="contained"
+            onPress={login}>
+            Anmelden
+          </Button>
+        </Surface>
       </View>
+      <Snackbar
+        visible={snackbar}
+        onDismiss={hideSnackbar}
+        action={{label: 'Okay', onPress: hideSnackbar}}>
+        Anmeldung fehlgeschlagen
+      </Snackbar>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {height: '50%', justifyContent: 'center', alignItems: 'center'},
-  footer: {height: '50%'},
+  logo: {
+    width: '70%',
+  },
+  header: {
+    height: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footer: {
+    height: '50%',
+  },
   center: {
     position: 'absolute',
     top: 0,
@@ -41,10 +102,14 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  button: {width: '60%'},
-  buttonLabel: {fontSize: 16},
-  buttonContent: {height: 50, backgroundColor: '#2ed296'},
-  logo: {width: '70%'},
+  surface: {
+    borderRadius: 8,
+    elevation: 4,
+    margin: 32,
+    padding: 6,
+  },
+  element: {
+    margin: 6,
+  },
 });
