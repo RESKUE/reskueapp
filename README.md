@@ -16,14 +16,10 @@ One needs to [authenticate with our private Package Registry](https://docs.gitla
 - `npm config set @ilt-pse:registry https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2563/packages/npm/`
 - `npm config set '//gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2563/packages/npm/:_authToken' "<your_access_token>"`
 
-### The actual project
+### Project dependencies
 
 1. Clone the repository
 2. Run `npm i` inside the `reskueapp` folder
-
-### OpenID/OAuth2 with Keycloak
-
-Configure `com.reskueapp:/callback` as `Valid Redirect URI` in Keycloak under `Clients > Reskue > Settings > Valid Redirect URIs`.
 
 ## Development
 

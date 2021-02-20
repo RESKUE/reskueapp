@@ -97,7 +97,7 @@ export default function CulturalAssetListScreen({navigation}) {
           color={colors.primary}
           icon="security"
           onPress={async () =>
-            console.log('ID TOKEN:', await authService.getIdToken())
+            console.log('ACCESS TOKEN:', await authService.getAccessToken())
           }
         />
         <IconButton
