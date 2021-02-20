@@ -5,7 +5,6 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.brentvatne.react.ReactVideoPackage;
-import com.rnappauth.RNAppAuthPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;

@@ -14,8 +14,6 @@ target 'reskueapp' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
-  pod 'react-native-app-auth', :path => '../node_modules/react-native-app-auth'
-
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
   target 'reskueappTests' do
