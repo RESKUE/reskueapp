@@ -2,12 +2,12 @@
   "name": "reskueapp",
   "displayName": "reskueapp",
   "auth": {
-    "tokenEndpoint": "http://10.0.2.2:8000/auth/realms/reskue/protocol/openid-connect/token",
-    "endSessionEndpoint": "http://10.0.2.2:8000/auth/realms/reskue/protocol/openid-connect/logout",
+    "tokenEndpoint": "http://10.0.2.2:5436/auth/realms/reskue/protocol/openid-connect/token",
+    "endSessionEndpoint": "http://10.0.2.2:5436/auth/realms/reskue/protocol/openid-connect/logout",
     "scope": "openid profile email offline_access",
     "clientId": "reskue"
   },
   "rest": {
-    "baseUrl": "http://10.0.2.2:8000/api"
+    "baseUrl": "http://10.0.2.2:8080/api"
   }
 }
