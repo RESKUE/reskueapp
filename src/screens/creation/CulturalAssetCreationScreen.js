@@ -61,7 +61,9 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     (parentId) => {
       const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
       updatedCulturalAsset.data.parent = {id: parentId};
-      setParentAsset([assetResult.data.find((asset) => asset.id === parentId)]);
+      setParentAsset([
+        assetResult.data.content.find((asset) => asset.id === parentId),
+      ]);
       setCulturalAsset(updatedCulturalAsset);
     },
     [assetResult, culturalAsset.data],
@@ -76,7 +78,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       updatedCulturalAsset.data.children.push({id: childId});
       const updatedChildrenAssets = childrenAssets;
       updatedChildrenAssets.push(
-        assetResult.data.find((asset) => asset.id === childId),
+        assetResult.data.content.find((asset) => asset.id === childId),
       );
       setChildrenAssets(updatedChildrenAssets);
       setCulturalAsset(updatedCulturalAsset);

@@ -52,7 +52,7 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
       </ListActions>
       <FancyList
         title={getTitle(selectionType)}
-        data={assetResult?.data}
+        data={assetResult?.data?.content}
         extraData={{callback: getCallback()}}
         component={CulturalAssetSelectionListItem}
       />
