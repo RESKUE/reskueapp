@@ -5,7 +5,7 @@ import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
-import useAllUsers from '../../handlers/AllUsersHook';
+import useUsers from '../../handlers/UsersHook';
 import useAllUsergroups from '../../handlers/AllUsergroupsHook';
 
 export default function UsergroupDetailScreen({navigation, route}) {
@@ -13,11 +13,11 @@ export default function UsergroupDetailScreen({navigation, route}) {
   const [usergroup, setUserGroup] = React.useState(null);
   const [users, setUsers] = React.useState(null);
   const {requestAllUsergroups, result: usergroupResult} = useAllUsergroups();
-  const {requestAllUsers, result: userResult} = useAllUsers();
+  const {requestUsers, result: userResult} = useUsers();
 
   React.useEffect(() => {
-    requestAllUsers();
-  }, [requestAllUsers]);
+    requestUsers();
+  }, [requestUsers]);
 
   React.useEffect(() => {
     requestAllUsergroups();

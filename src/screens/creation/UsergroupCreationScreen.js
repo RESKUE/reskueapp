@@ -11,7 +11,7 @@ import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserCreationListItem from '../../components/listItems/UserCreationListItem';
 import ListActions from '../../components/ListActions';
-import useAllUsers from '../../handlers/AllUsersHook';
+import useUsers from '../../handlers/UsersHook';
 
 export default function UsergroupCreationScreen({navigation, route}) {
   const {colors} = useTheme();
@@ -19,11 +19,11 @@ export default function UsergroupCreationScreen({navigation, route}) {
     name: '',
     users: [],
   });
-  const {requestAllUsers, result: userResult} = useAllUsers();
+  const {requestUsers, result: userResult} = useUsers();
 
   React.useEffect(() => {
-    requestAllUsers();
-  }, [requestAllUsers]);
+    requestUsers();
+  }, [requestUsers]);
 
   const routeUserId = route.params?.userId;
   React.useEffect(() => {
