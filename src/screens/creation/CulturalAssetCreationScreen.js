@@ -12,14 +12,11 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
-import {culturalAssetData} from '../../../testdata';
 import useAllAssets from '../../handlers/AllAssetsHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
-  const testData = culturalAssetData.find((asset) => asset.id === -1);
-
   const [culturalAsset, setCulturalAsset] = React.useState(
-    new CulturalAsset(testData),
+    new CulturalAsset(emptyCulturalAsset),
   );
   const [parentAsset, setParentAsset] = React.useState([]);
   const [childrenAssets, setChildrenAssets] = React.useState([]);
@@ -195,6 +192,22 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
+
+const emptyCulturalAsset = {
+  id: -1,
+  name: '',
+  description: '',
+  tags: ['p0'],
+  comments: [{}],
+  media: [{}],
+  label: '',
+  longitude: 0.0,
+  latitude: 0.0,
+  level: 0,
+  parent: {},
+  children: [],
+  tasks: [{}],
+};
 
 const styles = StyleSheet.create({
   inputSpacing: {marginBottom: 24},

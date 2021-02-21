@@ -14,42 +14,48 @@ import CulturalAssetListItem from '../../components/listItems/CulturalAssetListI
 import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
-import CulturalAsset from '../../models/CulturalAsset';
-import useAllAssets from '../../handlers/AllAssetsHook';
+import useAsset from '../../handlers/IdAssetHook';
+import useAllAssetChildren from '../../handlers/AllAssetChildrenHook';
 import useAllTasks from '../../handlers/AllTasksHook';
+import CulturalAsset from '../../models/CulturalAsset';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
   const [culturalAsset, setCulturalAsset] = React.useState(null);
   const [parentAsset, setParentAsset] = React.useState(null);
   const [childrenAssets, setChildrenAssets] = React.useState(null);
-  const [tasks, setTasks] = React.useState(null);
+  const [tasks, setTasks] = React.useState([]);
 
   const {colors} = useTheme();
-  const {requestAllAssets, result: assetResult} = useAllAssets();
+  const {requestAsset, result: assetResult} = useAsset(route.params.id);
+  const {
+    requestAllAssetChildren,
+    result: assetChildrenResult,
+  } = useAllAssetChildren(route.params.id);
   const {requestAllTasks, result: taskResult} = useAllTasks();
 
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    requestAsset();
+  }, [requestAsset]);
+
+  React.useEffect(() => {
+    requestAllAssetChildren();
+  }, [requestAllAssetChildren]);
 
   React.useEffect(() => {
     requestAllTasks();
   }, [requestAllTasks]);
 
-  const routeAssetId = route.params.id;
+  //Set this CulturalAsset from requested id data
   React.useEffect(() => {
     if (assetResult) {
-      setCulturalAsset(
-        new CulturalAsset(
-          assetResult?.data.find((asset) => asset.id === routeAssetId),
-        ),
-      );
+      setCulturalAsset(new CulturalAsset(assetResult.data));
     }
-  }, [assetResult, routeAssetId]);
+  }, [assetResult]);
 
+  //Set tasks of this CulturalAsset
   React.useEffect(() => {
     if (taskResult && culturalAsset) {
-      const taskIds = culturalAsset.data.tasks.map((task) => task.id);
+      const taskIds = culturalAsset.data.tasks?.map((task) => task.id);
       const foundTasks = taskResult?.data.filter((task) =>
         taskIds.includes(task.id),
       );
@@ -57,23 +63,22 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [culturalAsset, taskResult]);
 
+  //Set parent and children of this CulturalAsset
   React.useEffect(() => {
-    if (assetResult && culturalAsset) {
-      const parentId = culturalAsset.data.parent.id;
+    if (assetChildrenResult && culturalAsset) {
+      const parentId = culturalAsset.data.parent?.id;
       if (parentId != null) {
-        const parent = assetResult?.data.find((asset) => asset.id === parentId);
-        setParentAsset(parent);
+        setParentAsset(culturalAsset.data.parent);
       } else {
         setParentAsset({});
       }
-
-      const childrenIds = culturalAsset.data.children.map((child) => child.id);
-      const children = assetResult?.data.filter((asset) =>
-        childrenIds.includes(asset.id),
-      );
-      setChildrenAssets(children);
+      if (assetChildrenResult) {
+        setChildrenAssets(assetChildrenResult.data);
+      } else {
+        setChildrenAssets([]);
+      }
     }
-  }, [culturalAsset, assetResult]);
+  }, [culturalAsset, assetChildrenResult]);
 
   const goMap = () => navigation.push('CulturalAssetMapScreen');
   const goAssetGroup = () =>
