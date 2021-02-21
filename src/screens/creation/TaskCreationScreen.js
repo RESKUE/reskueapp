@@ -7,7 +7,7 @@ import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationL
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import Task from '../../models/Task';
-import useAllAssets from '../../handlers/AllAssetsHook';
+import useAssets from '../../handlers/AssetsHook';
 
 export default function TaskCreationScreen({navigation, route}) {
   const [task, setTask] = React.useState(new Task(emptyTask));
@@ -15,11 +15,11 @@ export default function TaskCreationScreen({navigation, route}) {
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
   const {colors} = useTheme();
-  const {requestAllAssets, result: assetResult} = useAllAssets();
+  const {requestAssets, result: assetResult} = useAssets();
 
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    requestAssets();
+  }, [requestAssets]);
 
   const routeAssetId = route.params?.assetId;
   React.useEffect(() => {

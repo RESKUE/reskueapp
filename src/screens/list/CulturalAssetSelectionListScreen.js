@@ -4,11 +4,11 @@ import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetSelectionListItem from '../../components/listItems/CulturalAssetSelectionListItem';
 import ListActions from '../../components/ListActions';
-import useAllAssets from '../../handlers/AllAssetsHook';
+import useAssets from '../../handlers/AssetsHook';
 
 export default function CulturalAssetSelectionListScreen({navigation, route}) {
   const {colors} = useTheme();
-  const {requestAllAssets, result: assetResult} = useAllAssets();
+  const {requestAssets, result: assetResult} = useAssets();
 
   const selectionType = route.params.selectionType;
 
@@ -34,8 +34,8 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
     }
   };
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    requestAssets();
+  }, [requestAssets]);
 
   if (assetResult === null) {
     return <LoadingIndicator />;
@@ -47,7 +47,7 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
         <IconButton
           color={colors.primary}
           icon="reload"
-          onPress={() => requestAllAssets()}
+          onPress={() => requestAssets()}
         />
       </ListActions>
       <FancyList

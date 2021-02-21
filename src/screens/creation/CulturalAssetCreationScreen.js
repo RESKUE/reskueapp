@@ -12,7 +12,7 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
-import useAllAssets from '../../handlers/AllAssetsHook';
+import useAssets from '../../handlers/AssetsHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
   const [culturalAsset, setCulturalAsset] = React.useState(
@@ -22,11 +22,11 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   const [childrenAssets, setChildrenAssets] = React.useState([]);
 
   const {colors} = useTheme();
-  const {requestAllAssets, result: assetResult} = useAllAssets();
+  const {requestAssets, result: assetResult} = useAssets();
 
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    requestAssets();
+  }, [requestAssets]);
 
   const routeParentId = route.params?.parentId;
   React.useEffect(() => {

@@ -3,7 +3,7 @@ import {useTheme, IconButton} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 import ListActions from '../../components/ListActions';
-import useAllAssets from '../../handlers/AllAssetsHook';
+import useAssets from '../../handlers/AssetsHook';
 import {Priorities} from '../../models/CulturalAsset';
 import {
   FancyList,
@@ -25,8 +25,8 @@ export default function CulturalAssetListScreen({navigation}) {
   const {result, setQuery, requestAllAssets} = useAllAssets();
 
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    requestAssets();
+  }, [requestAssets]);
 
   return (
     <Scaffold>
@@ -83,7 +83,7 @@ export default function CulturalAssetListScreen({navigation}) {
         <IconButton
           color={colors.primary}
           icon="reload"
-          onPress={() => requestAllAssets()}
+          onPress={() => requestAssets()}
         />
         <IconButton
           color={colors.primary}
