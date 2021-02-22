@@ -15,18 +15,14 @@ import {
   RadioFilteringOption,
   SliderFilteringOption,
   ChipFilteringOption,
+  SearchProvider,
 } from '@ilt-pse/react-native-kueres';
 
 export default function CulturalAssetListScreen({navigation}) {
   const goAssetCreation = () => navigation.push('CulturalAssetCreationScreen');
   const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
-  const {
-    result,
-    requestAllAssets,
-    updateFilters,
-    updateSorters,
-  } = useAllAssets();
+  const {result, setQuery, requestAllAssets} = useAllAssets();
 
   React.useEffect(() => {
     requestAllAssets();
@@ -34,55 +30,42 @@ export default function CulturalAssetListScreen({navigation}) {
 
   return (
     <Scaffold>
-      <SearchBar field="name" operation="~" updateFilters={updateFilters}>
-        <FilteringButton>
-          <RadioFilteringOption
-            updateFilters={updateFilters}
-            field="endangered"
-            operation="="
-            options={[
-              {name: 'Egal', value: null},
-              {name: 'Ja', value: 0},
-              {name: 'Nein', value: 1},
-            ]}
-            label="In Gefahr"
-          />
-          <SliderFilteringOption
-            updateFilters={updateFilters}
-            field="distance"
-            operation="<"
-            min={0}
-            max={100}
-            step={5}
-            unit="km"
-            label="Entfernung"
-          />
-          <ChipFilteringOption
-            updateFilters={updateFilters}
-            field="priority"
-            operation="="
-            options={Priorities}
-            label="Priorität"
-          />
-        </FilteringButton>
-        <SortingButton>
-          <SortingOption
-            updateSorters={updateSorters}
-            field="name"
-            label="Name"
-          />
-          <SortingOption
-            updateSorters={updateSorters}
-            field="distance"
-            label="Entfernung"
-          />
-          <SortingOption
-            updateSorters={updateSorters}
-            field="tags"
-            label="Priorität"
-          />
-        </SortingButton>
-      </SearchBar>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="name" operation="~">
+          <FilteringButton>
+            <RadioFilteringOption
+              field="endangered"
+              operation="="
+              options={[
+                {name: 'Egal', value: null},
+                {name: 'Ja', value: 0},
+                {name: 'Nein', value: 1},
+              ]}
+              label="In Gefahr"
+            />
+            <SliderFilteringOption
+              field="distance"
+              operation="<"
+              min={0}
+              max={100}
+              step={5}
+              unit="km"
+              label="Entfernung"
+            />
+            <ChipFilteringOption
+              field="priority"
+              operation="="
+              options={Priorities}
+              label="Priorität"
+            />
+          </FilteringButton>
+          <SortingButton>
+            <SortingOption field="name" label="Name" />
+            <SortingOption field="distance" label="Entfernung" />
+            <SortingOption field="tags" label="Priorität" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
 
       <ListActions>
         <IconButton
