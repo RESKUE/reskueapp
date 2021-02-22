@@ -24,19 +24,8 @@ export default function CulturalAssetListScreen({navigation}) {
   const {
     result,
     requestAllAssets,
-    nameSorting,
-    setNameSorting,
-    distanceSorting,
-    setDistanceSorting,
-    prioritySorting,
-    setPrioritySorting,
-    endangeredFiltering,
-    setEndangeredFiltering,
-    distanceFiltering,
-    setDistanceFiltering,
-    priorityFiltering,
-    setPriorityFiltering,
-    setSearchTerm,
+    updateFilters,
+    updateSorters,
   } = useAllAssets();
 
   React.useEffect(() => {
@@ -45,49 +34,52 @@ export default function CulturalAssetListScreen({navigation}) {
 
   return (
     <Scaffold>
-      <SearchBar setSearchTerm={setSearchTerm}>
+      <SearchBar field="name" operation="~" updateFilters={updateFilters}>
         <FilteringButton>
           <RadioFilteringOption
-            label="In Gefahr"
+            updateFilters={updateFilters}
+            field="endangered"
+            operation="="
             options={[
               {name: 'Egal', value: null},
-              {name: 'Ja', value: true},
-              {name: 'Nein', value: false},
+              {name: 'Ja', value: 0},
+              {name: 'Nein', value: 1},
             ]}
-            value={endangeredFiltering}
-            setValue={setEndangeredFiltering}
+            label="In Gefahr"
           />
           <SliderFilteringOption
-            label="Entfernung"
+            updateFilters={updateFilters}
+            field="distance"
+            operation="<"
             min={0}
             max={100}
             step={5}
             unit="km"
-            value={distanceFiltering}
-            setValue={setDistanceFiltering}
+            label="Entfernung"
           />
           <ChipFilteringOption
-            label="Priorität"
+            updateFilters={updateFilters}
+            field="priority"
+            operation="="
             options={Priorities}
-            values={priorityFiltering}
-            setValues={setPriorityFiltering}
+            label="Priorität"
           />
         </FilteringButton>
         <SortingButton>
           <SortingOption
+            updateSorters={updateSorters}
+            field="name"
             label="Name"
-            sorting={nameSorting}
-            setSorting={setNameSorting}
           />
           <SortingOption
+            updateSorters={updateSorters}
+            field="distance"
             label="Entfernung"
-            sorting={distanceSorting}
-            setSorting={setDistanceSorting}
           />
           <SortingOption
+            updateSorters={updateSorters}
+            field="tags"
             label="Priorität"
-            sorting={prioritySorting}
-            setSorting={setPrioritySorting}
           />
         </SortingButton>
       </SearchBar>
