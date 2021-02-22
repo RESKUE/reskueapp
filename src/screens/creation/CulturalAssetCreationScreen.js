@@ -45,9 +45,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }, [routeChildId, addChild]);
 
   React.useEffect(() => {
-    console.log(creationResult);
     if (creationResult?.data != null) {
       navigation.goBack();
+    } else {
+      console.log(creationResult);
     }
   }, [creationResult, navigation]);
 
@@ -119,8 +120,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   };
 
   const finishCreation = () => {
-    console.log(culturalAsset);
-    console.log(JSON.stringify(culturalAsset.data));
     postAsset(culturalAsset.data);
   };
 
@@ -191,9 +190,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
           </View>
         ))}
       </View>
-      <Button icon="camera" mode="contained">
-        Füge Medien hinzu
-      </Button>
       <Button
         icon="check"
         mode="contained"
@@ -210,13 +206,14 @@ const emptyCulturalAsset = {
   description: '',
   tags: ['p0'],
   comments: [],
-  media: [],
-  label: '',
+  address: '',
   longitude: 0.0,
   latitude: 0.0,
-  level: 0,
-  children: [],
   tasks: [],
+  label: '',
+  level: 0,
+  culturalAssetParent: null,
+  culturalAssetChildren: [],
 };
 
 const styles = StyleSheet.create({
