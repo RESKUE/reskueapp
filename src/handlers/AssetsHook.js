@@ -6,14 +6,14 @@ const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
 const url = appConfig.rest.baseUrl + '/culturalAsset';
 
-export default function useAllAssets() {
+export default function useAssets() {
   const {client, result} = useClient({authenticated: true});
   const [query, setQuery] = React.useState();
 
-  const requestAllAssets = React.useCallback(async () => {
+  const requestAssets = React.useCallback(async () => {
     const fullUrl = url + '?' + query;
     await client.request(fullUrl, options, policy);
   }, [query, client]);
 
-  return {result, setQuery, requestAllAssets};
+  return {result, setQuery, requestAssets};
 }

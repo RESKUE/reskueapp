@@ -4,15 +4,15 @@ import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
 import ListActions from '../../components/ListActions';
-import useAllUsergroups from '../../handlers/AllUsergroupsHook';
+import useUsergroups from '../../handlers/UsergroupsHook';
 
 export default function UsergroupListScreen({navigation}) {
   const {colors} = useTheme();
-  const {requestAllUsergroups, result: usergroupResult} = useAllUsergroups();
+  const {requestUsergroups, result: usergroupResult} = useUsergroups();
 
   React.useEffect(() => {
-    requestAllUsergroups();
-  }, [requestAllUsergroups]);
+    requestUsergroups();
+  }, [requestUsergroups]);
 
   const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
 

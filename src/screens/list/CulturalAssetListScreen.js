@@ -22,7 +22,7 @@ export default function CulturalAssetListScreen({navigation}) {
   const goAssetCreation = () => navigation.push('CulturalAssetCreationScreen');
   const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
-  const {result, setQuery, requestAllAssets} = useAllAssets();
+  const {result, setQuery, requestAssets} = useAssets();
 
   React.useEffect(() => {
     requestAssets();

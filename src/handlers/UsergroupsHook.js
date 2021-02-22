@@ -3,14 +3,14 @@ import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
 
 const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
-const url = 'https://lunaless.com/reskue/tasks.json';
+const url = 'https://lunaless.com/reskue/groups.json';
 
-export default function useAllTasks() {
+export default function useUsergroups() {
   const {client, result} = useClient();
 
-  const requestAllTasks = React.useCallback(async () => {
+  const requestUsergroups = React.useCallback(async () => {
     await client.request(url, options, policy);
   }, [client]);
 
-  return {result, requestAllTasks};
+  return {result, requestUsergroups};
 }

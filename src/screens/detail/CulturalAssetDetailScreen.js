@@ -15,8 +15,8 @@ import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/IdAssetHook';
-import useAllAssetChildren from '../../handlers/AllAssetChildrenHook';
-import useAllTasks from '../../handlers/AllTasksHook';
+import useAssetChildren from '../../handlers/AssetChildrenHook';
+import useTasks from '../../handlers/TasksHook';
 import CulturalAsset from '../../models/CulturalAsset';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
@@ -27,23 +27,22 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAsset, result: assetResult} = useAsset(route.params.id);
-  const {
-    requestAllAssetChildren,
-    result: assetChildrenResult,
-  } = useAllAssetChildren(route.params.id);
-  const {requestAllTasks, result: taskResult} = useAllTasks();
+  const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
+    route.params.id,
+  );
+  const {requestTasks, result: taskResult} = useTasks();
 
   React.useEffect(() => {
     requestAsset();
   }, [requestAsset]);
 
   React.useEffect(() => {
-    requestAllAssetChildren();
-  }, [requestAllAssetChildren]);
+    requestAssetChildren();
+  }, [requestAssetChildren]);
 
   React.useEffect(() => {
-    requestAllTasks();
-  }, [requestAllTasks]);
+    requestTasks();
+  }, [requestTasks]);
 
   //Set this CulturalAsset from requested id data
   React.useEffect(() => {
