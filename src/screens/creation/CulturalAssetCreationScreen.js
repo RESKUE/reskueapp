@@ -13,6 +13,7 @@ import CulturalAssetUnpressableListItem from '../../components/listItems/Cultura
 import ListActions from '../../components/ListActions';
 import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
 import useAssets from '../../handlers/AssetsHook';
+import useAssetCreation from '../../handlers/AssetCreationHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
   const [culturalAsset, setCulturalAsset] = React.useState(
@@ -23,6 +24,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAssets, result: assetResult} = useAssets();
+  const {postAsset, result: creationResult} = useAssetCreation();
 
   React.useEffect(() => {
     requestAssets();
@@ -41,6 +43,13 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       addChild(routeChildId);
     }
   }, [routeChildId, addChild]);
+
+  React.useEffect(() => {
+    console.log(creationResult);
+    if (creationResult?.data != null) {
+      navigation.goBack();
+    }
+  }, [creationResult, navigation]);
 
   const onChangeName = (name) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -111,7 +120,8 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   const finishCreation = () => {
     console.log(culturalAsset);
-    navigation.goBack();
+    console.log(JSON.stringify(culturalAsset.data));
+    postAsset(culturalAsset.data);
   };
 
   if (assetResult === null) {
@@ -196,19 +206,17 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 }
 
 const emptyCulturalAsset = {
-  id: -1,
   name: '',
   description: '',
   tags: ['p0'],
-  comments: [{}],
-  media: [{}],
+  comments: [],
+  media: [],
   label: '',
   longitude: 0.0,
   latitude: 0.0,
   level: 0,
-  parent: {},
   children: [],
-  tasks: [{}],
+  tasks: [],
 };
 
 const styles = StyleSheet.create({
