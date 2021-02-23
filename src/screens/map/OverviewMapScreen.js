@@ -2,20 +2,20 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import MapView, {PROVIDER_OSMDROID} from 'react-native-maps-osmdroid';
-import useAllAssets from '../../handlers/AllAssetsHook';
+import useAssets from '../../handlers/AssetsHook';
 import MapContainer from '../../components/MapContainer';
 import AssetMarker from '../../components/AssetMarker';
 import MarkerInfo from '../../components/MarkerInfo';
 
 export default function OverviewMapScreen() {
   const navigation = useNavigation();
-  const {result, requestAllAssets} = useAllAssets();
+  const {result, requestAssets} = useAssets();
   const [info, setInfo] = React.useState(null);
   const markers = generateMarkers(result?.data?.content || [], onMarkerPress);
 
   React.useEffect(() => {
-    requestAllAssets();
-  }, [requestAllAssets]);
+    requestAssets();
+  }, [requestAssets]);
 
   function showInfo(title, description, identifier) {
     setInfo({title, description, identifier});
