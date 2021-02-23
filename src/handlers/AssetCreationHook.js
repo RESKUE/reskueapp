@@ -7,13 +7,27 @@ const policy = FetchPolicy.cacheAndNetwork;
 export default function useAssetCreation() {
   const {client, result} = useClient({authenticated: true});
   const {client: parentClient} = useClient({authenticated: true});
-  const {client: childClient} = useClient({authenticated: true});
 
   const postAsset = React.useCallback(
     async (culturalAsset) => {
       const url = appConfig.rest.baseUrl + '/culturalAsset';
       const options = {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(culturalAsset),
+      };
+      await client.request(url, options, policy);
+    },
+    [client],
+  );
+
+  const putAsset = React.useCallback(
+    async (id, culturalAsset) => {
+      const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const options = {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -35,21 +49,10 @@ export default function useAssetCreation() {
     [parentClient],
   );
 
-  const putAddChild = React.useCallback(
-    async (assetId, childId) => {
-      const url =
-        appConfig.rest.baseUrl +
-        `/culturalAsset/${assetId}/addChild/${childId}`;
-      const options = {method: 'PUT'};
-      await childClient.request(url, options, policy);
-    },
-    [childClient],
-  );
-
   return {
     result,
     postAsset,
+    putAsset,
     putSetParent,
-    putAddChild,
   };
 }

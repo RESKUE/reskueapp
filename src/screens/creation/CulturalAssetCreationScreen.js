@@ -12,28 +12,49 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
+import useAsset from '../../handlers/AssetHook';
 import useAssets from '../../handlers/AssetsHook';
 import useAssetCreation from '../../handlers/AssetCreationHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
+  const {requestAsset, result: baseAssetResult} = useAsset();
+
+  const screenType = route.params?.screenType;
+
   const [culturalAsset, setCulturalAsset] = React.useState(
     new CulturalAsset(emptyCulturalAsset),
   );
   const [parentAsset, setParentAsset] = React.useState([]);
-  const [childrenAssets, setChildrenAssets] = React.useState([]);
 
   const {colors} = useTheme();
   const {requestAssets, result: assetResult} = useAssets();
   const {
     postAsset,
+    putAsset,
     putSetParent,
-    putAddChild,
     result: creationResult,
   } = useAssetCreation();
 
   React.useEffect(() => {
+    if (screenType === 'update') {
+      console.log('Request asset with id: ' + route.params.id);
+      requestAsset(route.params.id);
+    }
+  }, [requestAsset, screenType, route.params.id]);
+
+  React.useEffect(() => {
     requestAssets();
   }, [requestAssets]);
+
+  React.useEffect(() => {
+    console.log(baseAssetResult);
+    if (baseAssetResult) {
+      setCulturalAsset(new CulturalAsset(baseAssetResult.data));
+      if (baseAssetResult.data.culturalAssetParent) {
+        setParentAsset([baseAssetResult.data.culturalAssetParent]);
+      }
+    }
+  }, [baseAssetResult]);
 
   const routeParentId = route.params?.parentId;
   React.useEffect(() => {
@@ -42,33 +63,16 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     }
   }, [routeParentId, onChangeParent]);
 
-  const routeChildId = route.params?.childId;
-  React.useEffect(() => {
-    if (routeChildId != null) {
-      addChild(routeChildId);
-    }
-  }, [routeChildId, addChild]);
-
   React.useEffect(() => {
     if (creationResult?.data != null) {
       parentAsset.forEach((asset) => {
         putSetParent(creationResult.data.id, asset.id);
       });
-      childrenAssets.forEach((asset) => {
-        putAddChild(creationResult.data.id, asset.id);
-      });
       navigation.goBack();
     } else {
-      console.log(creationResult);
+      console.log('Creation result: ' + creationResult);
     }
-  }, [
-    creationResult,
-    parentAsset,
-    childrenAssets,
-    navigation,
-    putSetParent,
-    putAddChild,
-  ]);
+  }, [creationResult, parentAsset, navigation, putSetParent]);
 
   const onChangeName = (name) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -93,21 +97,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     },
     [assetResult],
   );
-  const addChild = React.useCallback(
-    (childId) => {
-      if (childrenAssets.some((asset) => asset.id === childId)) {
-        console.log('This asset is already a child');
-        return;
-      }
-      //const updatedChildrenAssets = childrenAssets;
-      const newChild = assetResult.data.content.find(
-        (asset) => asset.id === childId,
-      );
-      const updatedChildrenAssets = [...childrenAssets, newChild];
-      setChildrenAssets(updatedChildrenAssets);
-    },
-    [assetResult, childrenAssets],
-  );
   const onChangeLabel = (label) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.data.label = label;
@@ -126,17 +115,15 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     });
   };
 
-  const goChildSelection = () => {
-    navigation.push('CulturalAssetSelectionListScreen', {
-      selectionType: 'child',
-    });
-  };
-
   const finishCreation = () => {
-    postAsset(culturalAsset.data);
+    if (screenType === 'update') {
+      putAsset(culturalAsset.data.id, culturalAsset.data);
+    } else {
+      postAsset(culturalAsset.data);
+    }
   };
 
-  if (assetResult === null) {
+  if (assetResult === null || culturalAsset === null) {
     return <LoadingIndicator />;
   }
 
@@ -174,18 +161,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       <FancyList
         title="Obergruppe"
         data={parentAsset}
-        component={CulturalAssetUnpressableListItem}
-      />
-      <ListActions>
-        <IconButton
-          color={colors.primary}
-          icon="plus-circle-outline"
-          onPress={goChildSelection}
-        />
-      </ListActions>
-      <FancyList
-        title="Teil-Kulturgüter"
-        data={childrenAssets}
         component={CulturalAssetUnpressableListItem}
       />
       <View style={styles.priorityBox}>

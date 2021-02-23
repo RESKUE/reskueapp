@@ -19,7 +19,11 @@ import {
 } from '@ilt-pse/react-native-kueres';
 
 export default function CulturalAssetListScreen({navigation, route}) {
-  const goAssetCreation = () => navigation.push('CulturalAssetCreationScreen');
+  const goAssetCreation = () =>
+    navigation.push('CulturalAssetCreationScreen', {
+      screenType: 'creation',
+      id: -1,
+    });
   const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
   const {result, setQuery, requestAssets} = useAssets();

@@ -14,7 +14,7 @@ import CulturalAssetListItem from '../../components/listItems/CulturalAssetListI
 import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
-import useAsset from '../../handlers/IdAssetHook';
+import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useTasks from '../../handlers/TasksHook';
 import useAssetDeletion from '../../handlers/AssetDeletionHook';
@@ -27,7 +27,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const [tasks, setTasks] = React.useState([]);
 
   const {colors} = useTheme();
-  const {requestAsset, result: assetResult} = useAsset(route.params.id);
+  const {requestAsset, result: assetResult} = useAsset();
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
@@ -35,8 +35,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestTasks, result: taskResult} = useTasks();
 
   React.useEffect(() => {
-    requestAsset();
-  }, [requestAsset]);
+    requestAsset(route.params.id);
+  }, [requestAsset, route.params.id]);
 
   React.useEffect(() => {
     requestAssetChildren();
@@ -56,11 +56,15 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   //Set tasks of this CulturalAsset
   React.useEffect(() => {
     if (taskResult && culturalAsset) {
-      const taskIds = culturalAsset.data.tasks?.map((task) => task.id);
-      const foundTasks = taskResult?.data.filter((task) =>
-        taskIds.includes(task.id),
-      );
-      setTasks(foundTasks);
+      if (culturalAsset.data.tasks) {
+        const taskIds = culturalAsset.data.tasks?.map((task) => task.id);
+        const foundTasks = taskResult?.data.filter((task) =>
+          taskIds.includes(task.id),
+        );
+        setTasks(foundTasks);
+      } else {
+        setTasks([]);
+      }
     }
   }, [culturalAsset, taskResult]);
 
@@ -102,7 +106,11 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const deleteAsset = () => {
     requestAssetDeletion(culturalAsset.data.id);
   };
-  const goCreation = () => console.log('Edited Asset');
+  const goCreation = () =>
+    navigation.push('CulturalAssetCreationScreen', {
+      screenType: 'update',
+      id: culturalAsset.data.id,
+    });
   const goTaskCreation = () =>
     navigation.push('TaskCreationScreen', {
       assetId: culturalAsset.data.id,
