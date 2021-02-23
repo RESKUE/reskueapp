@@ -15,11 +15,7 @@ export default function LocationSelectionScreen({navigation, route}) {
   }
 
   function onSubmit() {
-    const callback = route.params?.callback;
-    if (callback) {
-      callback(location);
-    }
-    navigation.goBack();
+    navigation.navigate(route.params.parent, {location: location});
   }
 
   return (

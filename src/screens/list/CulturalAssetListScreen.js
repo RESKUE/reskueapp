@@ -18,7 +18,7 @@ import {
   SearchProvider,
 } from '@ilt-pse/react-native-kueres';
 
-export default function CulturalAssetListScreen({navigation}) {
+export default function CulturalAssetListScreen({navigation, route}) {
   const goAssetCreation = () => navigation.push('CulturalAssetCreationScreen');
   const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
@@ -28,11 +28,17 @@ export default function CulturalAssetListScreen({navigation}) {
     requestAssets();
   }, [requestAssets]);
 
-  function onLocationSelected() {
-    function callback(coords) {
-      console.log('LOCATION SELECTED', coords);
+  React.useEffect(() => {
+    const location = route.params?.location;
+    if (location) {
+      console.log('LOCATION SELECTED:', location);
     }
-    navigation.push('LocationSelectionScreen', {callback: callback});
+  }, [route.params?.location]);
+
+  function onLocationSelected() {
+    navigation.push('LocationSelectionScreen', {
+      parent: 'CulturalAssetListScreen',
+    });
   }
 
   return (
