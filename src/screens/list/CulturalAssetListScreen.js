@@ -33,7 +33,7 @@ export default function CulturalAssetListScreen({navigation, route}) {
     if (location) {
       console.log('LOCATION SELECTED:', location);
     }
-  }, [route.params?.location]);
+  }, [route.params]);
 
   function onLocationSelected() {
     navigation.push('LocationSelectionScreen', {
