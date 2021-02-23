@@ -17,6 +17,7 @@ import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/IdAssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useTasks from '../../handlers/TasksHook';
+import useAssetDeletion from '../../handlers/AssetDeletionHook';
 import CulturalAsset from '../../models/CulturalAsset';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
@@ -30,6 +31,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
+  const {requestAssetDeletion, result: deletionResult} = useAssetDeletion();
   const {requestTasks, result: taskResult} = useTasks();
 
   React.useEffect(() => {
@@ -79,11 +81,27 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [culturalAsset, assetChildrenResult]);
 
+  //If deletion was successful go back
+  React.useEffect(() => {
+    if (deletionResult) {
+      if (deletionResult.data?.deleted) {
+        navigation.goBack();
+      } else {
+        console.log(
+          'Deletion was not successful! Are you the creator of this asset?',
+        );
+        console.log(deletionResult);
+      }
+    }
+  }, [deletionResult, navigation]);
+
   const goMap = () =>
     navigation.push('CulturalAssetMapScreen', {id: culturalAsset.data.id});
   const goAssetGroup = () =>
     navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
-  const deleteAsset = () => console.log('Deleted Asset');
+  const deleteAsset = () => {
+    requestAssetDeletion(culturalAsset.data.id);
+  };
   const goCreation = () => console.log('Edited Asset');
   const goTaskCreation = () =>
     navigation.push('TaskCreationScreen', {
