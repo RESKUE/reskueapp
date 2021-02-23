@@ -79,7 +79,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [culturalAsset, assetChildrenResult]);
 
-  const goMap = () => navigation.push('CulturalAssetMapScreen');
+  const goMap = () =>
+    navigation.push('CulturalAssetMapScreen', {id: culturalAsset.data.id});
   const goAssetGroup = () =>
     navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
   const deleteAsset = () => console.log('Deleted Asset');
