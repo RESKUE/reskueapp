@@ -7,7 +7,7 @@ export default function NavigationBar({authService, navigation}) {
   const goMap = () =>
     navigation.reset({
       index: 0,
-      routes: [{name: 'CulturalAssetMapScreen'}],
+      routes: [{name: 'OverviewMapScreen'}],
     });
   const goHome = () =>
     navigation.reset({
