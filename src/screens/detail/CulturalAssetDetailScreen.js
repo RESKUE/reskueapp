@@ -65,14 +65,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   //Set parent and children of this CulturalAsset
   React.useEffect(() => {
     if (assetChildrenResult && culturalAsset) {
-      const parentId = culturalAsset.data.parent?.id;
+      const parentId = culturalAsset.data.culturalAssetParent?.id;
       if (parentId != null) {
-        setParentAsset(culturalAsset.data.parent);
+        setParentAsset(culturalAsset.data.culturalAssetParent);
       } else {
         setParentAsset({});
       }
       if (assetChildrenResult) {
-        setChildrenAssets(assetChildrenResult.data);
+        setChildrenAssets(assetChildrenResult.data.content);
       } else {
         setChildrenAssets([]);
       }

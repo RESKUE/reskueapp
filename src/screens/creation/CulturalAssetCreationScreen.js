@@ -24,7 +24,12 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAssets, result: assetResult} = useAssets();
-  const {postAsset, result: creationResult} = useAssetCreation();
+  const {
+    postAsset,
+    putSetParent,
+    putAddChild,
+    result: creationResult,
+  } = useAssetCreation();
 
   React.useEffect(() => {
     requestAssets();
@@ -46,11 +51,24 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   React.useEffect(() => {
     if (creationResult?.data != null) {
+      parentAsset.forEach((asset) => {
+        putSetParent(creationResult.data.id, asset.id);
+      });
+      childrenAssets.forEach((asset) => {
+        putAddChild(creationResult.data.id, asset.id);
+      });
       navigation.goBack();
     } else {
       console.log(creationResult);
     }
-  }, [creationResult, navigation]);
+  }, [
+    creationResult,
+    parentAsset,
+    childrenAssets,
+    navigation,
+    putSetParent,
+    putAddChild,
+  ]);
 
   const onChangeName = (name) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -69,35 +87,30 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   };
   const onChangeParent = React.useCallback(
     (parentId) => {
-      const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-      updatedCulturalAsset.data.parent = {id: parentId};
       setParentAsset([
         assetResult.data.content.find((asset) => asset.id === parentId),
       ]);
-      setCulturalAsset(updatedCulturalAsset);
     },
-    [assetResult, culturalAsset.data],
+    [assetResult],
   );
   const addChild = React.useCallback(
     (childId) => {
-      if (culturalAsset.data.children.some((asset) => asset.id === childId)) {
+      if (childrenAssets.some((asset) => asset.id === childId)) {
         console.log('This asset is already a child');
         return;
       }
-      const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-      updatedCulturalAsset.data.children.push({id: childId});
-      const updatedChildrenAssets = childrenAssets;
-      updatedChildrenAssets.push(
-        assetResult.data.content.find((asset) => asset.id === childId),
+      //const updatedChildrenAssets = childrenAssets;
+      const newChild = assetResult.data.content.find(
+        (asset) => asset.id === childId,
       );
+      const updatedChildrenAssets = [...childrenAssets, newChild];
       setChildrenAssets(updatedChildrenAssets);
-      setCulturalAsset(updatedCulturalAsset);
     },
-    [assetResult, culturalAsset.data, childrenAssets],
+    [assetResult, childrenAssets],
   );
-  const onChangePeculiarity = (peculiarity) => {
+  const onChangeLabel = (label) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.label = peculiarity;
+    updatedCulturalAsset.data.label = label;
     updatedCulturalAsset.setSpecial();
     setCulturalAsset(updatedCulturalAsset);
   };
@@ -147,7 +160,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       <TextInput
         label="Besonderheiten"
         value={culturalAsset.data.label}
-        onChangeText={onChangePeculiarity}
+        onChangeText={onChangeLabel}
         style={styles.inputSpacing}
       />
 
@@ -212,8 +225,6 @@ const emptyCulturalAsset = {
   tasks: [],
   label: '',
   level: 0,
-  culturalAssetParent: null,
-  culturalAssetChildren: [],
 };
 
 const styles = StyleSheet.create({
