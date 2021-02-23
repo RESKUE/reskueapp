@@ -12,6 +12,7 @@ import UserSelectionListScreen from '../screens/list/UserSelectionListScreen';
 import CulturalAssetMapScreen from '../screens/map/CulturalAssetMapScreen';
 import MediaListScreen from '../screens/list/MediaListScreen';
 import MediaDetailScreen from '../screens/detail/MediaDetailScreen';
+import LocationSelectionScreen from '../screens/map/LocationSelectionScreen';
 import HeaderBar from '../components/baseComponents/HeaderBar';
 import HomeTabs from './HomeTabs';
 
@@ -62,6 +63,10 @@ export default function ScreenStack() {
       />
       <Stack.Screen name="MediaListScreen" component={MediaListScreen} />
       <Stack.Screen name="MediaDetailScreen" component={MediaDetailScreen} />
+      <Stack.Screen
+        name="LocationSelectionScreen"
+        component={LocationSelectionScreen}
+      />
     </Stack.Navigator>
   );
 }

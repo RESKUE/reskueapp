@@ -28,6 +28,13 @@ export default function CulturalAssetListScreen({navigation}) {
     requestAssets();
   }, [requestAssets]);
 
+  function onLocationSelected() {
+    function callback(coords) {
+      console.log('LOCATION SELECTED', coords);
+    }
+    navigation.push('LocationSelectionScreen', {callback: callback});
+  }
+
   return (
     <Scaffold>
       <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
@@ -68,6 +75,11 @@ export default function CulturalAssetListScreen({navigation}) {
       </SearchProvider>
 
       <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="map-marker"
+          onPress={onLocationSelected}
+        />
         <IconButton
           color={colors.primary}
           icon="security"
