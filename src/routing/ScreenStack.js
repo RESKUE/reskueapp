@@ -4,6 +4,7 @@ import CulturalAssetCreationScreen from '../screens/creation/CulturalAssetCreati
 import TaskCreationScreen from '../screens/creation/TaskCreationScreen';
 import UsergroupCreationScreen from '../screens/creation/UsergroupCreationScreen';
 import CulturalAssetDetailScreen from '../screens/detail/CulturalAssetDetailScreen';
+import TaskDetailScreen from '../screens/detail/TaskDetailScreen';
 import UsergroupDetailScreen from '../screens/detail/UsergroupDetailScreen';
 import MyTaskListScreen from '../screens/list/MyTaskListScreen';
 import NotificationListScreen from '../screens/list/NotificationListScreen';
@@ -57,6 +58,7 @@ export default function ScreenStack() {
         name="CulturalAssetMapScreen"
         component={CulturalAssetMapScreen}
       />
+      <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
       <Stack.Screen name="MyTaskListScreen" component={MyTaskListScreen} />
       <Stack.Screen
         name="NotificationListScreen"

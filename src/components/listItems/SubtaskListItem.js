@@ -1,9 +1,9 @@
 import React from 'react';
 import {List} from 'react-native-paper';
 
-export default function SubtaskListItem({data}) {
+export default function SubtaskListItem({data, extraData}) {
   function onPress() {
-    console.log('Complete subtask', data.id);
+    extraData.changeSubtaskStateCallback(data.id, 1);
   }
 
   return (

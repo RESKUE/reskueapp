@@ -1,9 +1,12 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {List} from 'react-native-paper';
 
 export default function TaskListItem({data}) {
+  const navigation = useNavigation();
+
   function onPress() {
-    console.log('Goto task', data.id);
+    navigation.push('TaskDetailScreen', {id: data.id});
   }
 
   return (
