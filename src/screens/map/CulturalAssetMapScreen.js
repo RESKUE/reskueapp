@@ -1,23 +1,24 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import MapView, {PROVIDER_OSMDROID} from 'react-native-maps-osmdroid';
-import useAsset from '../../handlers/IdAssetHook';
+import useAsset from '../../handlers/AssetHook';
 import MapContainer from '../../components/MapContainer';
 import AssetMarker from '../../components/AssetMarker';
 import MarkerInfo from '../../components/MarkerInfo';
 import {LoadingIndicator, ErrorIndicator} from '@ilt-pse/react-native-kueres';
 
 export default function CulturalAssetMapScreen({route}) {
-  const {result, requestAsset} = useAsset(route.params.id);
+  const {result, requestAsset} = useAsset();
   const data = result?.data;
   const coordinate = {latitude: data?.latitude, longitude: data?.longitude};
   const region = {latitudeDelta: 0.09, longitudeDelta: 0.04, ...coordinate};
 
   React.useEffect(() => {
-    requestAsset();
-  }, [requestAsset]);
+    requestAsset(route.params.id);
+  }, [requestAsset, route.params.id]);
 
   if (!result?.data) {
+    console.log(result);
     return <LoadingIndicator />;
   }
 

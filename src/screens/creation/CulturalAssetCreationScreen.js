@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
   Button,
   Chip,
   IconButton,
+  Text,
   TextInput,
   useTheme,
 } from 'react-native-paper';
@@ -47,7 +48,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }, [requestAssets]);
 
   React.useEffect(() => {
-    console.log(baseAssetResult);
     if (baseAssetResult) {
       setCulturalAsset(new CulturalAsset(baseAssetResult.data));
       if (baseAssetResult.data.culturalAssetParent) {
@@ -56,12 +56,19 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     }
   }, [baseAssetResult]);
 
-  const routeParentId = route.params?.parentId;
   React.useEffect(() => {
+    const routeParentId = route.params?.parentId;
     if (routeParentId != null) {
       onChangeParent(routeParentId);
     }
-  }, [routeParentId, onChangeParent]);
+  }, [route.params, onChangeParent]);
+
+  React.useEffect(() => {
+    const location = route.params?.location;
+    if (location) {
+      onChangeLocation(location);
+    }
+  }, [route.params, onChangeLocation]);
 
   React.useEffect(() => {
     if (creationResult?.data != null) {
@@ -84,6 +91,15 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     updatedCulturalAsset.data.description = description;
     setCulturalAsset(updatedCulturalAsset);
   };
+  const onChangeLocation = React.useCallback(
+    (location) => {
+      const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
+      updatedCulturalAsset.data.longitude = location.longitude;
+      updatedCulturalAsset.data.latitude = location.latitude;
+      setCulturalAsset(updatedCulturalAsset);
+    },
+    [culturalAsset.data],
+  );
   const onChangeAddress = (newAddress) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.data.address = newAddress;
@@ -108,6 +124,12 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     updatedCulturalAsset.setPriority(prio);
     setCulturalAsset(updatedCulturalAsset);
   };
+
+  function goLocationSelection() {
+    navigation.push('LocationSelectionScreen', {
+      parent: 'CulturalAssetCreationScreen',
+    });
+  }
 
   const goParentSelection = () => {
     navigation.push('CulturalAssetSelectionListScreen', {
@@ -139,10 +161,24 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         value={culturalAsset.data.description}
         onChangeText={onChangeDescription}
       />
+      <Button
+        icon="map-marker"
+        mode="contained"
+        onPress={goLocationSelection}
+        style={styles.buttonSpacing}>
+        Wähle Location
+      </Button>
+      {culturalAsset.data.latitude || culturalAsset.longitude ? (
+        <View>
+          <Text>{`Breite: ${culturalAsset.data.latitude}`}</Text>
+          <Text>{`Länge: ${culturalAsset.data.longitude}`}</Text>
+        </View>
+      ) : null}
       <TextInput
         label="Adresse"
         value={culturalAsset.data.address}
         onChangeText={onChangeAddress}
+        style={styles.buttonSpacing}
       />
       <TextInput
         label="Besonderheiten"
@@ -204,6 +240,7 @@ const emptyCulturalAsset = {
 
 const styles = StyleSheet.create({
   inputSpacing: {marginBottom: 24},
+  textSpacing: {marginBottom: 16},
   buttonSpacing: {marginTop: 16},
   priorityBox: {marginVertical: 24},
   chipWrapper: {margin: 2, flexWrap: 'wrap'},

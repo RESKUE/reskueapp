@@ -32,19 +32,6 @@ export default function CulturalAssetListScreen({navigation, route}) {
     requestAssets();
   }, [requestAssets]);
 
-  React.useEffect(() => {
-    const location = route.params?.location;
-    if (location) {
-      console.log('LOCATION SELECTED:', location);
-    }
-  }, [route.params]);
-
-  function onLocationSelected() {
-    navigation.push('LocationSelectionScreen', {
-      parent: 'CulturalAssetListScreen',
-    });
-  }
-
   return (
     <Scaffold>
       <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
@@ -85,11 +72,6 @@ export default function CulturalAssetListScreen({navigation, route}) {
       </SearchProvider>
 
       <ListActions>
-        <IconButton
-          color={colors.primary}
-          icon="map-marker"
-          onPress={onLocationSelected}
-        />
         <IconButton
           color={colors.primary}
           icon="security"
