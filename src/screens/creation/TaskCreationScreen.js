@@ -69,10 +69,10 @@ export default function TaskCreationScreen({navigation, route}) {
 
   const addSubtask = () => {
     const emptySubtask = {
-      id: subtaskIdCounter,
+      localId: subtaskIdCounter,
       state: 0,
       text: '',
-      isRequired: true,
+      isRequired: false,
     };
     const updatedTask = new Task(task.data);
     updatedTask.data.subtasks.push(emptySubtask);

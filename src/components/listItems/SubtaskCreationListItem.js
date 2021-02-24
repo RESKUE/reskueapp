@@ -12,13 +12,13 @@ export default function SubtaskCreationListItem({data, extraData}) {
   const {colors} = useTheme();
 
   function setIsRequired(state) {
-    extraData.changeIsRequiredCallback(data.id, state);
+    extraData.changeIsRequiredCallback(data.localId, state);
   }
   function onChangeText(updatedText) {
-    extraData.changeTextCallback(data.id, updatedText);
+    extraData.changeTextCallback(data.localId, updatedText);
   }
   function deleteSubtask() {
-    extraData.removeCallback(data.id);
+    extraData.removeCallback(data.localId);
   }
 
   return (
@@ -27,10 +27,10 @@ export default function SubtaskCreationListItem({data, extraData}) {
         <Checkbox
           color={colors.primary}
           uncheckedColor={colors.primary}
-          status={data.isRequired ? 'unchecked' : 'checked'}
+          status={data.isRequired ? 'checked' : 'unchecked'}
           onPress={() => setIsRequired(!data.isRequired)}
         />
-        <Text style={styles.optionalText}>optional</Text>
+        <Text style={styles.optionalText}>Pflicht?</Text>
       </View>
       <TextInput
         label="Name"
