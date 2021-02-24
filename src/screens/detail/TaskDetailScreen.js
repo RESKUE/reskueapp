@@ -1,6 +1,13 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useTheme, IconButton, Paragraph, Text, Title} from 'react-native-paper';
+import {
+  useTheme,
+  Button,
+  IconButton,
+  Paragraph,
+  Text,
+  Title,
+} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskListItem from '../../components/listItems/SubtaskListItem';
@@ -36,19 +43,10 @@ export default function TaskDetailScreen({navigation, route}) {
   }, [requestAsset, taskResult]);
 
   React.useEffect(() => {
-    if (assetResult) {
-      onChangeAsset();
+    if (assetResult?.data) {
+      setAsset(assetResult.data);
     }
-  }, [onChangeAsset, assetResult]);
-
-  const onChangeAsset = React.useCallback(() => {
-    const updatedTask = new Task(task.data);
-    if (assetResult.data) {
-      updatedTask.data.culturalAsset = assetResult.data;
-      setAsset([assetResult.data]);
-    }
-    setTask(updatedTask);
-  }, [assetResult, task]);
+  }, [assetResult]);
 
   const addSubtask = () => {
     const emptySubtask = {
@@ -72,6 +70,10 @@ export default function TaskDetailScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
+  const goMap = () => navigation.push('CulturalAssetMapScreen', {id: asset.id});
+  const goAsset = () =>
+    navigation.push('CulturalAssetDetailScreen', {id: asset.id});
+
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
@@ -83,7 +85,27 @@ export default function TaskDetailScreen({navigation, route}) {
     <Scaffold>
       <Title style={styles.title}>{task.data.name}</Title>
       <Paragraph>{task.data.description}</Paragraph>
-      <Text>{task.data.recommendedHelperUsers}</Text>
+      <View>
+        {asset.name ? (
+          <View style={styles.buttonContainer}>
+            <Button
+              color={colors.primary}
+              icon="map-marker"
+              onPress={goMap}
+              style={styles.bold}>
+              Location
+            </Button>
+            <Button
+              color={colors.primary}
+              icon="apps"
+              onPress={goAsset}
+              style={styles.bold}>
+              {asset.name}
+            </Button>
+          </View>
+        ) : null}
+      </View>
+      <Text>Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}</Text>
       <ListActions>
         <IconButton
           color={colors.primary}
@@ -118,6 +140,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: -24,
+    marginLeft: -12,
+  },
+  bold: {
+    fontWeight: 'bold',
   },
   center: {
     justifyContent: 'center',
