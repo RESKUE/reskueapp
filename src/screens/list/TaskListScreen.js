@@ -20,6 +20,11 @@ export default function TaskListScreen({navigation}) {
       <ListActions>
         <IconButton
           color={colors.primary}
+          icon="reload"
+          onPress={() => requestTasks()}
+        />
+        <IconButton
+          color={colors.primary}
           icon="plus-circle-outline"
           onPress={goGroupCreation}
         />
