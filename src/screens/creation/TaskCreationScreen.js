@@ -6,8 +6,9 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationListItem';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
-import Task from '../../models/Task';
 import useAsset from '../../handlers/AssetHook';
+import useTaskCreation from '../../handlers/TaskCreationHook';
+import Task from '../../models/Task';
 
 export default function TaskCreationScreen({navigation, route}) {
   const [task, setTask] = React.useState(new Task(emptyTask));
@@ -16,6 +17,7 @@ export default function TaskCreationScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAsset, result: assetResult} = useAsset();
+  const {postTask, taskResult} = useTaskCreation();
 
   React.useEffect(() => {
     const assetId = route.params?.assetId;
@@ -31,6 +33,14 @@ export default function TaskCreationScreen({navigation, route}) {
       onChangeAsset();
     }
   }, [onChangeAsset, assetResult]);
+
+  React.useEffect(() => {
+    if (taskResult?.data != null) {
+      navigation.goBack();
+    } else {
+      console.log(taskResult);
+    }
+  }, [taskResult, navigation]);
 
   const onChangeName = (name) => {
     const updatedTask = new Task(task.data);
@@ -107,7 +117,7 @@ export default function TaskCreationScreen({navigation, route}) {
 
   const finishCreation = () => {
     console.log(task);
-    navigation.goBack();
+    postTask(task.data);
   };
 
   if (asset === null) {
@@ -176,10 +186,8 @@ const emptyTask = {
   description: '',
   tags: [],
   state: 0,
-  culturalAsset: {},
   subtasks: [],
   recommendedHelperUsers: '1',
-  contactUser: {},
 };
 
 const styles = StyleSheet.create({
