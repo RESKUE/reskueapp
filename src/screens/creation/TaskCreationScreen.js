@@ -7,26 +7,30 @@ import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationL
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import Task from '../../models/Task';
-import useAssets from '../../handlers/AssetsHook';
+import useAsset from '../../handlers/AssetHook';
 
 export default function TaskCreationScreen({navigation, route}) {
   const [task, setTask] = React.useState(new Task(emptyTask));
-  const [asset, setAsset] = React.useState([]);
+  const [asset, setAsset] = React.useState(null);
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
   const {colors} = useTheme();
-  const {requestAssets, result: assetResult} = useAssets();
+  const {requestAsset, result: assetResult} = useAsset();
 
   React.useEffect(() => {
-    requestAssets();
-  }, [requestAssets]);
-
-  const routeAssetId = route.params?.assetId;
-  React.useEffect(() => {
-    if (routeAssetId != null) {
-      onChangeAsset(routeAssetId);
+    const assetId = route.params?.assetId;
+    if (assetId) {
+      requestAsset(assetId);
+    } else {
+      setAsset([]);
     }
-  }, [routeAssetId, onChangeAsset, assetResult]);
+  }, [requestAsset, route.params]);
+
+  React.useEffect(() => {
+    if (assetResult?.data) {
+      onChangeAsset();
+    }
+  }, [onChangeAsset, assetResult]);
 
   const onChangeName = (name) => {
     const updatedTask = new Task(task.data);
@@ -44,21 +48,14 @@ export default function TaskCreationScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
-  const onChangeAsset = React.useCallback(
-    (assetId) => {
-      const updatedTask = new Task(task.data);
-      updatedTask.data.culturalAsset = {id: assetId};
-      if (assetResult) {
-        setAsset([
-          assetResult.data.find(
-            (culturalAsset) => culturalAsset.id === assetId,
-          ),
-        ]);
-      }
-      setTask(updatedTask);
-    },
-    [assetResult, task.data],
-  );
+  const onChangeAsset = React.useCallback(() => {
+    const updatedTask = new Task(task.data);
+    if (assetResult) {
+      updatedTask.data.culturalAsset = assetResult.data;
+      setAsset([assetResult.data]);
+    }
+    setTask(updatedTask);
+  }, [assetResult, task.data]);
 
   const addSubtask = () => {
     const emptySubtask = {
@@ -113,7 +110,7 @@ export default function TaskCreationScreen({navigation, route}) {
     navigation.goBack();
   };
 
-  if (assetResult === null) {
+  if (asset === null) {
     return <LoadingIndicator />;
   }
 

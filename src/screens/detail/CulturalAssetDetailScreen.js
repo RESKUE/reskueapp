@@ -55,10 +55,10 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   //Set tasks of this CulturalAsset
   React.useEffect(() => {
-    if (taskResult && culturalAsset) {
+    if (taskResult && taskResult.data && culturalAsset) {
       if (culturalAsset.data.tasks) {
         const taskIds = culturalAsset.data.tasks?.map((task) => task.id);
-        const foundTasks = taskResult?.data.filter((task) =>
+        const foundTasks = taskResult.data.content.filter((task) =>
           taskIds.includes(task.id),
         );
         setTasks(foundTasks);
