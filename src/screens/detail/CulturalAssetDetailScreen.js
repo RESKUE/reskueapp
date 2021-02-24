@@ -77,7 +77,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       } else {
         setParentAsset({});
       }
-      if (assetChildrenResult) {
+      if (assetChildrenResult.data) {
         setChildrenAssets(assetChildrenResult.data.content);
       } else {
         setChildrenAssets([]);
