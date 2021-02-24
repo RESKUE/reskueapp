@@ -3,12 +3,17 @@ import {useTheme, IconButton} from 'react-native-paper';
 import {FancyList} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import TaskListItem from '../../components/listItems/TaskListItem';
-import {taskData} from '../../../testdata';
 import ListActions from '../../components/ListActions';
+import useTasks from '../../handlers/TasksHook';
 
 export default function TaskListScreen({navigation}) {
   const goGroupCreation = () => navigation.push('TaskCreationScreen');
   const {colors} = useTheme();
+  const {result: tasksResult, requestTasks} = useTasks();
+
+  React.useEffect(() => {
+    requestTasks();
+  }, [requestTasks]);
 
   return (
     <Scaffold>
@@ -19,7 +24,11 @@ export default function TaskListScreen({navigation}) {
           onPress={goGroupCreation}
         />
       </ListActions>
-      <FancyList title="Aufgaben" data={taskData} component={TaskListItem} />
+      <FancyList
+        title="Aufgaben"
+        data={tasksResult?.data?.content || []}
+        component={TaskListItem}
+      />
     </Scaffold>
   );
 }

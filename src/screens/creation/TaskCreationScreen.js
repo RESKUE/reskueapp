@@ -38,9 +38,9 @@ export default function TaskCreationScreen({navigation, route}) {
     updatedTask.data.description = description;
     setTask(updatedTask);
   };
-  const onChangeNumOfHelpersRecommended = (numOfHelpersRecommended) => {
+  const onChangeRecommendedHelperUsers = (recommendedHelperUsers) => {
     const updatedTask = new Task(task.data);
-    updatedTask.data.numOfHelpersRecommended = numOfHelpersRecommended;
+    updatedTask.data.recommendedHelperUsers = recommendedHelperUsers;
     setTask(updatedTask);
   };
 
@@ -131,8 +131,8 @@ export default function TaskCreationScreen({navigation, route}) {
       />
       <TextInput
         label="Empfohlene Helferanzahl"
-        value={task.data.numOfHelpersRecommended}
-        onChangeText={onChangeNumOfHelpersRecommended}
+        value={task.data.recommendedHelperUsers}
+        onChangeText={onChangeRecommendedHelperUsers}
       />
       <ListActions>
         <IconButton
@@ -178,14 +178,11 @@ const emptyTask = {
   name: '',
   description: '',
   tags: [],
-  comments: [{}],
-  media: [{}],
   state: 0,
-  numOfHelpersRecommended: '1',
-  subtasks: [],
   culturalAsset: {},
-  helper: [{}],
-  contact: {},
+  subtasks: [],
+  recommendedHelperUsers: '1',
+  contactUser: {},
 };
 
 const styles = StyleSheet.create({
