@@ -5,7 +5,7 @@ import App from './src/App';
 import appConfig from './app.json';
 
 NotificationService.register(
-  appConfig.rest.baseUrl + '/notifications',
+  appConfig.rest.baseUrl + '/notification',
   appConfig.auth,
   new TokenStorage(),
 );
