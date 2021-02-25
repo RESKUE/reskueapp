@@ -10,9 +10,12 @@ export default function Scaffold({children}) {
 }
 
 const styles = StyleSheet.create({
-  scaffold: {},
+  scaffold: {
+    flex: 1,
+  },
   content: {
     paddingVertical: 24,
     paddingHorizontal: 16,
+    minHeight: '100%',
   },
 });
