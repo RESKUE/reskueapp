@@ -1,6 +1,13 @@
 import 'react-native-gesture-handler'; // must be on top to correctly initialize
+import {NotificationService, TokenStorage} from '@ilt-pse/react-native-kueres';
 import {AppRegistry} from 'react-native';
 import App from './src/App';
-import {name as appName} from './app.json';
+import appConfig from './app.json';
 
-AppRegistry.registerComponent(appName, () => App);
+NotificationService.register(
+  appConfig.rest.baseUrl + '/notifications',
+  appConfig.auth,
+  new TokenStorage(),
+);
+
+AppRegistry.registerComponent(appConfig.name, () => App);
