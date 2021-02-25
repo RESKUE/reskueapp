@@ -69,7 +69,7 @@ export default function TaskDetailScreen({navigation, route}) {
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
-  if (task === null || asset === null) {
+  if (task === null || task.data === null || asset === null) {
     return <LoadingIndicator />;
   }
 
