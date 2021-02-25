@@ -48,12 +48,13 @@ export default function TaskDetailScreen({navigation, route}) {
     }
   }, [assetResult]);
 
-  const onChangeSubtaskState = (subtaskId, state) => {
+  const onChangeSubtaskState = (subtaskId) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
       (subtask) => subtask.id === subtaskId,
     );
-    updatedTask.data.subtasks[index].state = state;
+    updatedTask.data.subtasks[index].state = !updatedTask.data.subtasks[index]
+      .state;
     setTask(updatedTask);
   };
 
