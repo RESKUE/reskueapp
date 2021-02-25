@@ -5,42 +5,38 @@ import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
-import useUsers from '../../handlers/UsersHook';
-import useUsergroups from '../../handlers/UsergroupsHook';
+import useUsergroup from '../../handlers/UsergroupHook';
 
 export default function UsergroupDetailScreen({navigation, route}) {
   const {colors} = useTheme();
   const [usergroup, setUserGroup] = React.useState(null);
   const [users, setUsers] = React.useState(null);
-  const {requestUsergroups, result: usergroupResult} = useUsergroups();
-  const {requestUsers, result: userResult} = useUsers();
+  const {
+    requestUsergroup,
+    requestUsergroupUsers,
+    usergroupResult,
+    usersResult,
+  } = useUsergroup();
 
   React.useEffect(() => {
-    requestUsers();
-  }, [requestUsers]);
+    requestUsergroup(route.params.id);
+  }, [requestUsergroup, route.params]);
 
   React.useEffect(() => {
-    requestUsergroups();
-  }, [requestUsergroups]);
+    requestUsergroupUsers(route.params.id);
+  }, [requestUsergroupUsers, route.params]);
 
-  const routeUsergroupId = route.params.id;
   React.useEffect(() => {
-    if (usergroupResult) {
-      setUserGroup(
-        usergroupResult.data.find((group) => group.id === routeUsergroupId),
-      );
+    if (usergroupResult?.data) {
+      setUserGroup(usergroupResult.data);
     }
-  }, [usergroupResult, routeUsergroupId]);
+  }, [usergroupResult]);
 
   React.useEffect(() => {
-    if (userResult && usergroup) {
-      const userIds = usergroup.users.map((user) => user.id);
-      const foundUsers = userResult?.data.filter((user) =>
-        userIds.includes(user.id),
-      );
-      setUsers(foundUsers);
+    if (usersResult?.data) {
+      setUsers(usersResult.data.content);
     }
-  }, [usergroup, userResult]);
+  }, [usersResult]);
 
   const goCreation = () => console.log('Edited Usergroup');
   const deleteUsergroup = () => console.log('Deleted Usergroup');
