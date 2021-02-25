@@ -89,7 +89,10 @@ export default function TaskDetailScreen({navigation, route}) {
   return (
     <Scaffold>
       <Title style={styles.title}>{task.data.name}</Title>
-      <Paragraph>{task.data.description}</Paragraph>
+      {task.data.description === '' ? null : (
+        <Paragraph>{task.data.description}</Paragraph>
+      )}
+
       <View>
         {asset.name ? (
           <View style={styles.buttonContainer}>
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginVertical: -24,
+    marginBottom: -24,
     marginLeft: -12,
   },
   bold: {
