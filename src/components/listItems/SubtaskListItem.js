@@ -23,7 +23,7 @@ export default function SubtaskListItem({data, extraData}) {
             onPress={onPress}
           />
           {data.isRequired ? (
-            <Text color={colors.redish} style={styles.requiredText}>
+            <Text style={[styles.requiredText, {color: colors.redish}]}>
               Pflicht
             </Text>
           ) : null}
@@ -42,5 +42,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  optionalText: {marginTop: -12},
+  requiredText: {marginTop: -8},
 });
