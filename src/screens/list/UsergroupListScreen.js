@@ -7,14 +7,13 @@ import ListActions from '../../components/ListActions';
 import useUsergroups from '../../handlers/UsergroupsHook';
 
 export default function UsergroupListScreen({navigation}) {
+  const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
   const {colors} = useTheme();
   const {requestUsergroups, result: usergroupResult} = useUsergroups();
 
   React.useEffect(() => {
     requestUsergroups();
   }, [requestUsergroups]);
-
-  const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
 
   return (
     <Scaffold>
@@ -27,7 +26,7 @@ export default function UsergroupListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Gruppen"
-        data={usergroupResult?.data || []}
+        data={usergroupResult?.data?.content || []}
         component={UsergroupListItem}
       />
     </Scaffold>

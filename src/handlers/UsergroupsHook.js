@@ -1,12 +1,13 @@
 import React from 'react';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
+import appConfig from '../../app.json';
 
 const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
-const url = 'https://lunaless.com/reskue/groups.json';
+const url = appConfig.rest.baseUrl + '/usergroup';
 
 export default function useUsergroups() {
-  const {client, result} = useClient();
+  const {client, result} = useClient({authenticated: true});
 
   const requestUsergroups = React.useCallback(async () => {
     await client.request(url, options, policy);
