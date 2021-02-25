@@ -28,8 +28,8 @@ export default class Task {
 }
 
 const TaskStates = [
-  {value: 0, name: 'Nicht angefangen'},
-  {value: 1, name: 'Angefangen'},
-  {value: 2, name: 'Abgebrochen'},
-  {value: 3, name: 'Abgeschlossen'},
+  {value: 0, name: 'Wurde nicht bearbeitet'},
+  {value: 1, name: 'In Bearbeitung'},
+  {value: 2, name: 'Wurde abgebrochen'},
+  {value: 3, name: 'Wurde abgeschlossen'},
 ];

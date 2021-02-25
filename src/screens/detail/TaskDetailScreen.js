@@ -9,23 +9,36 @@ import {
   Text,
   Title,
 } from 'react-native-paper';
-import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  AuthContext,
+  FancyList,
+  LoadingIndicator,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskListItem from '../../components/listItems/SubtaskListItem';
-import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
+import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
 import useTask from '../../handlers/TaskHook';
 import Task from '../../models/Task';
+import useUserMe from '../../handlers/UserMeHook';
 
 export default function TaskDetailScreen({navigation, route}) {
+  const {clientRoles} = React.useContext(AuthContext);
+
   const [task, setTask] = React.useState(null);
   const [asset, setAsset] = React.useState(null);
+  const [user, setUser] = React.useState(null);
 
   const {colors} = useTheme();
   const {requestTask, result: taskResult} = useTask();
   const {requestAsset, result: assetResult} = useAsset();
+  const {requestUserMe, result: userResult} = useUserMe();
+
+  React.useEffect(() => {
+    requestUserMe();
+  }, [requestUserMe]);
 
   React.useEffect(() => {
     requestTask(route.params.id);
@@ -43,6 +56,13 @@ export default function TaskDetailScreen({navigation, route}) {
   }, [requestAsset, taskResult]);
 
   React.useEffect(() => {
+    if (userResult?.data) {
+      userResult.data.helperUsers = [];
+      setUser(userResult.data);
+    }
+  }, [userResult]);
+
+  React.useEffect(() => {
     if (assetResult?.data) {
       setAsset(assetResult.data);
     }
@@ -58,6 +78,8 @@ export default function TaskDetailScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
+  //const onAcceptTask = () => {};
+
   const goMap = () => navigation.push('CulturalAssetMapScreen', {id: asset.id});
   const goAsset = () =>
     navigation.push('CulturalAssetDetailScreen', {id: asset.id});
@@ -65,7 +87,7 @@ export default function TaskDetailScreen({navigation, route}) {
   const deleteTask = () => {
     console.log('Delete Task');
   };
-  const goCreation = () => console.log('Update Task');
+  const goCreation = () => console.log(user);
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
@@ -74,15 +96,35 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   const getButtons = () => {
-    if (task.data.isEndangered === 0) {
+    //If the task isn't endangered you can't work on it
+    if (task?.data?.isEndangered === 0) {
       return null;
     } else {
-      return (
-        <ListActions>
-          <Button color={colors.primary}>Beenden</Button>
-          <Button color={colors.redish}>Abbrechen</Button>
-        </ListActions>
-      );
+      //If the user is a helper he can finish the task
+      if (task?.data?.helperUsers?.includes(user)) {
+        return (
+          <ListActions>
+            <Button color={colors.primary}>Beenden</Button>
+            <Button color={colors.redish}>Abbrechen</Button>
+          </ListActions>
+        );
+      }
+      //If the user isn't a helper he start working on the task
+      else {
+        return (
+          <ListActions>
+            <Button color={colors.primary}>Aufgabe annehmen</Button>
+          </ListActions>
+        );
+      }
+    }
+  };
+
+  const getSubtaskComponent = () => {
+    if (task?.data?.helperUsers?.includes(user)) {
+      return SubtaskListItem;
+    } else {
+      return SubtaskListItem;
     }
   };
 
@@ -113,36 +155,46 @@ export default function TaskDetailScreen({navigation, route}) {
           </View>
         ) : null}
       </View>
-      <View>
-        <ListActions>
-          <IconButton
-            color={colors.primary}
-            icon="circle-edit-outline"
-            onPress={goCreation}
-          />
-          <IconButton
-            color={colors.primary}
-            icon="trash-can-outline"
-            onPress={deleteTask}
-          />
-        </ListActions>
-      </View>
+      {clientRoles.includes('administrator') ? (
+        <View>
+          <ListActions>
+            <IconButton
+              color={colors.primary}
+              icon="circle-edit-outline"
+              onPress={goCreation}
+            />
+            <IconButton
+              color={colors.primary}
+              icon="trash-can-outline"
+              onPress={deleteTask}
+            />
+          </ListActions>
+        </View>
+      ) : null}
       {getButtons()}
       <Divider style={styles.divider} />
-      <Text>Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}</Text>
+      <Text style={styles.bold}>
+        Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}
+      </Text>
+      <Text style={styles.bold}>Status: {task.getTaskStateName()}</Text>
       <Divider style={styles.divider} />
       <FancyList
         title="Teilaufgaben"
         data={task.data.subtasks}
         extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
-        component={SubtaskListItem}
+        component={getSubtaskComponent()}
       />
-      <Divider style={styles.divider} />
-      <FancyList
-        title="Helfer"
-        data={[]}
-        component={CulturalAssetUnpressableListItem}
-      />
+      {task.data.isEndangered ? (
+        <View>
+          <Divider style={styles.divider} />
+          <FancyList
+            title="Helfer"
+            data={task.data.helperUsers || []}
+            component={UserUnpressableListItem}
+          />
+        </View>
+      ) : null}
+
       <View style={styles.center}>
         <FloatingWhiteButton onPress={goMedia} content="Weiter zu den Medien" />
         <FloatingWhiteButton
