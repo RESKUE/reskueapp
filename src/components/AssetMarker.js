@@ -13,7 +13,9 @@ export default function AssetMarker({
   const {colors} = useTheme();
 
   function onMarkerPress() {
-    onPress({title, description, identifier, coordinate});
+    if (onPress) {
+      onPress({title, description, identifier, coordinate});
+    }
   }
 
   return (
