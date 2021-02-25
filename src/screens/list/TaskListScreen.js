@@ -7,7 +7,7 @@ import ListActions from '../../components/ListActions';
 import useTasks from '../../handlers/TasksHook';
 
 export default function TaskListScreen({navigation}) {
-  const goGroupCreation = () => navigation.push('TaskCreationScreen');
+  const goTaskCreation = () => navigation.push('TaskCreationScreen');
   const {colors} = useTheme();
   const {result: tasksResult, requestTasks} = useTasks();
 
@@ -26,7 +26,7 @@ export default function TaskListScreen({navigation}) {
         <IconButton
           color={colors.primary}
           icon="plus-circle-outline"
-          onPress={goGroupCreation}
+          onPress={goTaskCreation}
         />
       </ListActions>
       <FancyList
