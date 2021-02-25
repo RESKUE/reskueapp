@@ -1,17 +1,32 @@
 import React from 'react';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import NotificationListItem from '../../components/listItems/NotificationListItem';
-import {notificationData} from '../../../testdata';
+import useNotifications from '../../handlers/NotificationsHook';
 
 export default function NotificationListScreen({navigation}) {
+  const {result, get} = useNotifications();
+
+  React.useEffect(() => {
+    get();
+  }, [get]);
+
+  if (result === null) {
+    <LoadingIndicator />;
+  }
+
   return (
     <Scaffold>
       <FancyList
         title="Benachrichtigungen"
-        data={notificationData}
+        data={result?.data?.content ?? []}
+        extraData={{onPress: onPress}}
         component={NotificationListItem}
       />
     </Scaffold>
   );
+
+  function onPress(id) {
+    navigation.push('NotificationDetailScreen', {id: id});
+  }
 }
