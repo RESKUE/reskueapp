@@ -12,13 +12,12 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import UserCreationListItem from '../../components/listItems/UserCreationListItem';
 import ListActions from '../../components/ListActions';
 import useUsers from '../../handlers/UsersHook';
+import useUsergroupCreation from '../../handlers/UsergroupCreationHook';
 
 export default function UsergroupCreationScreen({navigation, route}) {
   const {colors} = useTheme();
-  const [usergroup, setUserGroup] = React.useState({
-    name: '',
-    users: [],
-  });
+  const [usergroup, setUserGroup] = React.useState(emptyUsergroup);
+  const {postUsergroup, result: creationResult} = useUsergroupCreation();
   const {requestUsers, result: userResult} = useUsers();
 
   React.useEffect(() => {
@@ -32,6 +31,14 @@ export default function UsergroupCreationScreen({navigation, route}) {
     }
   }, [routeUserId, addUser]);
 
+  React.useEffect(() => {
+    if (creationResult?.data != null) {
+      navigation.goBack();
+    } else {
+      console.log(creationResult);
+    }
+  }, [creationResult, navigation]);
+
   const onChangeName = (name) => {
     const updatedUsergroup = {usergroup};
     updatedUsergroup.name = name;
@@ -41,7 +48,10 @@ export default function UsergroupCreationScreen({navigation, route}) {
 
   const addUser = React.useCallback(
     (userId) => {
-      const addedUser = userResult.data.find((user) => user.id === userId);
+      console.log(userResult);
+      const addedUser = userResult.data.content.find(
+        (user) => user.id === userId,
+      );
       const updatedUserList = [...usergroup.users, addedUser];
       const updatedUsergroup = {name: usergroup.name, users: updatedUserList};
       setUserGroup(updatedUsergroup);
@@ -60,7 +70,13 @@ export default function UsergroupCreationScreen({navigation, route}) {
   const goUserSelection = () => {
     navigation.push('UserSelectionListScreen');
   };
-  const finishCreation = () => navigation.goBack();
+  const finishCreation = () => {
+    const userIds = usergroup.users.map((user) => {
+      user.id;
+    });
+    const formattedUsergroup = {name: usergroup.name, users: userIds};
+    postUsergroup(formattedUsergroup);
+  };
 
   if (userResult === null) {
     return <LoadingIndicator />;
@@ -97,6 +113,11 @@ export default function UsergroupCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
+
+const emptyUsergroup = {
+  name: '',
+  users: [],
+};
 
 const styles = StyleSheet.create({
   dividerStyle: {marginBottom: 24, backgroundColor: 'black'},

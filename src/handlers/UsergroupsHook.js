@@ -4,7 +4,7 @@ import appConfig from '../../app.json';
 
 const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
-const url = appConfig.rest.baseUrl + '/usergroup';
+const url = appConfig.rest.baseUrl + '/userGroup';
 
 export default function useUsergroups() {
   const {client, result} = useClient({authenticated: true});
