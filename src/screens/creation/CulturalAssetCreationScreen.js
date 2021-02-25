@@ -121,7 +121,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   };
   const onChangePriority = (prio) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.setPriority(prio);
+    updatedCulturalAsset.data.priority = prio;
     setCulturalAsset(updatedCulturalAsset);
   };
 
@@ -141,6 +141,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     if (screenType === 'update') {
       putAsset(culturalAsset.data.id, culturalAsset.data);
     } else {
+      //if(parentAsset !== [])
+      //{
+      //  culturalAsset.data.culturalAssetParent = {id: parentAsset[0].id};
+      //}
       postAsset(culturalAsset.data);
     }
   };
@@ -207,7 +211,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
               icon="alert-circle"
               mode="flat"
               height={30}
-              selected={prio.value === culturalAsset.getPriority()}
+              selected={prio.value === culturalAsset.data.priority}
               onPress={() => onChangePriority(prio.value)}>
               {prio.name}
             </Chip>
@@ -228,12 +232,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 const emptyCulturalAsset = {
   name: '',
   description: '',
-  tags: ['p0'],
-  comments: [],
+  priority: 0,
   address: '',
   longitude: 0.0,
   latitude: 0.0,
-  tasks: [],
   label: '',
   level: 0,
 };

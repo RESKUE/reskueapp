@@ -72,7 +72,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
   }, [routeUserId, addUser]);
 
   React.useEffect(() => {
-    if (creationResult?.data != null) {
+    if (creationResult?.data) {
       navigation.goBack();
     } else {
       console.log(creationResult);
@@ -90,7 +90,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
 
   const addUser = React.useCallback(
     (userId) => {
-      console.log(userResult);
       const addedUser = userResult.data.content.find(
         (user) => user.id === userId,
       );
@@ -125,10 +124,13 @@ export default function UsergroupCreationScreen({navigation, route}) {
       console.log(usergroup);
       putUsergroup(usergroup.id, usergroup);
     } else {
-      const userIds = usergroup.users.map((user) => {
-        user.id;
+      const userIds = [];
+      usergroup.users.forEach((user) => {
+        userIds.push({id: user.id});
       });
       const formattedUsergroup = {name: usergroup.name, users: userIds};
+      console.log(formattedUsergroup);
+      //return;
       postUsergroup(formattedUsergroup);
     }
   };
