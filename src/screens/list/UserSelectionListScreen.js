@@ -29,7 +29,7 @@ export default function UserSelectionListScreen() {
       </ListActions>
       <FancyList
         title="Wähle Mitglied"
-        data={userResult.data}
+        data={userResult.data?.content || []}
         component={UserSelectionListItem}
       />
     </Scaffold>
