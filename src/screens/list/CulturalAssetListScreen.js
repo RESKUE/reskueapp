@@ -16,9 +16,10 @@ import {
   SliderFilteringOption,
   ChipFilteringOption,
   SearchProvider,
+  NotificationService,
 } from '@ilt-pse/react-native-kueres';
 
-export default function CulturalAssetListScreen({navigation, route}) {
+export default function CulturalAssetListScreen({navigation}) {
   const goAssetCreation = () =>
     navigation.push('CulturalAssetCreationScreen', {
       screenType: 'creation',
@@ -31,6 +32,14 @@ export default function CulturalAssetListScreen({navigation, route}) {
   React.useEffect(() => {
     requestAssets();
   }, [requestAssets]);
+
+  function onServiceOn() {
+    NotificationService.start();
+  }
+
+  function onServiceOff() {
+    NotificationService.stop();
+  }
 
   return (
     <Scaffold>
@@ -72,6 +81,22 @@ export default function CulturalAssetListScreen({navigation, route}) {
       </SearchProvider>
 
       <ListActions>
+        <IconButton color={colors.primary} icon="bell" onPress={onServiceOn} />
+        <IconButton
+          color={colors.primary}
+          icon="bell-off"
+          onPress={onServiceOff}
+        />
+        <IconButton
+          color={colors.primary}
+          icon="anchor"
+          onPress={async () =>
+            console.log(
+              'REFRESH TOKEN:',
+              await authService.storage.getRefreshToken(),
+            )
+          }
+        />
         <IconButton
           color={colors.primary}
           icon="security"
