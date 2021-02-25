@@ -6,6 +6,7 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import useUsergroup from '../../handlers/UsergroupHook';
+import useUsergroupDeletion from '../../handlers/UsergroupDeletionHook';
 
 export default function UsergroupDetailScreen({navigation, route}) {
   const {colors} = useTheme();
@@ -17,6 +18,10 @@ export default function UsergroupDetailScreen({navigation, route}) {
     usergroupResult,
     usersResult,
   } = useUsergroup();
+  const {
+    result: deletionResult,
+    requestUsergroupDeletion,
+  } = useUsergroupDeletion();
 
   React.useEffect(() => {
     requestUsergroup(route.params.id);
@@ -38,12 +43,23 @@ export default function UsergroupDetailScreen({navigation, route}) {
     }
   }, [usersResult]);
 
+  //If deletion was successful go back
+  React.useEffect(() => {
+    if (deletionResult) {
+      if (deletionResult.data?.deleted) {
+        navigation.goBack();
+      } else {
+        console.log(deletionResult);
+      }
+    }
+  }, [deletionResult, navigation]);
+
   const goCreation = () =>
     navigation.push('UsergroupCreationScreen', {
       screenType: 'update',
       id: usergroup.id,
     });
-  const deleteUsergroup = () => console.log('Deleted Usergroup');
+  const deleteUsergroup = () => requestUsergroupDeletion(usergroup.id);
   const finishCreation = () => navigation.goBack();
 
   if (usergroup === null || users === null) {
