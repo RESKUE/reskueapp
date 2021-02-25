@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {
   useTheme,
   Button,
+  Divider,
   IconButton,
   Paragraph,
   Text,
@@ -21,7 +22,6 @@ import Task from '../../models/Task';
 export default function TaskDetailScreen({navigation, route}) {
   const [task, setTask] = React.useState(null);
   const [asset, setAsset] = React.useState(null);
-  const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
   const {colors} = useTheme();
   const {requestTask, result: taskResult} = useTask();
@@ -34,7 +34,7 @@ export default function TaskDetailScreen({navigation, route}) {
   React.useEffect(() => {
     if (taskResult) {
       setTask(new Task(taskResult.data));
-      if (taskResult.data.culturalAsset) {
+      if (taskResult.data?.culturalAsset) {
         requestAsset(taskResult.data.culturalAsset.id);
       } else {
         setAsset([]);
@@ -47,19 +47,6 @@ export default function TaskDetailScreen({navigation, route}) {
       setAsset(assetResult.data);
     }
   }, [assetResult]);
-
-  const addSubtask = () => {
-    const emptySubtask = {
-      id: subtaskIdCounter,
-      state: 0,
-      text: '',
-      isRequired: true,
-    };
-    const updatedTask = new Task(task.data);
-    updatedTask.data.subtasks.push(emptySubtask);
-    setSubtaskIdCounter(subtaskIdCounter + 1);
-    setTask(updatedTask);
-  };
 
   const onChangeSubtaskState = (subtaskId, state) => {
     const updatedTask = new Task(task.data);
@@ -74,12 +61,29 @@ export default function TaskDetailScreen({navigation, route}) {
   const goAsset = () =>
     navigation.push('CulturalAssetDetailScreen', {id: asset.id});
 
+  const deleteTask = () => {
+    console.log('Delete Task');
+  };
+  const goCreation = () => console.log('Update Task');
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
   if (task === null || asset === null) {
     return <LoadingIndicator />;
   }
+
+  const getButtons = () => {
+    if (task.data.isEndangered === 0) {
+      return null;
+    } else {
+      return (
+        <ListActions>
+          <Button color={colors.primary}>Beenden</Button>
+          <Button color={colors.redish}>Abbrechen</Button>
+        </ListActions>
+      );
+    }
+  };
 
   return (
     <Scaffold>
@@ -105,20 +109,31 @@ export default function TaskDetailScreen({navigation, route}) {
           </View>
         ) : null}
       </View>
+      <View>
+        <ListActions>
+          <IconButton
+            color={colors.primary}
+            icon="circle-edit-outline"
+            onPress={goCreation}
+          />
+          <IconButton
+            color={colors.primary}
+            icon="trash-can-outline"
+            onPress={deleteTask}
+          />
+        </ListActions>
+      </View>
+      {getButtons()}
+      <Divider style={styles.divider} />
       <Text>Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}</Text>
-      <ListActions>
-        <IconButton
-          color={colors.primary}
-          icon="plus-circle-outline"
-          onPress={addSubtask}
-        />
-      </ListActions>
+      <Divider style={styles.divider} />
       <FancyList
         title="Teilaufgaben"
         data={task.data.subtasks}
         extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
         component={SubtaskListItem}
       />
+      <Divider style={styles.divider} />
       <FancyList
         title="Helfer"
         data={[]}
@@ -143,11 +158,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginTop: -24,
+    marginVertical: -24,
     marginLeft: -12,
   },
   bold: {
     fontWeight: 'bold',
+  },
+  divider: {
+    backgroundColor: 'black',
+    marginVertical: 10,
   },
   center: {
     justifyContent: 'center',
