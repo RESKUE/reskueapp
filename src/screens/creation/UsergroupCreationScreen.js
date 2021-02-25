@@ -12,17 +12,57 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import UserCreationListItem from '../../components/listItems/UserCreationListItem';
 import ListActions from '../../components/ListActions';
 import useUsers from '../../handlers/UsersHook';
+import useUsergroup from '../../handlers/UsergroupHook';
 import useUsergroupCreation from '../../handlers/UsergroupCreationHook';
 
 export default function UsergroupCreationScreen({navigation, route}) {
   const {colors} = useTheme();
+
+  const {
+    requestUsergroup,
+    requestUsergroupUsers,
+    usergroupResult,
+    usersResult,
+  } = useUsergroup();
+
+  const screenType = route.params?.screenType;
+
   const [usergroup, setUserGroup] = React.useState(emptyUsergroup);
-  const {postUsergroup, result: creationResult} = useUsergroupCreation();
+  const {
+    postUsergroup,
+    putUsergroup,
+    result: creationResult,
+  } = useUsergroupCreation();
   const {requestUsers, result: userResult} = useUsers();
+
+  React.useEffect(() => {
+    if (screenType === 'update') {
+      console.log('Request usergroup with id: ' + route.params.id);
+      requestUsergroup(route.params.id);
+      requestUsergroupUsers(route.params.id);
+    }
+  }, [requestUsergroup, requestUsergroupUsers, screenType, route.params]);
 
   React.useEffect(() => {
     requestUsers();
   }, [requestUsers]);
+
+  React.useEffect(() => {
+    if (usergroupResult?.data) {
+      setUserGroup(usergroupResult.data);
+    }
+  }, [usergroupResult]);
+
+  React.useEffect(() => {
+    if (usersResult?.data) {
+      const updatedUsergroup = {
+        id: usergroup.id,
+        name: usergroup.name,
+        users: usersResult.data.content,
+      };
+      setUserGroup(updatedUsergroup);
+    }
+  }, [usersResult, usergroup]);
 
   const routeUserId = route.params?.userId;
   React.useEffect(() => {
@@ -40,9 +80,11 @@ export default function UsergroupCreationScreen({navigation, route}) {
   }, [creationResult, navigation]);
 
   const onChangeName = (name) => {
-    const updatedUsergroup = {usergroup};
-    updatedUsergroup.name = name;
-    updatedUsergroup.users = usergroup.users;
+    const updatedUsergroup = {
+      id: usergroup.id,
+      name: name,
+      users: usergroup.users,
+    };
     setUserGroup(updatedUsergroup);
   };
 
@@ -53,7 +95,11 @@ export default function UsergroupCreationScreen({navigation, route}) {
         (user) => user.id === userId,
       );
       const updatedUserList = [...usergroup.users, addedUser];
-      const updatedUsergroup = {name: usergroup.name, users: updatedUserList};
+      const updatedUsergroup = {
+        id: usergroup.id,
+        name: usergroup.name,
+        users: updatedUserList,
+      };
       setUserGroup(updatedUsergroup);
     },
     [userResult, usergroup],
@@ -63,7 +109,11 @@ export default function UsergroupCreationScreen({navigation, route}) {
     const updatedUserList = usergroup.users.filter(
       (user) => user.id !== userId,
     );
-    const updatedUsergroup = {name: usergroup.name, users: updatedUserList};
+    const updatedUsergroup = {
+      id: usergroup.id,
+      name: usergroup.name,
+      users: updatedUserList,
+    };
     setUserGroup(updatedUsergroup);
   }
 
@@ -71,11 +121,16 @@ export default function UsergroupCreationScreen({navigation, route}) {
     navigation.push('UserSelectionListScreen');
   };
   const finishCreation = () => {
-    const userIds = usergroup.users.map((user) => {
-      user.id;
-    });
-    const formattedUsergroup = {name: usergroup.name, users: userIds};
-    postUsergroup(formattedUsergroup);
+    if (screenType === 'update') {
+      console.log(usergroup);
+      putUsergroup(usergroup.id, usergroup);
+    } else {
+      const userIds = usergroup.users.map((user) => {
+        user.id;
+      });
+      const formattedUsergroup = {name: usergroup.name, users: userIds};
+      postUsergroup(formattedUsergroup);
+    }
   };
 
   if (userResult === null) {

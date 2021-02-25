@@ -38,7 +38,11 @@ export default function UsergroupDetailScreen({navigation, route}) {
     }
   }, [usersResult]);
 
-  const goCreation = () => console.log('Edited Usergroup');
+  const goCreation = () =>
+    navigation.push('UsergroupCreationScreen', {
+      screenType: 'update',
+      id: usergroup.id,
+    });
   const deleteUsergroup = () => console.log('Deleted Usergroup');
   const finishCreation = () => navigation.goBack();
 

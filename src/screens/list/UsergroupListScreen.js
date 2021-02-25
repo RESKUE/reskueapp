@@ -7,7 +7,10 @@ import ListActions from '../../components/ListActions';
 import useUsergroups from '../../handlers/UsergroupsHook';
 
 export default function UsergroupListScreen({navigation}) {
-  const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
+  const goGroupCreation = () =>
+    navigation.push('UsergroupCreationScreen', {
+      screenType: 'creation',
+    });
   const {colors} = useTheme();
   const {requestUsergroups, result: usergroupResult} = useUsergroups();
 
@@ -18,6 +21,11 @@ export default function UsergroupListScreen({navigation}) {
   return (
     <Scaffold>
       <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="reload"
+          onPress={() => requestUsergroups()}
+        />
         <IconButton
           color={colors.primary}
           icon="plus-circle-outline"

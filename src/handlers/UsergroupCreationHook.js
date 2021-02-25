@@ -24,8 +24,24 @@ export default function useUsergroupCreation() {
     [client],
   );
 
+  const putUsergroup = React.useCallback(
+    async (id, usergroup) => {
+      const url = appConfig.rest.baseUrl + `/userGroup/${id}`;
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usergroup),
+      };
+      await client.request(url, options, policy);
+    },
+    [client],
+  );
+
   return {
     result,
     postUsergroup,
+    putUsergroup,
   };
 }
