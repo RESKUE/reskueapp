@@ -83,7 +83,7 @@ export default function TaskCreationScreen({navigation, route}) {
   const onChangeSubtaskText = (subtaskId, text) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
-      (subtask) => subtask.id === subtaskId,
+      (subtask) => subtask.localId === subtaskId,
     );
     updatedTask.data.subtasks[index].text = text;
     setTask(updatedTask);
@@ -92,7 +92,7 @@ export default function TaskCreationScreen({navigation, route}) {
   const onChangeSubtaskIsRequired = (subtaskId, isRequired) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
-      (subtask) => subtask.id === subtaskId,
+      (subtask) => subtask.localId === subtaskId,
     );
     updatedTask.data.subtasks[index].isRequired = isRequired;
     setTask(updatedTask);
@@ -102,7 +102,7 @@ export default function TaskCreationScreen({navigation, route}) {
     const updatedTask = new Task(task.data);
     updatedTask.data.subtasks.splice(
       updatedTask.data.subtasks.findIndex(
-        (subtask) => subtask.id === subtaskId,
+        (subtask) => subtask.localId === subtaskId,
       ),
       1,
     );
