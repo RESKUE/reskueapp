@@ -10,4 +10,6 @@ NotificationService.register(
   new TokenStorage(),
 );
 
+NotificationService.start();
+
 AppRegistry.registerComponent(appConfig.name, () => App);
