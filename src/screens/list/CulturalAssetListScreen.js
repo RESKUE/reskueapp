@@ -59,15 +59,6 @@ export default function CulturalAssetListScreen({navigation}) {
               ]}
               label="In Gefahr"
             />
-            <SliderFilteringOption
-              field="distance"
-              operation="<"
-              min={0}
-              max={100}
-              step={5}
-              unit="km"
-              label="Entfernung"
-            />
             <ChipFilteringOption
               field="priority"
               operation="="
@@ -77,7 +68,6 @@ export default function CulturalAssetListScreen({navigation}) {
           </FilteringButton>
           <SortingButton>
             <SortingOption field="name" label="Name" />
-            <SortingOption field="distance" label="Entfernung" />
             <SortingOption field="tags" label="Priorität" />
           </SortingButton>
         </SearchBar>
