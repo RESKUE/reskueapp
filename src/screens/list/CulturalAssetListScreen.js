@@ -76,34 +76,6 @@ export default function CulturalAssetListScreen({navigation}) {
       </SearchProvider>
 
       <ListActions>
-        <IconButton color={colors.primary} icon="bell" onPress={onServiceOn} />
-        <IconButton
-          color={colors.primary}
-          icon="bell-off"
-          onPress={onServiceOff}
-        />
-        <IconButton
-          color={colors.primary}
-          icon="anchor"
-          onPress={async () =>
-            console.log(
-              'REFRESH TOKEN:',
-              await authService.storage.getRefreshToken(),
-            )
-          }
-        />
-        <IconButton
-          color={colors.primary}
-          icon="security"
-          onPress={async () =>
-            console.log('ACCESS TOKEN:', await authService.getAccessToken())
-          }
-        />
-        <IconButton
-          color={colors.primary}
-          icon="key-outline"
-          onPress={() => authService.refresh()}
-        />
         <IconButton
           color={colors.primary}
           icon="reload"
