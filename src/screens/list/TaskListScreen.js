@@ -5,15 +5,18 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import useTasks from '../../handlers/TasksHook';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function TaskListScreen({navigation}) {
   const goTaskCreation = () => navigation.push('TaskCreationScreen');
   const {colors} = useTheme();
   const {result: tasksResult, requestTasks} = useTasks();
 
-  React.useEffect(() => {
-    requestTasks();
-  }, [requestTasks]);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestTasks();
+    }, [requestTasks]),
+  );
 
   return (
     <Scaffold>

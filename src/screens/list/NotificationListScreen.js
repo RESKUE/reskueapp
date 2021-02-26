@@ -3,13 +3,16 @@ import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import NotificationListItem from '../../components/listItems/NotificationListItem';
 import useNotifications from '../../handlers/NotificationsHook';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function NotificationListScreen({navigation}) {
   const {result, get} = useNotifications();
 
-  React.useEffect(() => {
-    get();
-  }, [get]);
+  useFocusEffect(
+    React.useCallback(() => {
+      get();
+    }, [get]),
+  );
 
   if (result === null) {
     <LoadingIndicator />;

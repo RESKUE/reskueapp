@@ -5,6 +5,7 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
 import ListActions from '../../components/ListActions';
 import useUsergroups from '../../handlers/UsergroupsHook';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function UsergroupListScreen({navigation}) {
   const goGroupCreation = () =>
@@ -14,9 +15,11 @@ export default function UsergroupListScreen({navigation}) {
   const {colors} = useTheme();
   const {requestUsergroups, result: usergroupResult} = useUsergroups();
 
-  React.useEffect(() => {
-    requestUsergroups();
-  }, [requestUsergroups]);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestUsergroups();
+    }, [requestUsergroups]),
+  );
 
   return (
     <Scaffold>

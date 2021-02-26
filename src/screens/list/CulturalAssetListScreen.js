@@ -1,4 +1,5 @@
 import React from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {useTheme, IconButton} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
@@ -29,9 +30,11 @@ export default function CulturalAssetListScreen({navigation}) {
   const {colors} = useTheme();
   const {result, setQuery, requestAssets} = useAssets();
 
-  React.useEffect(() => {
-    requestAssets();
-  }, [requestAssets]);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestAssets();
+    }, [requestAssets]),
+  );
 
   function onServiceOn() {
     NotificationService.start();
