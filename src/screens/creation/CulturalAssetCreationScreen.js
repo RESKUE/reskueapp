@@ -116,7 +116,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   const onChangeLabel = (label) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.data.label = label;
-    updatedCulturalAsset.setSpecial();
     setCulturalAsset(updatedCulturalAsset);
   };
   const onChangePriority = (prio) => {
