@@ -28,6 +28,10 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAsset, result: assetResult} = useAsset();
+  const {
+    requestAsset: requestAssetParent,
+    result: assetParentResult,
+  } = useAsset();
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
@@ -50,8 +54,22 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   React.useEffect(() => {
     if (assetResult) {
       setCulturalAsset(new CulturalAsset(assetResult.data));
+
+      const parentId = assetResult.data.culturalAssetParent;
+      if (parentId != null) {
+        requestAssetParent(assetResult.data.culturalAssetParent);
+      } else {
+        setParentAsset({});
+      }
     }
-  }, [assetResult]);
+  }, [assetResult, requestAssetParent]);
+
+  //Set parent of this CulturalAsset
+  React.useEffect(() => {
+    if (assetParentResult?.data) {
+      setParentAsset(assetParentResult.data);
+    }
+  }, [assetParentResult]);
 
   //Set tasks of this CulturalAsset
   React.useEffect(() => {
@@ -68,15 +86,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [culturalAsset, taskResult]);
 
-  //Set parent and children of this CulturalAsset
+  //Set children of this CulturalAsset
   React.useEffect(() => {
     if (assetChildrenResult && culturalAsset) {
-      const parentId = culturalAsset.data.culturalAssetParent?.id;
-      if (parentId != null) {
-        setParentAsset(culturalAsset.data.culturalAssetParent);
-      } else {
-        setParentAsset({});
-      }
       if (assetChildrenResult.data) {
         setChildrenAssets(assetChildrenResult.data.content);
       } else {

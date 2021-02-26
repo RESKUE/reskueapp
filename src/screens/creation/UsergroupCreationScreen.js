@@ -130,7 +130,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
       });
       const formattedUsergroup = {name: usergroup.name, users: userIds};
       console.log(formattedUsergroup);
-      //return;
       postUsergroup(formattedUsergroup);
     }
   };
