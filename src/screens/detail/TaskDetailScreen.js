@@ -16,6 +16,7 @@ import {
 } from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskListItem from '../../components/listItems/SubtaskListItem';
+import SubtaskUnpressableListItem from '../../components/listItems/SubtaskUnpressableListItem';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
@@ -23,6 +24,7 @@ import useAsset from '../../handlers/AssetHook';
 import useTask from '../../handlers/TaskHook';
 import Task from '../../models/Task';
 import useUserMe from '../../handlers/UserMeHook';
+import useSubtasks from '../../handlers/SubtaksHook';
 
 export default function TaskDetailScreen({navigation, route}) {
   const {clientRoles} = React.useContext(AuthContext);
@@ -34,6 +36,7 @@ export default function TaskDetailScreen({navigation, route}) {
   const {colors} = useTheme();
   const {requestTask, result: taskResult} = useTask();
   const {requestAsset, result: assetResult} = useAsset();
+  const {requestSubtasks, result: subtaskResult} = useSubtasks();
   const {requestUserMe, result: userResult} = useUserMe();
 
   React.useEffect(() => {
@@ -42,18 +45,25 @@ export default function TaskDetailScreen({navigation, route}) {
 
   React.useEffect(() => {
     requestTask(route.params.id);
-  }, [requestTask, route.params]);
+  }, [requestTask, requestSubtasks, route.params]);
 
   React.useEffect(() => {
     if (taskResult) {
       setTask(new Task(taskResult.data));
+      requestSubtasks(taskResult.data.id);
       if (taskResult.data?.culturalAsset) {
-        requestAsset(taskResult.data.culturalAsset.id);
+        requestAsset(taskResult.data.culturalAsset);
       } else {
         setAsset([]);
       }
     }
-  }, [requestAsset, taskResult]);
+  }, [requestAsset, requestSubtasks, taskResult]);
+
+  React.useEffect(() => {
+    if (subtaskResult?.data) {
+      setSubtasks(subtaskResult.data.content);
+    }
+  }, [subtaskResult, setSubtasks]);
 
   React.useEffect(() => {
     if (userResult?.data) {
@@ -68,6 +78,16 @@ export default function TaskDetailScreen({navigation, route}) {
     }
   }, [assetResult]);
 
+  const taskDataExpression = task?.data;
+  const setSubtasks = React.useCallback(
+    (subtasks) => {
+      const updatedTask = new Task(taskDataExpression);
+      updatedTask.data.subtasks = subtasks;
+      setTask(updatedTask);
+    },
+    [taskDataExpression],
+  );
+
   const onChangeSubtaskState = (subtaskId) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
@@ -78,7 +98,41 @@ export default function TaskDetailScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
-  //const onAcceptTask = () => {};
+  const resetState = () => {
+    const updatedTask = new Task(task.data);
+    updatedTask.data.state = 0;
+    updatedTask.data.subtasks.forEach((subtask) => {
+      subtask.state = 0;
+    });
+    setTask(updatedTask);
+  };
+
+  const onAcceptTask = () => {
+    const updatedHelpers = [...task.data.helperUsers, user];
+    const updatedTask = new Task(task.data);
+    updatedTask.data.helperUsers = updatedHelpers;
+    updatedTask.data.state = 1;
+    setTask(updatedTask);
+  };
+  const onCompleteTask = () => {
+    const updatedTask = new Task(task.data);
+    const updatedHelpers = updatedTask.data.helperUsers.filter(
+      (helperUser) => helperUser.id !== user.id,
+    );
+    updatedTask.data.helperUsers = updatedHelpers;
+    updatedTask.data.state = 3;
+    updatedTask.data.isEndangered = !updatedTask.data.isEndangered;
+    setTask(updatedTask);
+  };
+  const onCancelTask = () => {
+    const updatedTask = new Task(task.data);
+    const updatedHelpers = updatedTask.data.helperUsers.filter(
+      (helperUser) => helperUser.id !== user.id,
+    );
+    updatedTask.data.helperUsers = updatedHelpers;
+    updatedTask.data.state = 2;
+    setTask(updatedTask);
+  };
 
   const goMap = () => navigation.push('CulturalAssetMapScreen', {id: asset.id});
   const goAsset = () =>
@@ -104,8 +158,12 @@ export default function TaskDetailScreen({navigation, route}) {
       if (task?.data?.helperUsers?.includes(user)) {
         return (
           <ListActions>
-            <Button color={colors.primary}>Beenden</Button>
-            <Button color={colors.redish}>Abbrechen</Button>
+            <Button color={colors.primary} onPress={onCompleteTask}>
+              Beenden
+            </Button>
+            <Button color={colors.redish} onPress={onCancelTask}>
+              Abbrechen
+            </Button>
           </ListActions>
         );
       }
@@ -113,7 +171,9 @@ export default function TaskDetailScreen({navigation, route}) {
       else {
         return (
           <ListActions>
-            <Button color={colors.primary}>Aufgabe annehmen</Button>
+            <Button color={colors.primary} onPress={onAcceptTask}>
+              Aufgabe annehmen
+            </Button>
           </ListActions>
         );
       }
@@ -124,7 +184,7 @@ export default function TaskDetailScreen({navigation, route}) {
     if (task?.data?.helperUsers?.includes(user)) {
       return SubtaskListItem;
     } else {
-      return SubtaskListItem;
+      return SubtaskUnpressableListItem;
     }
   };
 
@@ -177,6 +237,11 @@ export default function TaskDetailScreen({navigation, route}) {
         Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}
       </Text>
       <Text style={styles.bold}>Status: {task.getTaskStateName()}</Text>
+      {clientRoles.includes('administrator') ? (
+        <Button color={colors.redish} onPress={resetState}>
+          Setze Status zurück
+        </Button>
+      ) : null}
       <Divider style={styles.divider} />
       <FancyList
         title="Teilaufgaben"

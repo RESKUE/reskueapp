@@ -2,12 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTheme, Checkbox, List, Text} from 'react-native-paper';
 
-export default function SubtaskListItem({data, extraData}) {
+export default function SubtaskUnpressableListItem({data}) {
   const {colors} = useTheme();
-
-  function onPress() {
-    extraData.changeSubtaskStateCallback(data.id);
-  }
 
   return (
     <List.Item
@@ -20,7 +16,6 @@ export default function SubtaskListItem({data, extraData}) {
             color={colors.primary}
             uncheckedColor={colors.primary}
             status={data.state ? 'checked' : 'unchecked'}
-            onPress={onPress}
           />
           {data.isRequired ? (
             <Text style={[styles.requiredText, {color: colors.redish}]}>

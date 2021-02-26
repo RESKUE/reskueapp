@@ -116,7 +116,9 @@ export default function TaskCreationScreen({navigation, route}) {
   };
 
   const finishCreation = () => {
-    task.data.culturalAsset = {id: task.data.culturalAsset.id};
+    if (task.data.culturalAsset) {
+      task.data.culturalAsset = {id: task.data.culturalAsset.id};
+    }
     console.log(task);
     postTask(task.data);
   };
