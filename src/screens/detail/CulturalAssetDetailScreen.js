@@ -55,8 +55,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     if (assetResult) {
       setCulturalAsset(new CulturalAsset(assetResult.data));
 
-      const parentId = assetResult.data.culturalAssetParent;
-      if (parentId != null) {
+      const parentId = assetResult?.data?.culturalAssetParent;
+      if (parentId) {
         requestAssetParent(assetResult.data.culturalAssetParent);
       } else {
         setParentAsset({});
