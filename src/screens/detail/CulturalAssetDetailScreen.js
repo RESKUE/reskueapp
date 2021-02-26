@@ -117,6 +117,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     return <LoadingIndicator />;
   }
 
+  const cleanName = (culturalAsset.data?.name ?? '').replace(' ', '');
+  const coverUri = `https://loremflickr.com/g/350/200/${cleanName}`;
+
   return (
     <Scaffold>
       <Card style={styles.card}>
@@ -125,11 +128,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           subtitle={getSubtitle()}
           right={buildMenu}
         />
-        <Card.Cover
-          source={{
-            uri: `https://loremflickr.com/g/320/240/${culturalAsset.data.name}`,
-          }}
-        />
+        <Card.Cover source={{uri: coverUri}} />
         <Card.Content style={styles.content}>
           <Paragraph>{culturalAsset?.data?.description}</Paragraph>
         </Card.Content>
