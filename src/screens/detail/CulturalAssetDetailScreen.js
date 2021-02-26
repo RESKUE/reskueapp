@@ -50,7 +50,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     requestTasks();
   }, [requestTasks]);
 
-  //Set this CulturalAsset from requested id data
+  // Set this CulturalAsset from requested id data
   React.useEffect(() => {
     if (assetResult) {
       setCulturalAsset(new CulturalAsset(assetResult.data));
@@ -64,16 +64,16 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [assetResult, requestAssetParent]);
 
-  //Set parent of this CulturalAsset
+  // Set parent of this CulturalAsset
   React.useEffect(() => {
     if (assetParentResult?.data) {
       setParentAsset(assetParentResult.data);
     }
   }, [assetParentResult]);
 
-  //Set tasks of this CulturalAsset
+  // Set tasks of this CulturalAsset
   React.useEffect(() => {
-    if (taskResult && taskResult.data && culturalAsset) {
+    if (taskResult?.data && culturalAsset) {
       if (culturalAsset.data.tasks) {
         const taskIds = culturalAsset.data.tasks?.map((task) => task.id);
         const foundTasks = taskResult.data.content.filter((task) =>
@@ -86,7 +86,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [culturalAsset, taskResult]);
 
-  //Set children of this CulturalAsset
+  // Set children of this CulturalAsset
   React.useEffect(() => {
     if (assetChildrenResult && culturalAsset) {
       if (assetChildrenResult.data) {
@@ -97,7 +97,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [culturalAsset, assetChildrenResult]);
 
-  //If deletion was successful go back
+  // If deletion was successful go back
   React.useEffect(() => {
     if (deletionResult) {
       if (deletionResult.data?.deleted) {
@@ -105,37 +105,13 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       } else {
         console.log(
           'Deletion was not successful! Are you the creator of this asset?',
+          deletionResult,
         );
-        console.log(deletionResult);
       }
     }
   }, [deletionResult, navigation]);
 
-  const goMap = () =>
-    navigation.push('CulturalAssetMapScreen', {id: culturalAsset.data.id});
-  const goAssetGroup = () =>
-    navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
-  const deleteAsset = () => {
-    requestAssetDeletion(culturalAsset.data.id);
-  };
-  const goCreation = () =>
-    navigation.push('CulturalAssetCreationScreen', {
-      screenType: 'update',
-      id: culturalAsset.data.id,
-    });
-  const goTaskCreation = () =>
-    navigation.push('TaskCreationScreen', {
-      assetId: culturalAsset.data.id,
-    });
-  const goMedia = () => navigation.push('MediaListScreen');
-  const goComments = () => console.log('Go to CommentList');
-
-  if (
-    culturalAsset === null ||
-    childrenAssets === null ||
-    parentAsset === null ||
-    tasks === null
-  ) {
+  if (!culturalAsset || !childrenAssets || !parentAsset || !tasks) {
     return <LoadingIndicator />;
   }
 
@@ -143,7 +119,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     <Scaffold>
       <Image
         style={styles.image}
-        source={require('../../assets/MonaLisa.jpg')}
+        source={{
+          uri: `https://loremflickr.com/g/320/240/${culturalAsset.data.name}`,
+        }}
       />
       <Title style={styles.title}>{culturalAsset.data.name}</Title>
       <View style={styles.buttonContainer}>
@@ -193,16 +171,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           />
         )}
       </View>
-      <View>
-        <ListActions>
-          <IconButton
-            color={colors.primary}
-            icon="plus-circle-outline"
-            onPress={goTaskCreation}
-          />
-        </ListActions>
-        <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
-      </View>
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="plus-circle-outline"
+          onPress={goTaskCreation}
+        />
+      </ListActions>
+      <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
       <View style={styles.center}>
         <FloatingWhiteButton onPress={goMedia} content="Weiter zu den Medien" />
         <FloatingWhiteButton
@@ -212,6 +188,39 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       </View>
     </Scaffold>
   );
+
+  function goMap() {
+    navigation.push('CulturalAssetMapScreen', {id: culturalAsset.data.id});
+  }
+
+  function goAssetGroup() {
+    navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
+  }
+
+  function deleteAsset() {
+    requestAssetDeletion(culturalAsset.data.id);
+  }
+
+  function goCreation() {
+    navigation.push('CulturalAssetCreationScreen', {
+      screenType: 'update',
+      id: culturalAsset.data.id,
+    });
+  }
+
+  function goTaskCreation() {
+    navigation.push('TaskCreationScreen', {
+      assetId: culturalAsset.data.id,
+    });
+  }
+
+  function goMedia() {
+    navigation.push('MediaListScreen');
+  }
+
+  function goComments() {
+    console.log('Go to CommentList');
+  }
 }
 
 const styles = StyleSheet.create({
