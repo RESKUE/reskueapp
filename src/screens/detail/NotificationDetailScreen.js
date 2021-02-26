@@ -7,12 +7,12 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import useNotification from '../../handlers/NotificationHook';
 
 export default function NotificationDetailScreen({navigation, route}) {
-  const {result, get} = useNotification(route.params.id);
+  const {result, get} = useNotification();
   const content = result?.data;
 
   React.useEffect(() => {
-    get();
-  }, [get]);
+    get(route.params.id);
+  }, [get, route]);
 
   if (!result) {
     return <LoadingIndicator />;
