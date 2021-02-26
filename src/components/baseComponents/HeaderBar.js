@@ -1,10 +1,9 @@
 import React from 'react';
 import {StyleSheet, Image} from 'react-native';
 import {Appbar} from 'react-native-paper';
+import AlarmAction from '../AlarmAction';
 
-export default function HeaderBar({navigation}) {
-  const createAlarm = () => navigation.navigate();
-
+export default function HeaderBar() {
   return (
     <Appbar.Header style={styles.header}>
       <Appbar.Action />
@@ -18,7 +17,7 @@ export default function HeaderBar({navigation}) {
         }
         style={styles.content}
       />
-      <Appbar.Action icon="bell" color="#a51d01" onPress={createAlarm} />
+      <AlarmAction />
     </Appbar.Header>
   );
 }
