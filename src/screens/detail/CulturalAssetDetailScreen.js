@@ -135,7 +135,11 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         <Divider />
         <Card.Actions>
           <Button onPress={goMap}>Zur Karte</Button>
-          {parentAsset?.id && <Button onPress={goAssetGroup}>Antarktis</Button>}
+          {parentAsset?.id && (
+            <Button onPress={goAssetGroup}>
+              {parentAsset?.name ?? 'Obergruppe'}
+            </Button>
+          )}
         </Card.Actions>
       </Card>
 
