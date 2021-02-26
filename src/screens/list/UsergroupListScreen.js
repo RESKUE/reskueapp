@@ -5,6 +5,7 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
 import ListActions from '../../components/ListActions';
 import useUsergroups from '../../handlers/UsergroupsHook';
+import useRoles from '../../handlers/RolesHook';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function UsergroupListScreen({navigation}) {
@@ -14,6 +15,7 @@ export default function UsergroupListScreen({navigation}) {
     });
   const {colors} = useTheme();
   const {requestUsergroups, result: usergroupResult} = useUsergroups();
+  const {isAdmin} = useRoles();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -29,11 +31,13 @@ export default function UsergroupListScreen({navigation}) {
           icon="reload"
           onPress={() => requestUsergroups()}
         />
-        <IconButton
-          color={colors.primary}
-          icon="plus-circle-outline"
-          onPress={goGroupCreation}
-        />
+        {isAdmin && (
+          <IconButton
+            color={colors.primary}
+            icon="plus-circle-outline"
+            onPress={goGroupCreation}
+          />
+        )}
       </ListActions>
       <FancyList
         title="Gruppen"

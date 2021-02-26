@@ -5,6 +5,7 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 import ListActions from '../../components/ListActions';
 import useAssets from '../../handlers/AssetsHook';
+import useRoles from '../../handlers/RolesHook';
 import {Priorities} from '../../models/CulturalAsset';
 import {
   FancyList,
@@ -29,6 +30,7 @@ export default function CulturalAssetListScreen({navigation}) {
   const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
   const {result, setQuery, requestAssets} = useAssets();
+  const {isAdmin} = useRoles();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -107,11 +109,13 @@ export default function CulturalAssetListScreen({navigation}) {
           icon="reload"
           onPress={() => requestAssets()}
         />
-        <IconButton
-          color={colors.primary}
-          icon="plus-circle-outline"
-          onPress={goAssetCreation}
-        />
+        {isAdmin && (
+          <IconButton
+            color={colors.primary}
+            icon="plus-circle-outline"
+            onPress={goAssetCreation}
+          />
+        )}
       </ListActions>
       <FancyList
         title="Kulturgüter"

@@ -6,11 +6,13 @@ import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import useTasks from '../../handlers/TasksHook';
 import {useFocusEffect} from '@react-navigation/native';
+import useRoles from '../../handlers/RolesHook';
 
 export default function TaskListScreen({navigation}) {
   const goTaskCreation = () => navigation.push('TaskCreationScreen');
   const {colors} = useTheme();
   const {result: tasksResult, requestTasks} = useTasks();
+  const {isAdmin} = useRoles();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -26,11 +28,13 @@ export default function TaskListScreen({navigation}) {
           icon="reload"
           onPress={() => requestTasks()}
         />
-        <IconButton
-          color={colors.primary}
-          icon="plus-circle-outline"
-          onPress={goTaskCreation}
-        />
+        {isAdmin && (
+          <IconButton
+            color={colors.primary}
+            icon="plus-circle-outline"
+            onPress={goTaskCreation}
+          />
+        )}
       </ListActions>
       <FancyList
         title="Aufgaben"
