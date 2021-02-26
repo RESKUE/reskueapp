@@ -1,12 +1,13 @@
 import React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
+  useTheme,
   Button,
   Divider,
   IconButton,
-  Title,
   Paragraph,
-  useTheme,
+  Card,
+  Menu,
 } from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
@@ -21,6 +22,7 @@ import useAssetDeletion from '../../handlers/AssetDeletionHook';
 import CulturalAsset from '../../models/CulturalAsset';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
+  const [menuVisible, setMenuVisible] = React.useState(false);
   const [culturalAsset, setCulturalAsset] = React.useState(null);
   const [parentAsset, setParentAsset] = React.useState(null);
   const [childrenAssets, setChildrenAssets] = React.useState(null);
@@ -117,60 +119,31 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   return (
     <Scaffold>
-      <Image
-        style={styles.image}
-        source={{
-          uri: `https://loremflickr.com/g/320/240/${culturalAsset.data.name}`,
-        }}
-      />
-      <Title style={styles.title}>{culturalAsset.data.name}</Title>
-      <View style={styles.buttonContainer}>
-        <Button
-          color={colors.primary}
-          icon="map-marker"
-          onPress={goMap}
-          style={styles.bold}>
-          Location
-        </Button>
-        <View>
-          {parentAsset.name ? (
-            <Button
-              color={colors.primary}
-              icon="apps"
-              onPress={goAssetGroup}
-              style={styles.bold}>
-              {parentAsset.name}
-            </Button>
-          ) : null}
-        </View>
-      </View>
-      <ListActions>
-        <IconButton
-          color={colors.primary}
-          icon="circle-edit-outline"
-          onPress={goCreation}
+      <Card style={styles.card}>
+        <Card.Title title={culturalAsset?.data?.name} right={buildMenu} />
+        <Card.Cover
+          source={{
+            uri: `https://loremflickr.com/g/320/240/${culturalAsset.data.name}`,
+          }}
         />
-        <IconButton
-          color={colors.primary}
-          icon="trash-can-outline"
-          onPress={deleteAsset}
+        <Card.Content style={styles.content}>
+          <Paragraph>{culturalAsset?.data?.description}</Paragraph>
+        </Card.Content>
+        <Divider />
+        <Card.Actions>
+          <Button onPress={goMap}>Zur Karte</Button>
+          {parentAsset?.id && <Button onPress={goAssetGroup}>Antarktis</Button>}
+        </Card.Actions>
+      </Card>
+
+      {childrenAssets.length !== 0 && (
+        <FancyList
+          title="Teil-Kulturgüter"
+          data={childrenAssets}
+          component={CulturalAssetListItem}
         />
-      </ListActions>
-      <Divider style={styles.divider} />
-      <View style={styles.descriptionContainer}>
-        <Title style={styles.bold}>Beschreibung:</Title>
-        <Paragraph>{culturalAsset.data.description}</Paragraph>
-      </View>
-      <Divider style={styles.divider} />
-      <View>
-        {childrenAssets.length === 0 ? null : (
-          <FancyList
-            title="Teil-Kulturgüter"
-            data={childrenAssets}
-            component={CulturalAssetListItem}
-          />
-        )}
-      </View>
+      )}
+
       <ListActions>
         <IconButton
           color={colors.primary}
@@ -179,6 +152,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         />
       </ListActions>
       <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
+
       <View style={styles.center}>
         <FloatingWhiteButton onPress={goMedia} content="Weiter zu den Medien" />
         <FloatingWhiteButton
@@ -189,6 +163,28 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     </Scaffold>
   );
 
+  function buildMenu(props) {
+    return (
+      <Menu
+        visible={menuVisible}
+        onDismiss={hideMenu}
+        anchor={
+          <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+        }>
+        <Menu.Item onPress={goCreation} title="Bearbeiten" />
+        <Menu.Item onPress={deleteAsset} title="Löschen" />
+      </Menu>
+    );
+  }
+
+  function showMenu() {
+    setMenuVisible(true);
+  }
+
+  function hideMenu() {
+    setMenuVisible(false);
+  }
+
   function goMap() {
     navigation.push('CulturalAssetMapScreen', {id: culturalAsset.data.id});
   }
@@ -198,10 +194,12 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function deleteAsset() {
+    hideMenu();
     requestAssetDeletion(culturalAsset.data.id);
   }
 
   function goCreation() {
+    hideMenu();
     navigation.push('CulturalAssetCreationScreen', {
       screenType: 'update',
       id: culturalAsset.data.id,
@@ -224,31 +222,11 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    height: 300,
-    width: '100%',
-    resizeMode: 'contain',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    marginTop: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: -8,
-  },
-  bold: {
-    fontWeight: 'bold',
-  },
-  divider: {
-    backgroundColor: 'black',
-    marginHorizontal: 15,
-  },
-  descriptionContainer: {
-    marginHorizontal: 20,
+  card: {
     marginBottom: 16,
+  },
+  content: {
+    paddingVertical: 16,
   },
   center: {
     justifyContent: 'center',
