@@ -62,7 +62,7 @@ export default function GroupSelectionScreen({navigation, route}) {
   }
 
   function toggle(data) {
-    if (selection.some((e) => e.id == data.id)) {
+    if (selection.some((e) => e.id === data.id)) {
       const newSelection = selection.filter((e) => e.id !== data.id);
       setSelection(newSelection);
     } else {
@@ -72,7 +72,7 @@ export default function GroupSelectionScreen({navigation, route}) {
   }
 
   function getIconName(id) {
-    if (selection.some((e) => e.id == id)) {
+    if (selection.some((e) => e.id === id)) {
       return 'checkbox-marked';
     }
     return 'checkbox-blank-outline';

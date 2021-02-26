@@ -9,16 +9,13 @@ import useRoles from '../../handlers/RolesHook';
 import {Priorities} from '../../models/CulturalAsset';
 import {
   FancyList,
-  AuthContext,
   SearchBar,
   FilteringButton,
   SortingButton,
   SortingOption,
   RadioFilteringOption,
-  SliderFilteringOption,
   ChipFilteringOption,
   SearchProvider,
-  NotificationService,
 } from '@ilt-pse/react-native-kueres';
 
 export default function CulturalAssetListScreen({navigation}) {
@@ -27,7 +24,6 @@ export default function CulturalAssetListScreen({navigation}) {
       screenType: 'creation',
       id: -1,
     });
-  const {authService} = React.useContext(AuthContext);
   const {colors} = useTheme();
   const {result, setQuery, requestAssets} = useAssets();
   const {isAdmin} = useRoles();
@@ -37,14 +33,6 @@ export default function CulturalAssetListScreen({navigation}) {
       requestAssets();
     }, [requestAssets]),
   );
-
-  function onServiceOn() {
-    NotificationService.start();
-  }
-
-  function onServiceOff() {
-    NotificationService.stop();
-  }
 
   return (
     <Scaffold>
