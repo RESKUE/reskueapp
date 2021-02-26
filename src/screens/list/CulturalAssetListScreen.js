@@ -50,12 +50,12 @@ export default function CulturalAssetListScreen({navigation}) {
         <SearchBar field="name" operation="~">
           <FilteringButton>
             <RadioFilteringOption
-              field="endangered"
+              field="isEndangered"
               operation="="
               options={[
                 {name: 'Egal', value: null},
-                {name: 'Ja', value: 0},
-                {name: 'Nein', value: 1},
+                {name: 'Nein', value: 0},
+                {name: 'Ja', value: 1},
               ]}
               label="In Gefahr"
             />
@@ -68,7 +68,7 @@ export default function CulturalAssetListScreen({navigation}) {
           </FilteringButton>
           <SortingButton>
             <SortingOption field="name" label="Name" />
-            <SortingOption field="tags" label="Priorität" />
+            <SortingOption field="priority" label="Priorität" />
           </SortingButton>
         </SearchBar>
       </SearchProvider>
