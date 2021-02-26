@@ -10,6 +10,10 @@ import theme from './Theme';
 
 const authService = new AuthService(appConfig.auth, new TokenStorage());
 
+setInterval(() => {
+  authService.refresh();
+}, 1000 * 60);
+
 export default function Providers({children}) {
   return (
     <PaperProvider theme={theme}>
