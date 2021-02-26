@@ -18,6 +18,7 @@ import MediaDetailScreen from '../screens/detail/MediaDetailScreen';
 import LocationSelectionScreen from '../screens/map/LocationSelectionScreen';
 import OverviewMapScreen from '../screens/map/OverviewMapScreen';
 import AssetSelectionScreen from '../screens/selection/AssetSelectionScreen';
+import GroupSelectionScreen from '../screens/selection/GroupSelectionScreen';
 import HeaderBar from '../components/baseComponents/HeaderBar';
 import HomeTabs from './HomeTabs';
 
@@ -85,6 +86,10 @@ export default function ScreenStack() {
       <Stack.Screen
         name="AssetSelectionScreen"
         component={AssetSelectionScreen}
+      />
+      <Stack.Screen
+        name="GroupSelectionScreen"
+        component={GroupSelectionScreen}
       />
     </Stack.Navigator>
   );
