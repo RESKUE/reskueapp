@@ -1,14 +1,5 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {
-  useTheme,
-  Button,
-  Divider,
-  IconButton,
-  Paragraph,
-  Card,
-  Menu,
-} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
@@ -20,6 +11,15 @@ import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useTasks from '../../handlers/TasksHook';
 import useAssetDeletion from '../../handlers/AssetDeletionHook';
 import CulturalAsset from '../../models/CulturalAsset';
+import {
+  useTheme,
+  Button,
+  Divider,
+  IconButton,
+  Paragraph,
+  Card,
+  Menu,
+} from 'react-native-paper';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
@@ -120,7 +120,11 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   return (
     <Scaffold>
       <Card style={styles.card}>
-        <Card.Title title={culturalAsset?.data?.name} right={buildMenu} />
+        <Card.Title
+          title={culturalAsset?.data?.name}
+          subtitle={getSubtitle()}
+          right={buildMenu}
+        />
         <Card.Cover
           source={{
             uri: `https://loremflickr.com/g/320/240/${culturalAsset.data.name}`,
@@ -175,6 +179,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         <Menu.Item onPress={deleteAsset} title="Löschen" />
       </Menu>
     );
+  }
+
+  function getSubtitle() {
+    const priority = culturalAsset?.data?.priority;
+    const isEndangered = culturalAsset?.data?.isEndangered ?? false;
+    const label = isEndangered ? 'In Gefahr!' : 'Nicht in Gefahr.';
+    const subtitle = `${label}  |  Priorität: ${priority}`;
+    return subtitle;
   }
 
   function showMenu() {
