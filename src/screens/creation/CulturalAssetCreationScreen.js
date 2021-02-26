@@ -75,6 +75,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       parentAsset.forEach((asset) => {
         putSetParent(creationResult.data.id, asset.id);
       });
+      setCulturalAsset(new CulturalAsset(emptyCulturalAsset));
       navigation.goBack();
     } else {
       console.log('Creation result: ' + creationResult);
