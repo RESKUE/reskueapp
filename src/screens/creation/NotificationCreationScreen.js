@@ -8,13 +8,18 @@ export default function NotificationCreationScreen({navigation, route}) {
   const [submitting, setSubmitting] = React.useState(false);
   const [title, setTitle] = React.useState();
   const [message, setMessage] = React.useState();
+  const [groups, setGroups] = React.useState([]);
   const [asset, setAsset] = React.useState();
   const {result, post} = useNotification();
 
   React.useEffect(() => {
     const selectedAsset = route.params?.selectedAsset;
+    const selectedGroups = route.params?.selectedGroups;
     if (selectedAsset) {
       setAsset(selectedAsset);
+    }
+    if (selectedGroups) {
+      setGroups(selectedGroups);
     }
   }, [route]);
 
@@ -52,6 +57,16 @@ export default function NotificationCreationScreen({navigation, route}) {
           <TextInput.Icon name="select-group" onPress={openAssetSelection} />
         }
       />
+      <TextInput
+        label="Benutzergruppen"
+        style={styles.spacing}
+        editable={false}
+        disabled={submitting}
+        value={getGroupNames().join(', ')}
+        right={
+          <TextInput.Icon name="select-group" onPress={openGroupSelection} />
+        }
+      />
       <Button
         disabled={!isFormValid() || submitting}
         mode="contained"
@@ -66,16 +81,30 @@ export default function NotificationCreationScreen({navigation, route}) {
     return !!title && !!message;
   }
 
+  function getGroupNames() {
+    return groups.map((group) => group.name ?? '');
+  }
+
   function openAssetSelection() {
     navigation.push('AssetSelectionScreen', {
       previousRouteName: 'NotificationCreationScreen',
     });
   }
 
+  function openGroupSelection() {
+    navigation.push('GroupSelectionScreen', {
+      previousRouteName: 'NotificationCreationScreen',
+    });
+  }
+
   function getData() {
+    const receivers = groups.map((g) => {
+      return {id: g.id};
+    });
     var data = {
       title: title,
       message: message,
+      receivers: receivers,
     };
     if (asset?.id) {
       data.entity = {id: asset.id};
