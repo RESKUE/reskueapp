@@ -9,6 +9,7 @@ import UsergroupDetailScreen from '../screens/detail/UsergroupDetailScreen';
 import MyTaskListScreen from '../screens/list/MyTaskListScreen';
 import NotificationListScreen from '../screens/list/NotificationListScreen';
 import NotificationDetailScreen from '../screens/detail/NotificationDetailScreen';
+import NotificationCreationScreen from '../screens/creation/NotificationCreationScreen';
 import CulturalAssetSelectionListScreen from '../screens/list/CulturalAssetSelectionListScreen';
 import UserSelectionListScreen from '../screens/list/UserSelectionListScreen';
 import CulturalAssetMapScreen from '../screens/map/CulturalAssetMapScreen';
@@ -69,6 +70,10 @@ export default function ScreenStack() {
       <Stack.Screen
         name="NotificationDetailScreen"
         component={NotificationDetailScreen}
+      />
+      <Stack.Screen
+        name="NotificationCreationScreen"
+        component={NotificationCreationScreen}
       />
       <Stack.Screen name="MediaListScreen" component={MediaListScreen} />
       <Stack.Screen name="MediaDetailScreen" component={MediaDetailScreen} />
