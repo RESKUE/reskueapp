@@ -11,7 +11,16 @@ import useTaskCreation from '../../handlers/TaskCreationHook';
 import Task from '../../models/Task';
 
 export default function TaskCreationScreen({navigation, route}) {
-  const [task, setTask] = React.useState(new Task(emptyTask));
+  const [task, setTask] = React.useState(
+    new Task({
+      name: '',
+      description: '',
+      tags: [],
+      state: 0,
+      subtasks: [],
+      recommendedHelperUsers: '1',
+    }),
+  );
   const [asset, setAsset] = React.useState(null);
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
@@ -189,15 +198,6 @@ export default function TaskCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
-
-const emptyTask = {
-  name: '',
-  description: '',
-  tags: [],
-  state: 0,
-  subtasks: [],
-  recommendedHelperUsers: '1',
-};
 
 const styles = StyleSheet.create({
   dividerStyle: {marginBottom: 24, backgroundColor: 'black'},
