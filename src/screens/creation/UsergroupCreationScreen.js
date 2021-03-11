@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ToastAndroid} from 'react-native';
 import {
   useTheme,
   IconButton,
@@ -27,7 +27,10 @@ export default function UsergroupCreationScreen({navigation, route}) {
 
   const screenType = route.params?.screenType;
 
-  const [usergroup, setUserGroup] = React.useState(emptyUsergroup);
+  const [usergroup, setUserGroup] = React.useState({
+    name: '',
+    users: [],
+  });
   const {
     postUsergroup,
     putUsergroup,
@@ -120,6 +123,10 @@ export default function UsergroupCreationScreen({navigation, route}) {
     navigation.push('UserSelectionListScreen');
   };
   const finishCreation = () => {
+    if (usergroup.name === '') {
+      ToastAndroid.show('Es muss ein Name gewählt werden!', ToastAndroid.SHORT);
+      return;
+    }
     if (screenType === 'update') {
       console.log(usergroup);
       putUsergroup(usergroup.id, usergroup);
@@ -169,11 +176,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
-
-const emptyUsergroup = {
-  name: '',
-  users: [],
-};
 
 const styles = StyleSheet.create({
   dividerStyle: {marginBottom: 24, backgroundColor: 'black'},
