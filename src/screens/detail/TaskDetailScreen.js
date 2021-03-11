@@ -22,9 +22,9 @@ import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
 import useTask from '../../handlers/TaskHook';
-import Task from '../../models/Task';
 import useUserMe from '../../handlers/UserMeHook';
 import useSubtasks from '../../handlers/SubtaksHook';
+import Task from '../../models/Task';
 
 export default function TaskDetailScreen({navigation, route}) {
   const {clientRoles} = React.useContext(AuthContext);
@@ -34,7 +34,12 @@ export default function TaskDetailScreen({navigation, route}) {
   const [user, setUser] = React.useState(null);
 
   const {colors} = useTheme();
-  const {requestTask, result: taskResult} = useTask();
+  const {
+    requestTask,
+    requestTaskDeletion,
+    getResult: taskResult,
+    deletionResult,
+  } = useTask();
   const {requestAsset, result: assetResult} = useAsset();
   const {requestSubtasks, result: subtaskResult} = useSubtasks();
   const {requestUserMe, result: userResult} = useUserMe();
@@ -88,6 +93,17 @@ export default function TaskDetailScreen({navigation, route}) {
     [taskDataExpression],
   );
 
+  //If deletion was successful go back
+  React.useEffect(() => {
+    if (deletionResult) {
+      if (deletionResult.data?.deleted) {
+        navigation.goBack();
+      } else {
+        console.log(deletionResult);
+      }
+    }
+  }, [deletionResult, navigation]);
+
   const onChangeSubtaskState = (subtaskId) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
@@ -139,7 +155,7 @@ export default function TaskDetailScreen({navigation, route}) {
     navigation.push('CulturalAssetDetailScreen', {id: asset.id});
 
   const deleteTask = () => {
-    console.log('Delete Task');
+    requestTaskDeletion(task.data.id);
   };
   const goCreation = () => console.log(user);
   const goMedia = () => navigation.push('MediaListScreen');
