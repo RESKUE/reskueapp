@@ -88,6 +88,17 @@ export default function TaskDetailScreen({navigation, route}) {
     [taskDataExpression],
   );
 
+  //If deletion was successful go back
+  React.useEffect(() => {
+    if (deletionResult) {
+      if (deletionResult.data?.deleted) {
+        navigation.goBack();
+      } else {
+        console.log(deletionResult);
+      }
+    }
+  }, [deletionResult, navigation]);
+
   const onChangeSubtaskState = (subtaskId) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
