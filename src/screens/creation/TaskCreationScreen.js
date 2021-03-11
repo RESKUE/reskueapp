@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ToastAndroid} from 'react-native';
 import {useTheme, IconButton, Button, TextInput} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
@@ -116,10 +116,15 @@ export default function TaskCreationScreen({navigation, route}) {
   };
 
   const finishCreation = () => {
-    if (task.data.culturalAsset) {
-      task.data.culturalAsset = {id: task.data.culturalAsset.id};
+    if (task.data.name === '' || !task.data.culturalAsset) {
+      ToastAndroid.show(
+        'Es muss ein Name und ein zugehöriges Kulturgut gewählt werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
     }
-    console.log(task);
+    task.data.culturalAsset = {id: task.data.culturalAsset.id};
+
     postTask(task.data);
   };
 
@@ -141,6 +146,7 @@ export default function TaskCreationScreen({navigation, route}) {
       />
       <TextInput
         label="Empfohlene Helferanzahl"
+        keyboardType="number-pad"
         value={task.data.recommendedHelperUsers}
         onChangeText={onChangeRecommendedHelperUsers}
       />
