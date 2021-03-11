@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, ToastAndroid, View} from 'react-native';
 import {
   Button,
   Chip,
@@ -138,6 +138,18 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   };
 
   const finishCreation = () => {
+    if (
+      culturalAsset.data.name === '' ||
+      !culturalAsset.data.latitude ||
+      !culturalAsset.data.longitude
+    ) {
+      ToastAndroid.show(
+        'Es muss ein Name und Location gewählt werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
     if (screenType === 'update') {
       putAsset(culturalAsset.data.id, culturalAsset.data);
     } else {
@@ -234,8 +246,6 @@ const emptyCulturalAsset = {
   description: '',
   priority: 0,
   address: '',
-  longitude: 0.0,
-  latitude: 0.0,
   label: '',
   level: 0,
 };
