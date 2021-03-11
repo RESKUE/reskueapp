@@ -23,7 +23,14 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   const screenType = route.params?.screenType;
 
   const [culturalAsset, setCulturalAsset] = React.useState(
-    new CulturalAsset(emptyCulturalAsset),
+    new CulturalAsset({
+      name: '',
+      description: '',
+      priority: 0,
+      address: '',
+      label: '',
+      level: 0,
+    }),
   );
   const [parentAsset, setParentAsset] = React.useState([]);
 
@@ -75,7 +82,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       parentAsset.forEach((asset) => {
         putSetParent(creationResult.data.id, asset.id);
       });
-      setCulturalAsset(new CulturalAsset(emptyCulturalAsset));
       navigation.goBack();
     } else {
       console.log('Creation result: ' + creationResult);
@@ -240,15 +246,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     </Scaffold>
   );
 }
-
-const emptyCulturalAsset = {
-  name: '',
-  description: '',
-  priority: 0,
-  address: '',
-  label: '',
-  level: 0,
-};
 
 const styles = StyleSheet.create({
   inputSpacing: {marginBottom: 24},
