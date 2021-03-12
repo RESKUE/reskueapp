@@ -17,7 +17,12 @@ import {useFocusEffect} from '@react-navigation/native';
 import useRoles from '../../handlers/RolesHook';
 
 export default function TaskListScreen({navigation}) {
-  const goTaskCreation = () => navigation.push('TaskCreationScreen');
+  function goTaskCreation() {
+    navigation.push('TaskCreationScreen', {
+      screenType: 'creation',
+      id: -1,
+    });
+  }
   const {colors} = useTheme();
   const {isAdmin} = useRoles();
   const {result, setQuery, requestTasks} = useTasks();

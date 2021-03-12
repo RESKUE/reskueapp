@@ -157,7 +157,12 @@ export default function TaskDetailScreen({navigation, route}) {
   const deleteTask = () => {
     requestTaskDeletion(task.data.id);
   };
-  const goCreation = () => console.log(user);
+  function goCreation() {
+    navigation.push('TaskCreationScreen', {
+      screenType: 'update',
+      id: task.data.id,
+    });
+  }
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 

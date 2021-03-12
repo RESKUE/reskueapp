@@ -24,8 +24,24 @@ export default function useTaskCreation() {
     [taskClient],
   );
 
+  const putTask = React.useCallback(
+    async (id, task) => {
+      const url = appConfig.rest.baseUrl + `/task/${id}`;
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      };
+      await taskClient.request(url, options, policy);
+    },
+    [taskClient],
+  );
+
   return {
     taskResult,
     postTask,
+    putTask,
   };
 }

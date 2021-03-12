@@ -7,10 +7,15 @@ import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationL
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import useAsset from '../../handlers/AssetHook';
+import useTask from '../../handlers/TaskHook';
 import useTaskCreation from '../../handlers/TaskCreationHook';
 import Task from '../../models/Task';
 
 export default function TaskCreationScreen({navigation, route}) {
+  const {requestTask, getResult: baseTaskResult} = useTask();
+
+  const screenType = route.params?.screenType;
+
   const [task, setTask] = React.useState(
     new Task({
       name: '',
@@ -18,7 +23,7 @@ export default function TaskCreationScreen({navigation, route}) {
       tags: [],
       state: 0,
       subtasks: [],
-      recommendedHelperUsers: '1',
+      recommendedHelperUsers: 1,
     }),
   );
   const [asset, setAsset] = React.useState(null);
@@ -26,7 +31,23 @@ export default function TaskCreationScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAsset, result: assetResult} = useAsset();
-  const {postTask, taskResult} = useTaskCreation();
+  const {postTask, putTask, taskResult} = useTaskCreation();
+
+  React.useEffect(() => {
+    if (screenType === 'update') {
+      console.log('Request task with id: ' + route.params.id);
+      requestTask(route.params.id);
+    }
+  }, [requestTask, screenType, route.params.id]);
+
+  React.useEffect(() => {
+    if (baseTaskResult) {
+      setTask(new Task(baseTaskResult.data));
+      if (baseTaskResult.data.culturalAsset) {
+        route.params.assetId = baseTaskResult.data.culturalAsset;
+      }
+    }
+  }, [baseTaskResult, route.params.assetId]);
 
   React.useEffect(() => {
     const assetId = route.params?.assetId;
@@ -134,7 +155,11 @@ export default function TaskCreationScreen({navigation, route}) {
     }
     task.data.culturalAsset = {id: task.data.culturalAsset.id};
 
-    postTask(task.data);
+    if (screenType === 'update') {
+      putTask(task.data.id, task.data);
+    } else {
+      postTask(task.data);
+    }
   };
 
   if (asset === null) {
@@ -156,7 +181,7 @@ export default function TaskCreationScreen({navigation, route}) {
       <TextInput
         label="Empfohlene Helferanzahl"
         keyboardType="number-pad"
-        value={task.data.recommendedHelperUsers}
+        value={task.data.recommendedHelperUsers.toString()}
         onChangeText={onChangeRecommendedHelperUsers}
       />
       <ListActions>
