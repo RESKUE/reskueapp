@@ -6,4 +6,3 @@ import LocationSelectionScreen from '../src/screens/map/LocationSelectionScreen'
 it('location selection screen renders correctly', () => {
   renderer.create(<LocationSelectionScreen />);
 });
-
