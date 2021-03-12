@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import mockReactNativeReanimated from 'react-native-reanimated/mock';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
@@ -22,13 +22,28 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-jest.mock("@react-navigation/material-top-tabs", () => {
-  const actual = jest.requireActual("@react-navigation/material-top-tabs");
+jest.mock('@react-navigation/material-top-tabs', () => {
+  const actual = jest.requireActual('@react-navigation/material-top-tabs');
   return {
     ...actual,
     createMaterialTopTabNavigator: jest.fn().mockReturnValue({
       Navigator: ({children}) => <>{children}</>,
       Screen: ({children}) => <>{children}</>,
     }),
-  }
+  };
+});
+
+jest.mock('react-native-maps-osmdroid', () => {
+  const {View} = require('react-native');
+  const MockMapView = (props) => {
+    return <View>{props.children}</View>;
+  };
+  const MockMarker = (props) => {
+    return <View>{props.children}</View>;
+  };
+  return {
+    __esModule: true,
+    default: MockMapView,
+    Marker: MockMarker,
+  };
 });
