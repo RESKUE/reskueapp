@@ -50,7 +50,7 @@ export default function TaskDetailScreen({navigation, route}) {
 
   React.useEffect(() => {
     requestTask(route.params.id);
-  }, [requestTask, requestSubtasks, route.params]);
+  }, [requestTask, route.params]);
 
   React.useEffect(() => {
     if (taskResult) {

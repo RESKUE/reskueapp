@@ -4,9 +4,10 @@ import {useTheme, IconButton, Button, TextInput} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationListItem';
-import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
+import CulturalAssetCreationListItem from '../../components/listItems/CulturalAssetCreationListItem';
 import ListActions from '../../components/ListActions';
 import useAsset from '../../handlers/AssetHook';
+import useSubtasks from '../../handlers/SubtaksHook';
 import useTask from '../../handlers/TaskHook';
 import useTaskCreation from '../../handlers/TaskCreationHook';
 import Task from '../../models/Task';
@@ -31,38 +32,48 @@ export default function TaskCreationScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAsset, result: assetResult} = useAsset();
+  const {requestSubtasks, result: subtaskResult} = useSubtasks();
   const {postTask, putTask, taskResult} = useTaskCreation();
 
   React.useEffect(() => {
-    if (screenType === 'update') {
+    if (screenType === 'update' && !task.data.id) {
       console.log('Request task with id: ' + route.params.id);
       requestTask(route.params.id);
     }
-  }, [requestTask, screenType, route.params.id]);
+  }, [requestTask, screenType, route.params.id, task.data]);
 
   React.useEffect(() => {
-    if (baseTaskResult) {
+    if (baseTaskResult && !task.data.id) {
       setTask(new Task(baseTaskResult.data));
       if (baseTaskResult.data.culturalAsset) {
-        route.params.assetId = baseTaskResult.data.culturalAsset;
+        requestAsset(baseTaskResult.data.culturalAsset);
+      }
+      if (baseTaskResult.data.subtasks.length !== 0) {
+        requestSubtasks(baseTaskResult.data.id);
       }
     }
-  }, [baseTaskResult, route.params.assetId]);
+  }, [requestAsset, requestSubtasks, baseTaskResult, task.data]);
 
   React.useEffect(() => {
     const assetId = route.params?.assetId;
     if (assetId) {
       requestAsset(assetId);
-    } else {
+    } else if (screenType === 'creation') {
       setAsset([]);
     }
-  }, [requestAsset, route.params]);
+  }, [requestAsset, screenType, route.params]);
 
   React.useEffect(() => {
     if (assetResult?.data) {
       onChangeAsset();
     }
   }, [onChangeAsset, assetResult]);
+
+  React.useEffect(() => {
+    if (subtaskResult?.data && screenType === 'update') {
+      setSubtasks(subtaskResult.data.content);
+    }
+  }, [subtaskResult, screenType, setSubtasks]);
 
   React.useEffect(() => {
     if (taskResult?.data != null) {
@@ -96,6 +107,22 @@ export default function TaskCreationScreen({navigation, route}) {
     }
     setTask(updatedTask);
   }, [assetResult, task.data]);
+
+  function removeCulturalAsset() {
+    const updatedTask = new Task(task.data);
+    updatedTask.data.culturalAsset = null;
+    setAsset([]);
+  }
+
+  const taskDataExpression = task?.data;
+  const setSubtasks = React.useCallback(
+    (subtasks) => {
+      const updatedTask = new Task(taskDataExpression);
+      updatedTask.data.subtasks = subtasks;
+      setTask(updatedTask);
+    },
+    [taskDataExpression],
+  );
 
   const addSubtask = () => {
     const emptySubtask = {
@@ -156,6 +183,7 @@ export default function TaskCreationScreen({navigation, route}) {
     task.data.culturalAsset = {id: task.data.culturalAsset.id};
 
     if (screenType === 'update') {
+      console.log(task.data);
       putTask(task.data.id, task.data);
     } else {
       postTask(task.data);
@@ -194,7 +222,8 @@ export default function TaskCreationScreen({navigation, route}) {
       <FancyList
         title="Kulturgut"
         data={asset}
-        component={CulturalAssetUnpressableListItem}
+        extraData={{removeCallback: removeCulturalAsset}}
+        component={CulturalAssetCreationListItem}
       />
       <ListActions>
         <IconButton
