@@ -31,6 +31,8 @@ export default function UsergroupCreationScreen({navigation, route}) {
     name: '',
     users: [],
   });
+  const [usersLoaded, setUsersLoaded] = React.useState(false);
+
   const {
     postUsergroup,
     putUsergroup,
@@ -51,28 +53,24 @@ export default function UsergroupCreationScreen({navigation, route}) {
   }, [requestUsers]);
 
   React.useEffect(() => {
-    if (usergroupResult?.data) {
+    if (usergroupResult?.data && !usersLoaded) {
       setUserGroup(usergroupResult.data);
     }
-  }, [usergroupResult]);
+  }, [usergroupResult, usersLoaded]);
 
   React.useEffect(() => {
-    if (usersResult?.data) {
-      const updatedUsergroup = {
-        id: usergroup.id,
-        name: usergroup.name,
-        users: usersResult.data.content,
-      };
-      setUserGroup(updatedUsergroup);
+    if (usersResult?.data && !usersLoaded) {
+      console.log(usersResult.data.content);
+      setUsers(usersResult.data.content);
     }
-  }, [usersResult, usergroup]);
+  }, [setUsers, usersResult, usersLoaded]);
 
   const routeUserId = route.params?.userId;
   React.useEffect(() => {
     if (routeUserId != null) {
       addUser(routeUserId);
     }
-  }, [routeUserId, addUser]);
+  }, [addUser, routeUserId]);
 
   React.useEffect(() => {
     if (creationResult?.data) {
@@ -90,6 +88,21 @@ export default function UsergroupCreationScreen({navigation, route}) {
     };
     setUserGroup(updatedUsergroup);
   };
+
+  const setUsers = React.useCallback(
+    (userList) => {
+      const updatedUsergroup = {
+        id: usergroup.id,
+        name: usergroup.name,
+        users: userList,
+      };
+      console.log(updatedUsergroup);
+      console.log(usergroup);
+      setUserGroup(updatedUsergroup);
+      setUsersLoaded(true);
+    },
+    [usergroup],
+  );
 
   const addUser = React.useCallback(
     (userId) => {
