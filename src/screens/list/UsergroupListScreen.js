@@ -1,4 +1,5 @@
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {useTheme, IconButton} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import {
@@ -11,6 +12,7 @@ import {
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
 import ListActions from '../../components/ListActions';
+import useUserMe from '../../handlers/UserMeHook';
 import useUsergroups from '../../handlers/UsergroupsHook';
 import useRoles from '../../handlers/RolesHook';
 
@@ -20,14 +22,22 @@ export default function UsergroupListScreen({navigation}) {
       screenType: 'creation',
     });
   const {colors} = useTheme();
+  const {requestUserMe, result: userResult} = useUserMe();
   const {isAdmin} = useRoles();
-  const {result, setQuery, requestUsergroups} = useUsergroups();
+  const {result, myUsergroupResult, setQuery, requestUsergroups, requestMyUsergroups} = useUsergroups();
 
   useFocusEffect(
     React.useCallback(() => {
       requestUsergroups();
-    }, [requestUsergroups]),
+      requestUserMe();
+    }, [requestUsergroups, requestUserMe]),
   );
+
+  React.useEffect(() => {
+    if (userResult?.data) {
+      requestMyUsergroups(userResult.data.id);
+    }
+  }, [requestMyUsergroups, userResult]);
 
   return (
     <Scaffold>
@@ -52,6 +62,16 @@ export default function UsergroupListScreen({navigation}) {
           />
         )}
       </ListActions>
+      {myUsergroupResult?.data?.content.length === 0 ? null : (
+        <View style={styles.content}>
+          <FancyList
+            title="Meine Gruppen"
+            data={myUsergroupResult?.data?.content}
+            component={UsergroupListItem}
+          />
+        </View>
+      )}
+
       <FancyList
         title="Gruppen"
         data={result?.data?.content || []}
@@ -60,3 +80,9 @@ export default function UsergroupListScreen({navigation}) {
     </Scaffold>
   );
 }
+
+const styles = StyleSheet.create({
+  content: {
+    paddingBottom: 16,
+  },
+});
