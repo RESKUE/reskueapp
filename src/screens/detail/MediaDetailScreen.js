@@ -1,26 +1,14 @@
 import React from 'react';
-import {
-  MediaType,
-  MediaViewer,
-  LoadingIndicator,
-} from '@ilt-pse/react-native-kueres';
-import useMedia from '../../handlers/MediaHook';
+import {MediaType, MediaViewer} from '@ilt-pse/react-native-kueres';
 import {useTheme} from 'react-native-paper';
+import appConfig from '../../../app.json';
 
 export default function MediaDetailScreen({route}) {
   const {colors} = useTheme();
-  const {result, requestMedia} = useMedia(route.params.id);
-
-  React.useEffect(() => {
-    requestMedia();
-  }, [requestMedia]);
-
-  if (result === null) {
-    return <LoadingIndicator />;
-  }
-
-  const type = MediaType.fromMime(result.data.mimeType);
-  const uri = `https://lunaless.com/reskue/media/${result.data.id}`;
+  const mediaId = route.params.mediaId;
+  const mimeType = route.params.mimeType;
+  const type = MediaType.fromMime(mimeType);
+  const uri = `${appConfig.rest.baseUrl}/media/${mediaId}`;
 
   return (
     <MediaViewer

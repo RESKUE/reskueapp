@@ -15,6 +15,7 @@ import UserSelectionListScreen from '../screens/list/UserSelectionListScreen';
 import CulturalAssetMapScreen from '../screens/map/CulturalAssetMapScreen';
 import MediaListScreen from '../screens/list/MediaListScreen';
 import MediaDetailScreen from '../screens/detail/MediaDetailScreen';
+import MediaCreationScreen from '../screens/creation/MediaCreationScreen';
 import LocationSelectionScreen from '../screens/map/LocationSelectionScreen';
 import OverviewMapScreen from '../screens/map/OverviewMapScreen';
 import AssetSelectionScreen from '../screens/selection/AssetSelectionScreen';
@@ -78,6 +79,10 @@ export default function ScreenStack() {
       />
       <Stack.Screen name="MediaListScreen" component={MediaListScreen} />
       <Stack.Screen name="MediaDetailScreen" component={MediaDetailScreen} />
+      <Stack.Screen
+        name="MediaCreationScreen"
+        component={MediaCreationScreen}
+      />
       <Stack.Screen name="OverviewMapScreen" component={OverviewMapScreen} />
       <Stack.Screen
         name="LocationSelectionScreen"

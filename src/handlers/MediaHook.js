@@ -1,16 +1,35 @@
 import React from 'react';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
+import appConfig from '../../app.json';
 
-const policy = FetchPolicy.cacheAndNetwork;
-const options = {method: 'GET'};
+const baseUrl = appConfig.rest.baseUrl;
 
-export default function useMedia(id) {
-  const {client, result} = useClient();
+export default function useMedia() {
+  const {client, result} = useClient({authenticated: true});
 
-  const requestMedia = React.useCallback(async () => {
-    const url = `https://lunaless.com/reskue/media/${id}.json`;
-    await client.request(url, options, policy);
-  }, [client, id]);
+  const get = React.useCallback(
+    async (path) => {
+      const url = `${baseUrl}/${path}`;
+      const options = {method: 'GET'};
+      const policy = FetchPolicy.cacheAndNetwork;
+      await client.request(url, options, policy);
+    },
+    [client],
+  );
 
-  return {result, requestMedia};
+  const post = React.useCallback(
+    async (path, formData) => {
+      const url = `${baseUrl}/${path}`;
+      const options = {
+        method: 'POST',
+        body: formData,
+        headers: {'Content-Type': 'multipart/form-data'},
+      };
+      const policy = FetchPolicy.noCache;
+      await client.request(url, options, policy);
+    },
+    [client],
+  );
+
+  return {result, get, post};
 }

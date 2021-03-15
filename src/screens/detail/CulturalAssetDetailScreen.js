@@ -228,7 +228,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function goMedia() {
-    navigation.push('MediaListScreen');
+    navigation.push('MediaListScreen', {assetId: culturalAsset.data.id});
   }
 
   function goComments() {

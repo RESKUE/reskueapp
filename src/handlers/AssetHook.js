@@ -16,5 +16,20 @@ export default function useAsset() {
     [client],
   );
 
-  return {result, requestAsset};
+  const put = React.useCallback(
+    async (id, data) => {
+      const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+      await client.request(url, options, policy);
+    },
+    [client],
+  );
+
+  return {result, requestAsset, put};
 }

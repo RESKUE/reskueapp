@@ -1,16 +1,21 @@
 import React from 'react';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
+import appConfig from '../../app.json';
 
 const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
-const url = 'https://lunaless.com/reskue/media.json';
+const baseUrl = appConfig.rest.baseUrl;
 
 export default function useMedias() {
   const {client, result} = useClient();
 
-  const requestMedias = React.useCallback(async () => {
-    await client.request(url, options, policy);
-  }, [client]);
+  const get = React.useCallback(
+    async (path) => {
+      const url = `${baseUrl}/${path}`;
+      await client.request(url, options, policy);
+    },
+    [client],
+  );
 
-  return {result, requestMedias};
+  return {result, get};
 }
