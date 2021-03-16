@@ -26,7 +26,7 @@ export default function useMedia() {
         headers: {'Content-Type': 'multipart/form-data'},
       };
       const policy = FetchPolicy.noCache;
-      await client.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
     [client],
   );

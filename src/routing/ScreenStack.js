@@ -20,6 +20,7 @@ import LocationSelectionScreen from '../screens/map/LocationSelectionScreen';
 import OverviewMapScreen from '../screens/map/OverviewMapScreen';
 import AssetSelectionScreen from '../screens/selection/AssetSelectionScreen';
 import GroupSelectionScreen from '../screens/selection/GroupSelectionScreen';
+import CommentListScreen from '../screens/list/CommentListScreen';
 import HeaderBar from '../components/baseComponents/HeaderBar';
 import HomeTabs from './HomeTabs';
 
@@ -96,6 +97,7 @@ export default function ScreenStack() {
         name="GroupSelectionScreen"
         component={GroupSelectionScreen}
       />
+      <Stack.Screen name="CommentListScreen" component={CommentListScreen} />
     </Stack.Navigator>
   );
 }

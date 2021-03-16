@@ -232,7 +232,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function goComments() {
-    console.log('Go to CommentList');
+    navigation.push('CommentListScreen', {assetId: culturalAsset.data.id});
   }
 }
 
