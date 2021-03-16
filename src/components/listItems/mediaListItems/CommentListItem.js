@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import {StyleSheet, View} from 'react-native';
 import {Card, Button, Paragraph, Caption} from 'react-native-paper';
-import { useNavigation } from '@react-navigation/core';
+import {useNavigation} from '@react-navigation/native';
 
 export default function CommentListItem({data}) {
   const navigation = useNavigation();
