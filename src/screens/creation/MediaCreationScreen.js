@@ -8,9 +8,7 @@ import useMedia from '../../handlers/MediaHook';
 export default function MediaCreationScreen({navigation, route}) {
   const [submitting, setSubmitting] = React.useState(false);
   const [altText, setAltText] = React.useState();
-  const [fileURI, setFileURI] = React.useState();
-  const [fileType, setFileType] = React.useState();
-  const [fileName, setFileName] = React.useState();
+  const [file, setFile] = React.useState();
   const {result, post} = useMedia();
   const previousRouteName = route.params.previousRouteName;
 
@@ -31,7 +29,7 @@ export default function MediaCreationScreen({navigation, route}) {
         style={styles.spacing}
         editable={false}
         disabled={submitting}
-        value={fileName}
+        value={file?.name}
         right={<TextInput.Icon name="file" onPress={pickFile} />}
       />
       <TextInput
@@ -51,7 +49,7 @@ export default function MediaCreationScreen({navigation, route}) {
   );
 
   function isFormValid() {
-    return !!fileURI;
+    return !!file?.uri;
   }
 
   async function pickFile() {
@@ -64,9 +62,7 @@ export default function MediaCreationScreen({navigation, route}) {
         ],
       });
       if (res) {
-        setFileURI(res.uri);
-        setFileType(res.type);
-        setFileName(res.name);
+        setFile(res);
       }
     } catch (err) {}
   }
@@ -74,7 +70,7 @@ export default function MediaCreationScreen({navigation, route}) {
   function getData() {
     const data = new FormData();
     data.append('altText', altText);
-    data.append('file', {uri: fileURI, type: fileType, name: fileName});
+    data.append('file', file);
     return data;
   }
 
