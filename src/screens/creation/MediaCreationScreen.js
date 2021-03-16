@@ -12,7 +12,6 @@ export default function MediaCreationScreen({navigation, route}) {
   const [fileType, setFileType] = React.useState();
   const [fileName, setFileName] = React.useState();
   const {result, post} = useMedia();
-  const path = 'media';
   const previousRouteName = route.params.previousRouteName;
 
   React.useEffect(() => {
@@ -81,7 +80,7 @@ export default function MediaCreationScreen({navigation, route}) {
 
   async function submit() {
     setSubmitting(true);
-    await post(path, getData());
+    await post(getData());
   }
 }
 

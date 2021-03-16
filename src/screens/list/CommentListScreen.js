@@ -111,7 +111,7 @@ export default function CommentListScreen({route}) {
   async function uploadMedia() {
     const data = new FormData();
     data.append('file', file);
-    const result = await postMedia('media', data);
+    const result = await postMedia(data);
     return result?.data ?? null;
   }
 

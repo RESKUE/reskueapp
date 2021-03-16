@@ -18,8 +18,8 @@ export default function useMedia() {
   );
 
   const post = React.useCallback(
-    async (path, formData) => {
-      const url = `${baseUrl}/${path}`;
+    async (formData) => {
+      const url = `${baseUrl}/media`;
       const options = {
         method: 'POST',
         body: formData,
