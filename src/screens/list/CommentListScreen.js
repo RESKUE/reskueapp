@@ -21,17 +21,17 @@ export default function CommentListScreen({route}) {
   const [text, setText] = React.useState();
   const [file, setFile] = React.useState();
   const {result: commentsResult, get: getComments} = useComments();
-  const {result: commentResult, post: postComment} = useComment();
+  const {post: postComment} = useComment();
   const {post: postMedia} = useMedia();
   const {colors} = useTheme();
   const assetId = route.params.assetId;
   const comments = commentsResult?.data?.content ?? [];
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getComments(`/culturalAsset/${assetId}/comments`);
-    }, [getComments, commentResult]),
-  );
+  const refresh = React.useCallback(() => {
+    getComments(`/culturalAsset/${assetId}/comments`);
+  }, [getComments, assetId]);
+
+  useFocusEffect(refresh);
 
   if (!commentsResult) {
     return <LoadingIndicator />;
@@ -117,13 +117,13 @@ export default function CommentListScreen({route}) {
 
   async function createComment(mediaId) {
     const data = {
-        "text": text,
-        "commentCulturalAsset": {"id": assetId}
+      text: text,
+      commentCulturalAsset: {id: assetId},
     };
     if (mediaId) {
-      data.media = [{"id": mediaId}];
+      data.media = [{id: mediaId}];
     }
-    return await postComment("comment/autoAuthor", data);
+    return await postComment('comment/autoAuthor', data);
   }
 
   async function send() {
@@ -134,6 +134,7 @@ export default function CommentListScreen({route}) {
       setText(null);
       setFile(null);
     }
+    refresh();
     setSubmitting(false);
   }
 

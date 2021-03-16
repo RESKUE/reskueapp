@@ -12,25 +12,38 @@ import useAsset from '../../handlers/AssetHook';
 export default function MediaListScreen({navigation, route}) {
   const {result, get} = useMedias();
   const {result: assetResult, requestAsset} = useAsset();
-  const {result: assetPutResult, put: putAsset} = useAsset();
+  const {put: putAsset} = useAsset();
   const {isAdmin} = useRoles();
   const {colors} = useTheme();
   const assetId = route.params?.assetId;
   const mediaId = route.params?.mediaId;
   const mediaUrl = `culturalAsset/${assetId}/media`;
 
+  const linkMedia = React.useCallback(() => {
+    // Unfortunately the backend requires a separate step to link an media
+    // upload with a cultural asset. This creates all sorts of issues and
+    // should definitely be changed.
+    // Additionaly media can only be linked by updating a cultural asset
+    // entities media array. This obviously creates rance conditions between
+    // clients. This should also be changed.
+    const mediaArray = assetResult?.data?.media ?? [];
+    const updatedMediaArray = mediaArray.concat([{id: mediaId}]);
+    const data = {media: updatedMediaArray};
+    putAsset(assetId, data);
+  }, [assetResult, mediaId, assetId, putAsset]);
+
   useFocusEffect(
     React.useCallback(() => {
       get(mediaUrl);
       requestAsset(assetId);
-    }, [get, route, assetPutResult]),
+    }, [get, mediaUrl, requestAsset, assetId]),
   );
 
   React.useEffect(() => {
     if (mediaId) {
       linkMedia();
     }
-  }, [route]);
+  }, [mediaId, linkMedia]);
 
   if (!result) {
     return <LoadingIndicator />;
@@ -58,18 +71,5 @@ export default function MediaListScreen({navigation, route}) {
     navigation.navigate('MediaCreationScreen', {
       previousRouteName: 'MediaListScreen',
     });
-  }
-
-  function linkMedia() {
-    // Unfortunately the backend requires a separate step to link an media
-    // upload with a cultural asset. This creates all sorts of issues and
-    // should definitely be changed.
-    // Additionaly media can only be linked by updating a cultural asset
-    // entities media array. This obviously creates rance conditions between
-    // clients. This should also be changed.
-    const mediaArray = assetResult?.data?.media ?? [];
-    const updatedMediaArray = mediaArray.concat([{id: mediaId}]);
-    const data = {media: updatedMediaArray};
-    putAsset(assetId, data);
   }
 }

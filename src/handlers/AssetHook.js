@@ -2,15 +2,14 @@ import React from 'react';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
 import appConfig from '../../app.json';
 
-const policy = FetchPolicy.cacheAndNetwork;
-const options = {method: 'GET'};
-
 export default function useAsset() {
   const {client, result} = useClient({authenticated: true});
 
   const requestAsset = React.useCallback(
     async (id) => {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const policy = FetchPolicy.cacheAndNetwork;
+      const options = {method: 'GET'};
       await client.request(url, options, policy);
     },
     [client],
@@ -19,11 +18,10 @@ export default function useAsset() {
   const put = React.useCallback(
     async (id, data) => {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const policy = FetchPolicy.networkOnly;
       const options = {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data),
       };
       await client.request(url, options, policy);

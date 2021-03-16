@@ -12,7 +12,7 @@ export default function CommentListItem({data}) {
     <Card style={styles.comment}>
       <Card.Content>
         <View style={styles.header}>
-          <Caption>{data?.author?.name ?? "Unbekannt"}</Caption>
+          <Caption>{data?.author?.name ?? 'Unbekannt'}</Caption>
           <Caption>{reprDateTime(data?.createdAt)} Uhr</Caption>
         </View>
         <Paragraph>{data?.text}</Paragraph>
@@ -20,7 +20,13 @@ export default function CommentListItem({data}) {
       <Card.Actions>
         {media.map((mediaItem, key) => {
           const altText = (mediaItem?.altText ?? '') || 'Anhang';
-          return <Button key={key} onPress={() => openMedia(mediaItem?.id, mediaItem?.mimeType)}>{altText}</Button>;
+          return (
+            <Button
+              key={key}
+              onPress={() => openMedia(mediaItem?.id, mediaItem?.mimeType)}>
+              {altText}
+            </Button>
+          );
         })}
       </Card.Actions>
     </Card>

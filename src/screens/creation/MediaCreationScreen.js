@@ -13,16 +13,17 @@ export default function MediaCreationScreen({navigation, route}) {
   const [fileName, setFileName] = React.useState();
   const {result, post} = useMedia();
   const path = 'media';
+  const previousRouteName = route.params.previousRouteName;
 
   React.useEffect(() => {
     if (result?.data) {
-      navigation.navigate(route.params.previousRouteName, {
+      navigation.navigate(previousRouteName, {
         mediaId: result.data,
       });
     } else {
       setSubmitting(false);
     }
-  }, [result, navigation]);
+  }, [result, navigation, previousRouteName]);
 
   return (
     <Scaffold>
