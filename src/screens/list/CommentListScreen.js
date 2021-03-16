@@ -123,7 +123,7 @@ export default function CommentListScreen({route}) {
     if (mediaId) {
       data.media = [{id: mediaId}];
     }
-    return await postComment('comment/autoAuthor', data);
+    return await postComment(data);
   }
 
   async function send() {

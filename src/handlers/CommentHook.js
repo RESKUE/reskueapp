@@ -8,8 +8,8 @@ export default function useComment() {
   const {client, result} = useClient({authenticated: true});
 
   const post = React.useCallback(
-    async (path, data) => {
-      const url = `${baseUrl}/${path}`;
+    async (data) => {
+      const url = `${baseUrl}/comment/autoAuthor`;
       const options = {
         method: 'POST',
         body: JSON.stringify(data),
