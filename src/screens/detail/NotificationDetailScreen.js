@@ -35,7 +35,7 @@ export default function NotificationDetailScreen({navigation, route}) {
           <Paragraph>Sender: {content?.sender?.name ?? 'Unbekannt'}</Paragraph>
         </Card.Content>
       </Card>
-      {content?.entity?.id && (
+      {content?.entity && (
         <Button style={styles.button} mode="contained" onPress={onPress}>
           Zum betroffenen Kulturgut
         </Button>
@@ -44,7 +44,7 @@ export default function NotificationDetailScreen({navigation, route}) {
   );
 
   function onPress() {
-    navigation.push('CulturalAssetDetailScreen', {id: content.entity.id});
+    navigation.push('CulturalAssetDetailScreen', {id: content.entity});
   }
 }
 
