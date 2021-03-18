@@ -19,7 +19,7 @@ export default function useNotification() {
 
   const post = React.useCallback(
     async (data) => {
-      const url = `${baseUrl}`;
+      const url = `${baseUrl}/autoSender`;
       const options = {
         method: 'POST',
         body: JSON.stringify(data),
