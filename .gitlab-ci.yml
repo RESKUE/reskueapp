@@ -62,3 +62,20 @@ assembleDebug:
     paths:
       - ./node_modules
       - ./android/.gradle
+
+assembleRelease:
+  stage: build
+  tags:
+    - ILT
+  when: manual
+  script:
+    - cd android
+    - ./gradlew assembleRelease
+  artifacts:
+    paths:
+      - ./android/app/build/outputs
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-android
+    paths:
+      - ./node_modules
+      - ./android/.gradle
