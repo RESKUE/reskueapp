@@ -1,11 +1,13 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
+import {FancyToggle} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import useNotification from '../../handlers/NotificationHook';
 
 export default function NotificationCreationScreen({navigation, route}) {
   const [submitting, setSubmitting] = React.useState(false);
+  const [type, setType] = React.useState(1);
   const [title, setTitle] = React.useState();
   const [message, setMessage] = React.useState();
   const [groups, setGroups] = React.useState([]);
@@ -33,6 +35,13 @@ export default function NotificationCreationScreen({navigation, route}) {
 
   return (
     <Scaffold>
+      <FancyToggle.Row
+        style={styles.spacing}
+        initialValue={1}
+        onSelectionChanged={setType}>
+        <FancyToggle label="Alarm" value={1} />
+        <FancyToggle label="Info" value={2} />
+      </FancyToggle.Row>
       <TextInput
         label="Titel*"
         onChangeText={setTitle}
@@ -47,32 +56,34 @@ export default function NotificationCreationScreen({navigation, route}) {
         disabled={submitting}
         style={styles.spacing}
       />
-      <TextInput
-        label="Kulturgutgruppe"
-        style={styles.spacing}
-        editable={false}
-        disabled={submitting}
-        value={asset?.name ?? null}
-        right={
-          <TextInput.Icon name="select-group" onPress={openAssetSelection} />
-        }
-      />
-      <TextInput
-        label="Benutzergruppen"
-        style={styles.spacing}
-        editable={false}
-        disabled={submitting}
-        value={getGroupNames().join(', ')}
-        right={
-          <TextInput.Icon name="select-group" onPress={openGroupSelection} />
-        }
-      />
+      <View style={[styles.spacing, styles.inputRow]}>
+        <TextInput
+          label="Kulturgutgruppe"
+          style={styles.inputRowItem}
+          editable={false}
+          disabled={submitting}
+          value={asset?.name ?? null}
+          right={
+            <TextInput.Icon name="select-group" onPress={openAssetSelection} />
+          }
+        />
+        <TextInput
+          label="Benutzergruppen"
+          style={styles.inputRowItem}
+          editable={false}
+          disabled={submitting}
+          value={getGroupNames().join(', ')}
+          right={
+            <TextInput.Icon name="select-group" onPress={openGroupSelection} />
+          }
+        />
+      </View>
       <Button
         disabled={!isFormValid() || submitting}
         mode="contained"
         onPress={submit}
         loading={submitting}>
-        Alarm auslösen
+        Senden
       </Button>
     </Scaffold>
   );
@@ -105,6 +116,7 @@ export default function NotificationCreationScreen({navigation, route}) {
       title: title,
       message: message,
       receivers: receivers,
+      type: type,
     };
     if (asset?.id) {
       data.entity = {id: asset.id};
@@ -121,5 +133,13 @@ export default function NotificationCreationScreen({navigation, route}) {
 const styles = StyleSheet.create({
   spacing: {
     marginBottom: 16,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    marginRight: -16,
+  },
+  inputRowItem: {
+    flex: 1,
+    marginRight: 16,
   },
 });
