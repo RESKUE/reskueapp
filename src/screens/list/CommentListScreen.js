@@ -1,5 +1,5 @@
 import React from 'react';
-import {LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {LoadingIndicator, usePolling} from '@ilt-pse/react-native-kueres';
 import {useFocusEffect} from '@react-navigation/native';
 import {View, StyleSheet} from 'react-native';
 import {
@@ -26,6 +26,7 @@ export default function CommentListScreen({route}) {
   const {colors} = useTheme();
   const assetId = route.params.assetId;
   const comments = commentsResult?.data?.content ?? [];
+  usePolling(4000, getComments);
 
   const refresh = React.useCallback(() => {
     getComments(`/culturalAsset/${assetId}/comments`);
