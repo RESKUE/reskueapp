@@ -1,16 +1,23 @@
 import React from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {useTheme, IconButton} from 'react-native-paper';
 import {
-  FancyList,
-  LoadingIndicator,
   usePolling,
+  FancyList,
+  SearchBar,
+  SortingButton,
+  SortingOption,
+  SearchProvider,
+  LoadingIndicator,
 } from '@ilt-pse/react-native-kueres';
+import ListActions from '../../components/ListActions';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import NotificationListItem from '../../components/listItems/NotificationListItem';
 import useNotifications from '../../handlers/NotificationsHook';
-import {useFocusEffect} from '@react-navigation/native';
 
 export default function NotificationListScreen({navigation}) {
-  const {result, get} = useNotifications();
+  const {result, setQuery, get} = useNotifications();
+  const {colors} = useTheme();
   usePolling(4000, get);
 
   useFocusEffect(
@@ -19,12 +26,26 @@ export default function NotificationListScreen({navigation}) {
     }, [get]),
   );
 
-  if (result === null) {
+  if (!result) {
     <LoadingIndicator />;
   }
 
   return (
     <Scaffold>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="title" operation="~">
+          <SortingButton>
+            <SortingOption field="title" label="Titel" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="reload"
+          onPress={() => get()}
+        />
+      </ListActions>
       <FancyList
         title="Benachrichtigungen"
         data={result?.data?.content ?? []}

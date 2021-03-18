@@ -1,6 +1,12 @@
 import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {
+  FancyList,
+  SearchBar,
+  SortingButton,
+  SortingOption,
+  SearchProvider,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
@@ -11,8 +17,8 @@ import useRoles from '../../handlers/RolesHook';
 export default function TaskListScreen({navigation}) {
   const goTaskCreation = () => navigation.push('TaskCreationScreen');
   const {colors} = useTheme();
-  const {result: tasksResult, requestTasks} = useTasks();
   const {isAdmin} = useRoles();
+  const {result, setQuery, requestTasks} = useTasks();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -22,6 +28,13 @@ export default function TaskListScreen({navigation}) {
 
   return (
     <Scaffold>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="name" operation="~">
+          <SortingButton>
+            <SortingOption field="name" label="Name" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
       <ListActions>
         <IconButton
           color={colors.primary}
@@ -38,7 +51,7 @@ export default function TaskListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Aufgaben"
-        data={tasksResult?.data?.content || []}
+        data={result?.data?.content || []}
         component={TaskListItem}
       />
     </Scaffold>

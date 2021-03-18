@@ -1,12 +1,18 @@
 import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
-import {FancyList} from '@ilt-pse/react-native-kueres';
+import {useFocusEffect} from '@react-navigation/native';
+import {
+  FancyList,
+  SearchBar,
+  SortingButton,
+  SortingOption,
+  SearchProvider,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UsergroupListItem from '../../components/listItems/UsergroupListItem';
 import ListActions from '../../components/ListActions';
 import useUsergroups from '../../handlers/UsergroupsHook';
 import useRoles from '../../handlers/RolesHook';
-import {useFocusEffect} from '@react-navigation/native';
 
 export default function UsergroupListScreen({navigation}) {
   const goGroupCreation = () =>
@@ -14,8 +20,8 @@ export default function UsergroupListScreen({navigation}) {
       screenType: 'creation',
     });
   const {colors} = useTheme();
-  const {requestUsergroups, result: usergroupResult} = useUsergroups();
   const {isAdmin} = useRoles();
+  const {result, setQuery, requestUsergroups} = useUsergroups();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -25,6 +31,13 @@ export default function UsergroupListScreen({navigation}) {
 
   return (
     <Scaffold>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="name" operation="~">
+          <SortingButton>
+            <SortingOption field="name" label="Name" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
       <ListActions>
         <IconButton
           color={colors.primary}
@@ -41,7 +54,7 @@ export default function UsergroupListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Gruppen"
-        data={usergroupResult?.data?.content || []}
+        data={result?.data?.content || []}
         component={UsergroupListItem}
       />
     </Scaffold>

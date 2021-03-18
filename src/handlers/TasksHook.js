@@ -7,19 +7,20 @@ const options = {method: 'GET'};
 
 export default function useTasks() {
   const {client, result} = useClient({authenticated: true});
+  const [query, setQuery] = React.useState();
 
   const requestTasks = React.useCallback(async () => {
-    const url = appConfig.rest.baseUrl + '/task';
+    const url = appConfig.rest.baseUrl + '/task?' + query;
     await client.request(url, options, policy);
-  }, [client]);
+  }, [query, client]);
 
   const requestUserTasks = React.useCallback(
     async (userId) => {
-      const url = `${appConfig.rest.baseUrl}/user/${userId}/helperTasks`;
+      const url = `${appConfig.rest.baseUrl}/user/${userId}/helperTasks?${query}`;
       await client.request(url, options, policy);
     },
-    [client],
+    [query, client],
   );
 
-  return {result, requestTasks, requestUserTasks};
+  return {result, setQuery, requestTasks, requestUserTasks};
 }

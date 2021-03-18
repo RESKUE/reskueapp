@@ -4,14 +4,16 @@ import appConfig from '../../app.json';
 
 const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
-const url = appConfig.rest.baseUrl + '/userGroup';
+const baseUrl = appConfig.rest.baseUrl + '/userGroup';
 
 export default function useUsergroups() {
   const {client, result} = useClient({authenticated: true});
+  const [query, setQuery] = React.useState();
 
   const requestUsergroups = React.useCallback(async () => {
+    const url = baseUrl + '?' + query;
     await client.request(url, options, policy);
-  }, [client]);
+  }, [query, client]);
 
-  return {result, requestUsergroups};
+  return {result, requestUsergroups, setQuery};
 }

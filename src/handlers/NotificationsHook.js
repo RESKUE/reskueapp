@@ -4,14 +4,17 @@ import appConfig from '../../app.json';
 
 const policy = FetchPolicy.cacheAndNetwork;
 const options = {method: 'GET'};
-const url = appConfig.rest.baseUrl + '/notification?sort=id;desc';
+const baseUrl = appConfig.rest.baseUrl;
 
 export default function useNotifications() {
   const {client, result} = useClient({authenticated: true});
+  const [query, setQuery] = React.useState();
 
   const get = React.useCallback(async () => {
+    const url = baseUrl + '/notification?' + query;
+    console.log('url dins:', url);
     await client.request(url, options, policy);
-  }, [client]);
+  }, [query, client]);
 
-  return {result, get};
+  return {result, setQuery, get};
 }

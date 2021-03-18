@@ -1,7 +1,14 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import MapView, {PROVIDER_OSMDROID} from 'react-native-maps-osmdroid';
+import {
+  SearchBar,
+  FilteringButton,
+  RadioFilteringOption,
+  SearchProvider,
+} from '@ilt-pse/react-native-kueres';
+import {Priorities} from '../../models/CulturalAsset';
 import useAssets from '../../handlers/AssetsHook';
 import MapContainer from '../../components/MapContainer';
 import AssetMarker from '../../components/AssetMarker';
@@ -9,7 +16,7 @@ import MarkerInfo from '../../components/MarkerInfo';
 
 export default function OverviewMapScreen() {
   const navigation = useNavigation();
-  const {result, requestAssets} = useAssets();
+  const {result, setQuery, requestAssets} = useAssets();
   const [info, setInfo] = React.useState(null);
   const markers = generateMarkers(result?.data?.content || [], onMarkerPress);
 
@@ -38,22 +45,48 @@ export default function OverviewMapScreen() {
   }
 
   return (
-    <MapContainer>
-      <MapView
-        style={styles.map}
-        provider={PROVIDER_OSMDROID}
-        initialRegion={INITIAL_REGION}
-        onPress={onMapPress}>
-        {markers}
-      </MapView>
-      <MarkerInfo
-        visible={info !== null}
-        title={info?.title}
-        text={info?.description}
-        onPress={onMore}
-        icon="more"
-      />
-    </MapContainer>
+    <>
+      <MapContainer>
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_OSMDROID}
+          initialRegion={INITIAL_REGION}
+          onPress={onMapPress}>
+          {markers}
+        </MapView>
+        <MarkerInfo
+          visible={info !== null}
+          title={info?.title}
+          text={info?.description}
+          onPress={onMore}
+          icon="more"
+        />
+      </MapContainer>
+      <View style={styles.overlay}>
+        <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+          <SearchBar field="name" operation="~">
+            <FilteringButton>
+              <RadioFilteringOption
+                field="isEndangered"
+                operation="="
+                options={[
+                  {name: 'Egal', value: null},
+                  {name: 'Nein', value: 0},
+                  {name: 'Ja', value: 1},
+                ]}
+                label="In Gefahr"
+              />
+              <RadioFilteringOption
+                field="priority"
+                operation="="
+                options={[{name: 'Alle', value: null}].concat(Priorities)}
+                label="Priorität"
+              />
+            </FilteringButton>
+          </SearchBar>
+        </SearchProvider>
+      </View>
+    </>
   );
 }
 
@@ -78,6 +111,11 @@ function generateMarkers(culturalAssets = [], onMarkerPress) {
 const styles = StyleSheet.create({
   map: {
     flex: 1,
+  },
+  overlay: {
+    position: 'absolute',
+    padding: 16,
+    width: '100%',
   },
 });
 

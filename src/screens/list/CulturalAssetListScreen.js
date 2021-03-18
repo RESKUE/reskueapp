@@ -14,7 +14,6 @@ import {
   SortingButton,
   SortingOption,
   RadioFilteringOption,
-  ChipFilteringOption,
   SearchProvider,
 } from '@ilt-pse/react-native-kueres';
 
@@ -49,10 +48,10 @@ export default function CulturalAssetListScreen({navigation}) {
               ]}
               label="In Gefahr"
             />
-            <ChipFilteringOption
+            <RadioFilteringOption
               field="priority"
               operation="="
-              options={Priorities}
+              options={[{name: 'Alle', value: null}].concat(Priorities)}
               label="Priorität"
             />
           </FilteringButton>
