@@ -32,6 +32,7 @@ before_script:
 stages:
   - test
   - build
+  - release
 
 lint:
   stage: test
@@ -64,7 +65,7 @@ assembleDebug:
       - ./android/.gradle
 
 assembleRelease:
-  stage: build
+  stage: release
   tags:
     - ILT
   when: manual
