@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, ToastAndroid, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   useTheme,
@@ -138,6 +138,13 @@ export default function TaskDetailScreen({navigation, route}) {
     putTask(task.data.id, putBody);
   };
   const onCompleteTask = () => {
+    if (!canComplete()) {
+      ToastAndroid.show(
+        'Es müssen alle Pflicht-Teilaufgaben bearbeitet werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
     removeTaskHelper(task.data.id, user.id);
     const updatedState = Math.max(3, task.data.state);
     const putBody = {isEndangered: 0, state: updatedState};
@@ -324,6 +331,15 @@ export default function TaskDetailScreen({navigation, route}) {
 
   function isUserHelper() {
     return helpers?.some((helper) => helper.id === user.id);
+  }
+
+  function canComplete() {
+    task.data.subtasks.forEach((subtask) => {
+      if (subtask.state === 0 && subtask.isRequired) {
+        return false;
+      }
+    });
+    return true;
   }
 }
 
