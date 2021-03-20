@@ -76,15 +76,6 @@ export default function UsergroupDetailScreen({navigation, route}) {
     </Scaffold>
   );
 
-  async function deleteUsergroup() {
-    const result = requestUsergroupDeletion(usergroup.id);
-    if (result.data?.deleted) {
-      navigation.goBack();
-    } else {
-      console.log('Usergroup deletion failed:', result?.data, result?.error);
-    }
-  }
-
   function goUpdate() {
     navigation.push('UsergroupCreationScreen', {
       screenType: 'update',

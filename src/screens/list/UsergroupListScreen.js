@@ -24,7 +24,13 @@ export default function UsergroupListScreen({navigation}) {
   const {colors} = useTheme();
   const {requestUserMe, result: userResult} = useUserMe();
   const {isAdmin} = useRoles();
-  const {result, myUsergroupResult, setQuery, requestUsergroups, requestMyUsergroups} = useUsergroups();
+  const {
+    result,
+    myUsergroupResult,
+    setQuery,
+    requestUsergroups,
+    requestMyUsergroups,
+  } = useUsergroups();
 
   useFocusEffect(
     React.useCallback(() => {
