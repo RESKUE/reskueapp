@@ -267,7 +267,7 @@ export default function TaskDetailScreen({navigation, route}) {
   );
 
   async function deleteTask() {
-    const result = requestTaskDeletion(task.data.id);
+    const result = await requestTaskDeletion(task.data.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {

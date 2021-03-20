@@ -4,7 +4,7 @@ import appConfig from '../../app.json';
 
 export default function useAsset() {
   const {client, result} = useClient({authenticated: true});
-  const {deletionClient} = useClient({authenticated: true});
+  const {client: deletionClient} = useClient({authenticated: true});
 
   const requestAsset = React.useCallback(
     async (id) => {
@@ -33,7 +33,7 @@ export default function useAsset() {
   const requestAssetDeletion = React.useCallback(
     async (id) => {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
-      const policy = FetchPolicy.networkOnly;
+      const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'DELETE'};
       return await deletionClient.request(url, options, policy);
     },

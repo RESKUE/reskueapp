@@ -78,8 +78,6 @@ export default function UsergroupDetailScreen({navigation, route}) {
 
   async function deleteUsergroup() {
     const result = requestUsergroupDeletion(usergroup.id);
-    console.log(result);
-    return;
     if (result.data?.deleted) {
       navigation.goBack();
     } else {
@@ -94,7 +92,7 @@ export default function UsergroupDetailScreen({navigation, route}) {
     });
   }
   async function deleteUsergroup() {
-    const result = requestUsergroupDeletion(usergroup.id);
+    const result = await requestUsergroupDeletion(usergroup.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {

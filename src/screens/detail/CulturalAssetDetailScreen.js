@@ -194,7 +194,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   async function deleteAsset() {
     hideMenu();
-    const result = requestAssetDeletion(culturalAsset.data.id);
+    const result = await requestAssetDeletion(culturalAsset.data.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {
