@@ -12,7 +12,7 @@ export default function NotificationCreationScreen({navigation, route}) {
   const [message, setMessage] = React.useState();
   const [groups, setGroups] = React.useState([]);
   const [asset, setAsset] = React.useState();
-  const {result, post} = useNotification();
+  const {post} = useNotification();
 
   React.useEffect(() => {
     const selectedAsset = route.params?.selectedAsset;
@@ -24,14 +24,6 @@ export default function NotificationCreationScreen({navigation, route}) {
       setGroups(selectedGroups);
     }
   }, [route]);
-
-  React.useEffect(() => {
-    if (result?.data) {
-      navigation.goBack();
-    } else {
-      setSubmitting(false);
-    }
-  }, [result, navigation]);
 
   return (
     <Scaffold>
@@ -126,7 +118,12 @@ export default function NotificationCreationScreen({navigation, route}) {
 
   async function submit() {
     setSubmitting(true);
-    post(getData());
+    const result = await post(getData());
+    if (result?.data) {
+      navigation.goBack();
+    } else {
+      setSubmitting(false);
+    }
   }
 }
 

@@ -26,7 +26,7 @@ export default function useNotification() {
         headers: {'Content-Type': 'application/json'},
       };
       const policy = FetchPolicy.networkOnly;
-      await client.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
     [client],
   );
