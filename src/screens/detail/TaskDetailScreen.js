@@ -9,7 +9,6 @@ import {
   IconButton,
   Menu,
   Paragraph,
-  Text,
 } from 'react-native-paper';
 import {
   AuthContext,
@@ -20,7 +19,6 @@ import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskListItem from '../../components/listItems/SubtaskListItem';
 import SubtaskUnpressableListItem from '../../components/listItems/SubtaskUnpressableListItem';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
-import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useTask from '../../handlers/TaskHook';
 import useTaskCreation from '../../handlers/TaskCreationHook';
@@ -109,8 +107,6 @@ export default function TaskDetailScreen({navigation, route}) {
   React.useEffect(() => {
     if (taskUpdateResult?.data) {
       setTask(new Task(taskUpdateResult.data));
-    } else {
-      console.log(taskUpdateResult);
     }
   }, [taskUpdateResult]);
 
@@ -178,24 +174,24 @@ export default function TaskDetailScreen({navigation, route}) {
       //If the user is a helper he can finish the task
       if (isUserHelper()) {
         return (
-          <ListActions>
+          <Card.Actions>
             <Button color={colors.primary} onPress={onCompleteTask}>
               Beenden
             </Button>
             <Button color={colors.redish} onPress={onCancelTask}>
               Abbrechen
             </Button>
-          </ListActions>
+          </Card.Actions>
         );
       }
       //If the user isn't a helper he start working on the task
       else {
         return (
-          <ListActions>
+          <Card.Actions>
             <Button color={colors.primary} onPress={onBeginTask}>
               Aufgabe annehmen
             </Button>
-          </ListActions>
+          </Card.Actions>
         );
       }
     }
@@ -244,35 +240,24 @@ export default function TaskDetailScreen({navigation, route}) {
             </Button>
           </Card.Actions>
         ) : null}
+        {getButtons()}
       </Card>
-      {getButtons()}
-      <Text style={styles.bold}>
-        Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}
-      </Text>
-      <Text style={styles.bold}>Status: {task.getTaskStateName()}</Text>
-      {clientRoles.includes('administrator') ? (
-        <Button color={colors.redish} onPress={resetState}>
-          Setze Status zurück
-        </Button>
-      ) : null}
-      <Divider style={styles.divider} />
       {task.data.subtasks.length !== 0 && (
-        <FancyList
-          title="Teilaufgaben"
-          data={task.data.subtasks}
-          extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
-          component={getSubtaskComponent()}
-        />
-      )}
-      {task.data.isEndangered ? (
-        <View>
-          <Divider style={styles.divider} />
+        <View style={styles.listSpacing}>
           <FancyList
-            title="Helfer"
-            data={helpers || []}
-            component={UserUnpressableListItem}
+            title="Teilaufgaben"
+            data={task.data.subtasks}
+            extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
+            component={getSubtaskComponent()}
           />
         </View>
+      )}
+      {task.data.isEndangered ? (
+        <FancyList
+          title="Helfer"
+          data={helpers || []}
+          component={UserUnpressableListItem}
+        />
       ) : null}
 
       <View style={styles.center}>
@@ -294,6 +279,7 @@ export default function TaskDetailScreen({navigation, route}) {
           anchor={
             <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
           }>
+          <Menu.Item onPress={resetState} title="Setze Status zurück" />
           <Menu.Item onPress={goUpdate} title="Bearbeiten" />
           <Menu.Item onPress={deleteTask} title="Löschen" />
         </Menu>
@@ -304,11 +290,10 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   function getSubtitle() {
-    //const priority = culturalAsset?.data?.priority;
-    //const isEndangered = culturalAsset?.data?.isEndangered ?? false;
-    //const label = isEndangered ? 'In Gefahr!' : 'Nicht in Gefahr.';
-    //const subtitle = `${label}  |  Priorität: ${priority}`;
-    return 'Subtitle';
+    const status = `Status: ${task.getTaskStateName()}`;
+    const recommendedHelpers = `Empf. Helferanzahl: ${task.data.recommendedHelperUsers}`;
+    const subtitle = `${status} | ${recommendedHelpers}`;
+    return subtitle;
   }
 
   function showMenu() {
@@ -351,15 +336,14 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
   },
-  divider: {
-    backgroundColor: 'black',
-    marginVertical: 10,
-  },
   card: {
     marginBottom: 16,
   },
   content: {
     paddingVertical: 8,
+  },
+  listSpacing: {
+    marginBottom: 16,
   },
   center: {
     justifyContent: 'center',
