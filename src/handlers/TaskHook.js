@@ -8,7 +8,7 @@ export default function useTask() {
   const {client: getClient, result: getResult} = useClient({
     authenticated: true,
   });
-  const {client: deletionClient, result: deletionResult} = useClient({
+  const {client: deletionClient} = useClient({
     authenticated: true,
   });
 
@@ -25,10 +25,10 @@ export default function useTask() {
     async (id) => {
       const url = appConfig.rest.baseUrl + `/task/${id}`;
       const options = {method: 'DELETE'};
-      await deletionClient.request(url, options, policy);
+      return await deletionClient.request(url, options, policy);
     },
     [deletionClient],
   );
 
-  return {getResult, deletionResult, requestTask, requestTaskDeletion};
+  return {getResult, requestTask, requestTaskDeletion};
 }

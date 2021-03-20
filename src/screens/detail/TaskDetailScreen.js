@@ -34,12 +34,7 @@ export default function TaskDetailScreen({navigation, route}) {
   const [user, setUser] = React.useState(null);
 
   const {colors} = useTheme();
-  const {
-    requestTask,
-    requestTaskDeletion,
-    getResult: taskResult,
-    deletionResult,
-  } = useTask();
+  const {requestTask, requestTaskDeletion, getResult: taskResult} = useTask();
   const {requestAsset, result: assetResult} = useAsset();
   const {requestSubtasks, result: subtaskResult} = useSubtasks();
   const {requestUserMe, result: userResult} = useUserMe();
@@ -93,17 +88,6 @@ export default function TaskDetailScreen({navigation, route}) {
     [taskDataExpression],
   );
 
-  //If deletion was successful go back
-  React.useEffect(() => {
-    if (deletionResult) {
-      if (deletionResult.data?.deleted) {
-        navigation.goBack();
-      } else {
-        console.log(deletionResult);
-      }
-    }
-  }, [deletionResult, navigation]);
-
   const onChangeSubtaskState = (subtaskId) => {
     const updatedTask = new Task(task.data);
     const index = updatedTask.data.subtasks.findIndex(
@@ -154,15 +138,6 @@ export default function TaskDetailScreen({navigation, route}) {
   const goAsset = () =>
     navigation.push('CulturalAssetDetailScreen', {id: asset.id});
 
-  const deleteTask = () => {
-    requestTaskDeletion(task.data.id);
-  };
-  function goCreation() {
-    navigation.push('TaskCreationScreen', {
-      screenType: 'update',
-      id: task.data.id,
-    });
-  }
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
@@ -242,7 +217,7 @@ export default function TaskDetailScreen({navigation, route}) {
             <IconButton
               color={colors.primary}
               icon="circle-edit-outline"
-              onPress={goCreation}
+              onPress={goUpdate}
             />
             <IconButton
               color={colors.primary}
@@ -290,6 +265,22 @@ export default function TaskDetailScreen({navigation, route}) {
       </View>
     </Scaffold>
   );
+
+  async function deleteTask() {
+    const result = requestTaskDeletion(task.data.id);
+    if (result.data?.deleted) {
+      navigation.goBack();
+    } else {
+      console.log('Task deletion failed:', result?.data, result?.error);
+    }
+  }
+
+  function goUpdate() {
+    navigation.push('TaskCreationScreen', {
+      screenType: 'update',
+      id: task.data.id,
+    });
+  }
 }
 
 const styles = StyleSheet.create({

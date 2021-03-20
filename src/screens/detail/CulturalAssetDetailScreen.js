@@ -9,7 +9,6 @@ import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useTasks from '../../handlers/TasksHook';
-import useAssetDeletion from '../../handlers/AssetDeletionHook';
 import CulturalAsset from '../../models/CulturalAsset';
 import {
   useTheme,
@@ -29,7 +28,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const [tasks, setTasks] = React.useState([]);
 
   const {colors} = useTheme();
-  const {requestAsset, result: assetResult} = useAsset();
+  const {requestAsset, requestAssetDeletion, result: assetResult} = useAsset();
   const {
     requestAsset: requestAssetParent,
     result: assetParentResult,
@@ -37,7 +36,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
-  const {requestAssetDeletion, result: deletionResult} = useAssetDeletion();
   const {requestTasks, result: taskResult} = useTasks();
 
   React.useEffect(() => {
@@ -98,20 +96,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       }
     }
   }, [culturalAsset, assetChildrenResult]);
-
-  // If deletion was successful go back
-  React.useEffect(() => {
-    if (deletionResult) {
-      if (deletionResult.data?.deleted) {
-        navigation.goBack();
-      } else {
-        console.log(
-          'Deletion was not successful! Are you the creator of this asset?',
-          deletionResult,
-        );
-      }
-    }
-  }, [deletionResult, navigation]);
 
   if (!culturalAsset || !childrenAssets || !parentAsset || !tasks) {
     return <LoadingIndicator />;
@@ -178,7 +162,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         anchor={
           <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
         }>
-        <Menu.Item onPress={goCreation} title="Bearbeiten" />
+        <Menu.Item onPress={goUpdate} title="Bearbeiten" />
         <Menu.Item onPress={deleteAsset} title="Löschen" />
       </Menu>
     );
@@ -208,12 +192,17 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
   }
 
-  function deleteAsset() {
+  async function deleteAsset() {
     hideMenu();
-    requestAssetDeletion(culturalAsset.data.id);
+    const result = requestAssetDeletion(culturalAsset.data.id);
+    if (result.data?.deleted) {
+      navigation.goBack();
+    } else {
+      console.log('Asset deletion failed:', result, result?.error);
+    }
   }
 
-  function goCreation() {
+  function goUpdate() {
     hideMenu();
     navigation.push('CulturalAssetCreationScreen', {
       screenType: 'update',
