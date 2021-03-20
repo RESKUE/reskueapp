@@ -1,23 +1,15 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Chip, useTheme} from 'react-native-paper';
+import {Chip} from 'react-native-paper';
 import {Priorities} from '../models/CulturalAsset';
 
 export default function AssetTags({data}) {
-  const {colors} = useTheme();
-  const endangeredChip = {backgroundColor: colors.redish};
-  const endangeredText = {color: '#ffffff'};
-
   return (
     <View style={styles.chips}>
       <SmallChip>{getPriorityLabel(data.priority)}</SmallChip>
       <SmallChip>Ebene {data.level}</SmallChip>
       {data.label && <SmallChip>{data.label}</SmallChip>}
-      {!!data.isEndangered && (
-        <SmallChip style={endangeredChip} textStyle={endangeredText}>
-          In Gefahr!
-        </SmallChip>
-      )}
+      {!!data.isEndangered && <SmallChip>In Gefahr!</SmallChip>}
     </View>
   );
 }
