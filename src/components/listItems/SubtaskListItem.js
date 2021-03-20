@@ -6,7 +6,7 @@ export default function SubtaskListItem({data, extraData}) {
   const {colors} = useTheme();
 
   function onPress() {
-    extraData.changeSubtaskStateCallback(data.id);
+    extraData.changeSubtaskStateCallback(data.id, !data.state);
   }
 
   return (

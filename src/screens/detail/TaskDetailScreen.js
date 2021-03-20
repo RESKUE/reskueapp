@@ -22,7 +22,10 @@ import UserUnpressableListItem from '../../components/listItems/UserUnpressableL
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useTask from '../../handlers/TaskHook';
+import useTaskCreation from '../../handlers/TaskCreationHook';
+import useTaskHelpers from '../../handlers/TaskHelpersHook';
 import useUserMe from '../../handlers/UserMeHook';
+import useSubtask from '../../handlers/SubtaskHook';
 import useSubtasks from '../../handlers/SubtaksHook';
 import Task from '../../models/Task';
 
@@ -32,11 +35,21 @@ export default function TaskDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
   const [task, setTask] = React.useState(null);
+  const [helpers, setHelpers] = React.useState(null);
   const [user, setUser] = React.useState(null);
 
   const {colors} = useTheme();
   const {requestTask, requestTaskDeletion, getResult: taskResult} = useTask();
+  const {
+    requestTaskHelpers,
+    assignTaskHelper,
+    removeTaskHelper,
+    getResult: helpersResult,
+    updateResult,
+  } = useTaskHelpers();
+  const {putTask, taskResult: taskUpdateResult} = useTaskCreation();
   const {requestSubtasks, result: subtaskResult} = useSubtasks();
+  const {putSubtask, result: subtaskUpdateResult} = useSubtask();
   const {requestUserMe, result: userResult} = useUserMe();
 
   React.useEffect(() => {
@@ -46,6 +59,10 @@ export default function TaskDetailScreen({navigation, route}) {
   React.useEffect(() => {
     requestTask(route.params.id);
   }, [requestTask, route.params]);
+
+  React.useEffect(() => {
+    requestTaskHelpers(route.params.id);
+  }, [requestTaskHelpers, route.params]);
 
   React.useEffect(() => {
     if (taskResult) {
@@ -77,50 +94,64 @@ export default function TaskDetailScreen({navigation, route}) {
     [taskDataExpression],
   );
 
-  const onChangeSubtaskState = (subtaskId) => {
-    const updatedTask = new Task(task.data);
-    const index = updatedTask.data.subtasks.findIndex(
-      (subtask) => subtask.id === subtaskId,
-    );
-    updatedTask.data.subtasks[index].state = !updatedTask.data.subtasks[index]
-      .state;
-    setTask(updatedTask);
+  React.useEffect(() => {
+    if (helpersResult?.data) {
+      setHelpers(helpersResult.data.content);
+    }
+  }, [helpersResult]);
+
+  React.useEffect(() => {
+    if (updateResult?.data) {
+      requestTaskHelpers(updateResult.data.id);
+    }
+  }, [updateResult, requestTaskHelpers]);
+
+  React.useEffect(() => {
+    if (taskUpdateResult?.data) {
+      setTask(new Task(taskUpdateResult.data));
+    } else {
+      console.log(taskUpdateResult);
+    }
+  }, [taskUpdateResult]);
+
+  React.useEffect(() => {
+    if (subtaskUpdateResult?.data) {
+      requestTask(route.params.id);
+    }
+  }, [subtaskUpdateResult, route.params, requestTask]);
+
+  const onChangeSubtaskState = (subtaskId, subtaskState) => {
+    const stateAsInt = subtaskState ? 1 : 0;
+    const putBody = {state: stateAsInt};
+    putSubtask(subtaskId, putBody);
   };
 
   const resetState = () => {
-    const updatedTask = new Task(task.data);
-    updatedTask.data.state = 0;
-    updatedTask.data.subtasks.forEach((subtask) => {
-      subtask.state = 0;
-    });
-    setTask(updatedTask);
+    const putBody = {state: 0};
+    putTask(task.data.id, putBody);
+
+    //task.data.subtasks.forEach((subtask) => {
+    //  putSubtask(subtask.id, {state: 0});
+    //});
   };
 
-  const onAcceptTask = () => {
-    const updatedHelpers = [...task.data.helperUsers, user];
-    const updatedTask = new Task(task.data);
-    updatedTask.data.helperUsers = updatedHelpers;
-    updatedTask.data.state = 1;
-    setTask(updatedTask);
+  const onBeginTask = () => {
+    assignTaskHelper(task.data.id, user.id);
+    const updatedState = Math.max(1, task.data.state);
+    const putBody = {state: updatedState};
+    putTask(task.data.id, putBody);
   };
   const onCompleteTask = () => {
-    const updatedTask = new Task(task.data);
-    const updatedHelpers = updatedTask.data.helperUsers.filter(
-      (helperUser) => helperUser.id !== user.id,
-    );
-    updatedTask.data.helperUsers = updatedHelpers;
-    updatedTask.data.state = 3;
-    updatedTask.data.isEndangered = !updatedTask.data.isEndangered;
-    setTask(updatedTask);
+    removeTaskHelper(task.data.id, user.id);
+    const updatedState = Math.max(3, task.data.state);
+    const putBody = {isEndangered: 0, state: updatedState};
+    putTask(task.data.id, putBody);
   };
   const onCancelTask = () => {
-    const updatedTask = new Task(task.data);
-    const updatedHelpers = updatedTask.data.helperUsers.filter(
-      (helperUser) => helperUser.id !== user.id,
-    );
-    updatedTask.data.helperUsers = updatedHelpers;
-    updatedTask.data.state = 2;
-    setTask(updatedTask);
+    removeTaskHelper(task.data.id, user.id);
+    const updatedState = Math.max(2, task.data.state);
+    const putBody = {state: updatedState};
+    putTask(task.data.id, putBody);
   };
 
   const goMap = () =>
@@ -145,7 +176,7 @@ export default function TaskDetailScreen({navigation, route}) {
       return null;
     } else {
       //If the user is a helper he can finish the task
-      if (task?.data?.helperUsers?.includes(user)) {
+      if (isUserHelper()) {
         return (
           <ListActions>
             <Button color={colors.primary} onPress={onCompleteTask}>
@@ -161,7 +192,7 @@ export default function TaskDetailScreen({navigation, route}) {
       else {
         return (
           <ListActions>
-            <Button color={colors.primary} onPress={onAcceptTask}>
+            <Button color={colors.primary} onPress={onBeginTask}>
               Aufgabe annehmen
             </Button>
           </ListActions>
@@ -171,7 +202,7 @@ export default function TaskDetailScreen({navigation, route}) {
   };
 
   const getSubtaskComponent = () => {
-    if (task?.data?.helperUsers?.includes(user)) {
+    if (isUserHelper()) {
       return SubtaskListItem;
     } else {
       return SubtaskUnpressableListItem;
@@ -238,7 +269,7 @@ export default function TaskDetailScreen({navigation, route}) {
           <Divider style={styles.divider} />
           <FancyList
             title="Helfer"
-            data={task.data.helperUsers || []}
+            data={helpers || []}
             component={UserUnpressableListItem}
           />
         </View>
@@ -304,6 +335,10 @@ export default function TaskDetailScreen({navigation, route}) {
     } else {
       console.log('Task deletion failed:', result?.data, result?.error);
     }
+  }
+
+  function isUserHelper() {
+    return helpers?.some((helper) => helper.id === user.id);
   }
 }
 
