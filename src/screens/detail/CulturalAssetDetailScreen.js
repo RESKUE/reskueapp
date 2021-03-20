@@ -8,6 +8,7 @@ import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
+import useAssetCreation from '../../handlers/AssetCreationHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useTasks from '../../handlers/TasksHook';
 import CulturalAsset from '../../models/CulturalAsset';
@@ -37,6 +38,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
+  const {putAsset, result: updateResult} = useAssetCreation();
   const {requestTasks, result: taskResult} = useTasks();
 
   useFocusEffect(
@@ -93,6 +95,12 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       }
     }
   }, [culturalAsset, assetChildrenResult]);
+
+  React.useEffect(() => {
+    if (updateResult?.data) {
+      requestAsset(route.params.id);
+    }
+  }, [requestAsset, updateResult, route.params]);
 
   if (!culturalAsset || !childrenAssets || !parentAsset || !tasks) {
     return <LoadingIndicator />;
@@ -159,6 +167,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         anchor={
           <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
         }>
+        <Menu.Item
+          onPress={toggleIsEndangered}
+          title={
+            culturalAsset.data.isEndangered
+              ? 'Entferne in Gefahr'
+              : 'Markiere in Gefahr'
+          }
+        />
         <Menu.Item onPress={goUpdate} title="Bearbeiten" />
         <Menu.Item onPress={deleteAsset} title="Löschen" />
       </Menu>
@@ -205,6 +221,13 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     } else {
       console.log('Asset deletion failed:', result, result?.error);
     }
+  }
+
+  function toggleIsEndangered() {
+    hideMenu();
+    const isEndangeredAsInt = !culturalAsset.data.isEndangered ? 1 : 0;
+    const putBody = {isEndangered: isEndangeredAsInt};
+    putAsset(culturalAsset.data.id, putBody);
   }
 
   function goTaskCreation() {
