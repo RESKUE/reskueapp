@@ -9,18 +9,8 @@ export default function MediaCreationScreen({navigation, route}) {
   const [submitting, setSubmitting] = React.useState(false);
   const [altText, setAltText] = React.useState();
   const [file, setFile] = React.useState();
-  const {result, post} = useMedia();
+  const {post} = useMedia();
   const previousRouteName = route.params.previousRouteName;
-
-  React.useEffect(() => {
-    if (result?.data) {
-      navigation.navigate(previousRouteName, {
-        mediaId: result.data,
-      });
-    } else {
-      setSubmitting(false);
-    }
-  }, [result, navigation, previousRouteName]);
 
   return (
     <Scaffold>
@@ -76,7 +66,14 @@ export default function MediaCreationScreen({navigation, route}) {
 
   async function submit() {
     setSubmitting(true);
-    await post(getData());
+    const result = await post(getData());
+    if (result?.data) {
+      navigation.navigate(previousRouteName, {
+        mediaId: result.data,
+      });
+    } else {
+      setSubmitting(false);
+    }
   }
 }
 
