@@ -1,14 +1,14 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {useTheme, IconButton, Button, Divider, Title} from 'react-native-paper';
+import {useFocusEffect} from '@react-navigation/native';
+import {Card, IconButton, Menu} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
-import ListActions from '../../components/ListActions';
 import useUsergroup from '../../handlers/UsergroupHook';
 
 export default function UsergroupDetailScreen({navigation, route}) {
-  const {colors} = useTheme();
+  const [menuVisible, setMenuVisible] = React.useState(false);
   const [usergroup, setUserGroup] = React.useState(null);
   const [users, setUsers] = React.useState(null);
   const {
@@ -19,13 +19,12 @@ export default function UsergroupDetailScreen({navigation, route}) {
     usersResult,
   } = useUsergroup();
 
-  React.useEffect(() => {
-    requestUsergroup(route.params.id);
-  }, [requestUsergroup, route.params]);
-
-  React.useEffect(() => {
-    requestUsergroupUsers(route.params.id);
-  }, [requestUsergroupUsers, route.params]);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestUsergroup(route.params.id);
+      requestUsergroupUsers(route.params.id);
+    }, [requestUsergroup, requestUsergroupUsers, route.params]),
+  );
 
   React.useEffect(() => {
     if (usergroupResult?.data) {
@@ -39,66 +38,65 @@ export default function UsergroupDetailScreen({navigation, route}) {
     }
   }, [usersResult]);
 
-  const finishCreation = () => navigation.goBack();
-
   if (usergroup === null || users === null) {
     return <LoadingIndicator />;
   }
 
   return (
     <Scaffold>
-      <Title style={styles.title}>{usergroup.name}</Title>
-      <ListActions>
-        <IconButton
-          color={colors.primary}
-          icon="circle-edit-outline"
-          onPress={goUpdate}
-        />
-        <IconButton
-          color={colors.primary}
-          icon="trash-can-outline"
-          onPress={deleteUsergroup}
-        />
-      </ListActions>
-      <Divider style={styles.dividerStyle} />
+      <Card style={styles.card}>
+        <Card.Title title={usergroup.name} right={buildMenu} />
+      </Card>
       <FancyList
         title="Mitglieder"
         data={users}
         component={UserUnpressableListItem}
       />
-      <Button
-        icon="check"
-        mode="contained"
-        onPress={finishCreation}
-        style={styles.buttonSpacing}>
-        Fertig
-      </Button>
     </Scaffold>
   );
+  function buildMenu(props) {
+    return (
+      <Menu
+        visible={menuVisible}
+        onDismiss={hideMenu}
+        anchor={
+          <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+        }>
+        <Menu.Item onPress={goUpdate} title="Bearbeiten" />
+        <Menu.Item onPress={deleteUsergroup} title="Löschen" />
+      </Menu>
+    );
+  }
+
+  function showMenu() {
+    setMenuVisible(true);
+  }
+
+  function hideMenu() {
+    setMenuVisible(false);
+  }
 
   function goUpdate() {
+    hideMenu();
     navigation.push('UsergroupCreationScreen', {
       screenType: 'update',
       id: usergroup.id,
     });
   }
+
   async function deleteUsergroup() {
+    hideMenu();
     const result = await requestUsergroupDeletion(usergroup.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {
-      console.log('Usergroup deletion failed:', result);
+      console.log('Usergroup deletion failed:', result?.data, result?.error);
     }
   }
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    marginTop: 10,
+  card: {
+    marginBottom: 16,
   },
-  dividerStyle: {marginBottom: 24, backgroundColor: 'black'},
-  buttonSpacing: {marginTop: 16},
 });

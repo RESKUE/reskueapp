@@ -3,11 +3,12 @@ import {StyleSheet, View} from 'react-native';
 import {
   useTheme,
   Button,
+  Card,
   Divider,
   IconButton,
+  Menu,
   Paragraph,
   Text,
-  Title,
 } from 'react-native-paper';
 import {
   AuthContext,
@@ -20,7 +21,6 @@ import SubtaskUnpressableListItem from '../../components/listItems/SubtaskUnpres
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
-import useAsset from '../../handlers/AssetHook';
 import useTask from '../../handlers/TaskHook';
 import useUserMe from '../../handlers/UserMeHook';
 import useSubtasks from '../../handlers/SubtaksHook';
@@ -29,13 +29,13 @@ import Task from '../../models/Task';
 export default function TaskDetailScreen({navigation, route}) {
   const {clientRoles} = React.useContext(AuthContext);
 
+  const [menuVisible, setMenuVisible] = React.useState(false);
+
   const [task, setTask] = React.useState(null);
-  const [asset, setAsset] = React.useState(null);
   const [user, setUser] = React.useState(null);
 
   const {colors} = useTheme();
   const {requestTask, requestTaskDeletion, getResult: taskResult} = useTask();
-  const {requestAsset, result: assetResult} = useAsset();
   const {requestSubtasks, result: subtaskResult} = useSubtasks();
   const {requestUserMe, result: userResult} = useUserMe();
 
@@ -51,13 +51,8 @@ export default function TaskDetailScreen({navigation, route}) {
     if (taskResult) {
       setTask(new Task(taskResult.data));
       requestSubtasks(taskResult.data.id);
-      if (taskResult.data?.culturalAsset) {
-        requestAsset(taskResult.data.culturalAsset);
-      } else {
-        setAsset([]);
-      }
     }
-  }, [requestAsset, requestSubtasks, taskResult]);
+  }, [requestSubtasks, taskResult]);
 
   React.useEffect(() => {
     if (subtaskResult?.data) {
@@ -71,12 +66,6 @@ export default function TaskDetailScreen({navigation, route}) {
       setUser(userResult.data);
     }
   }, [userResult]);
-
-  React.useEffect(() => {
-    if (assetResult?.data) {
-      setAsset(assetResult.data);
-    }
-  }, [assetResult]);
 
   const taskDataExpression = task?.data;
   const setSubtasks = React.useCallback(
@@ -134,14 +123,19 @@ export default function TaskDetailScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
-  const goMap = () => navigation.push('CulturalAssetMapScreen', {id: asset.id});
+  const goMap = () =>
+    navigation.push('CulturalAssetMapScreen', {
+      id: taskResult.data.culturalAsset,
+    });
   const goAsset = () =>
-    navigation.push('CulturalAssetDetailScreen', {id: asset.id});
+    navigation.push('CulturalAssetDetailScreen', {
+      id: taskResult.data.culturalAsset,
+    });
 
   const goMedia = () => navigation.push('MediaListScreen');
   const goComments = () => console.log('Go to CommentList');
 
-  if (task === null || task.data === null || asset === null) {
+  if (task === null || task.data === null) {
     return <LoadingIndicator />;
   }
 
@@ -186,49 +180,41 @@ export default function TaskDetailScreen({navigation, route}) {
 
   return (
     <Scaffold>
-      <Title style={styles.title}>{task.data.name}</Title>
-      {task.data.description === '' ? null : (
-        <Paragraph>{task.data.description}</Paragraph>
-      )}
-
-      <View>
-        {asset.name ? (
-          <View style={styles.buttonContainer}>
+      <Card style={styles.card}>
+        <Card.Title
+          title={task.data.name}
+          subtitle={getSubtitle()}
+          right={buildMenu}
+        />
+        {task.data.description === '' ? null : (
+          <View>
+            <Divider />
+            <Card.Content style={styles.content}>
+              <Paragraph>{task.data.description}</Paragraph>
+            </Card.Content>
+          </View>
+        )}
+        <Divider />
+        {taskResult.data?.culturalAsset ? (
+          <Card.Actions>
             <Button
               color={colors.primary}
               icon="map-marker"
               onPress={goMap}
               style={styles.bold}>
-              Location
+              Zur Karte
             </Button>
             <Button
               color={colors.primary}
               icon="apps"
               onPress={goAsset}
               style={styles.bold}>
-              {asset.name}
+              Zum Kulturgut
             </Button>
-          </View>
+          </Card.Actions>
         ) : null}
-      </View>
-      {clientRoles.includes('administrator') ? (
-        <View>
-          <ListActions>
-            <IconButton
-              color={colors.primary}
-              icon="circle-edit-outline"
-              onPress={goUpdate}
-            />
-            <IconButton
-              color={colors.primary}
-              icon="trash-can-outline"
-              onPress={deleteTask}
-            />
-          </ListActions>
-        </View>
-      ) : null}
+      </Card>
       {getButtons()}
-      <Divider style={styles.divider} />
       <Text style={styles.bold}>
         Empfohlene Helferanzahl: {task.data.recommendedHelperUsers}
       </Text>
@@ -239,12 +225,14 @@ export default function TaskDetailScreen({navigation, route}) {
         </Button>
       ) : null}
       <Divider style={styles.divider} />
-      <FancyList
-        title="Teilaufgaben"
-        data={task.data.subtasks}
-        extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
-        component={getSubtaskComponent()}
-      />
+      {task.data.subtasks.length !== 0 && (
+        <FancyList
+          title="Teilaufgaben"
+          data={task.data.subtasks}
+          extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
+          component={getSubtaskComponent()}
+        />
+      )}
       {task.data.isEndangered ? (
         <View>
           <Divider style={styles.divider} />
@@ -266,7 +254,50 @@ export default function TaskDetailScreen({navigation, route}) {
     </Scaffold>
   );
 
+  function buildMenu(props) {
+    if (clientRoles.includes('administrator')) {
+      return (
+        <Menu
+          visible={menuVisible}
+          onDismiss={hideMenu}
+          anchor={
+            <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+          }>
+          <Menu.Item onPress={goUpdate} title="Bearbeiten" />
+          <Menu.Item onPress={deleteTask} title="Löschen" />
+        </Menu>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  function getSubtitle() {
+    //const priority = culturalAsset?.data?.priority;
+    //const isEndangered = culturalAsset?.data?.isEndangered ?? false;
+    //const label = isEndangered ? 'In Gefahr!' : 'Nicht in Gefahr.';
+    //const subtitle = `${label}  |  Priorität: ${priority}`;
+    return 'Subtitle';
+  }
+
+  function showMenu() {
+    setMenuVisible(true);
+  }
+
+  function hideMenu() {
+    setMenuVisible(false);
+  }
+
+  function goUpdate() {
+    hideMenu();
+    navigation.push('TaskCreationScreen', {
+      screenType: 'update',
+      id: task.data.id,
+    });
+  }
+
   async function deleteTask() {
+    hideMenu();
     const result = await requestTaskDeletion(task.data.id);
     if (result.data?.deleted) {
       navigation.goBack();
@@ -274,21 +305,9 @@ export default function TaskDetailScreen({navigation, route}) {
       console.log('Task deletion failed:', result?.data, result?.error);
     }
   }
-
-  function goUpdate() {
-    navigation.push('TaskCreationScreen', {
-      screenType: 'update',
-      id: task.data.id,
-    });
-  }
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
   buttonContainer: {
     flexDirection: 'row',
     marginBottom: -24,
@@ -300,6 +319,12 @@ const styles = StyleSheet.create({
   divider: {
     backgroundColor: 'black',
     marginVertical: 10,
+  },
+  card: {
+    marginBottom: 16,
+  },
+  content: {
+    paddingVertical: 8,
   },
   center: {
     justifyContent: 'center',

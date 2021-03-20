@@ -192,6 +192,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
   }
 
+  function goUpdate() {
+    hideMenu();
+    navigation.push('CulturalAssetCreationScreen', {
+      screenType: 'update',
+      id: culturalAsset.data.id,
+    });
+  }
+
   async function deleteAsset() {
     hideMenu();
     const result = await requestAssetDeletion(culturalAsset.data.id);
@@ -200,14 +208,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     } else {
       console.log('Asset deletion failed:', result, result?.error);
     }
-  }
-
-  function goUpdate() {
-    hideMenu();
-    navigation.push('CulturalAssetCreationScreen', {
-      screenType: 'update',
-      id: culturalAsset.data.id,
-    });
   }
 
   function goTaskCreation() {
