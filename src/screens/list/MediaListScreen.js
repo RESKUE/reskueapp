@@ -35,7 +35,8 @@ export default function MediaListScreen({navigation, route}) {
     const updatedMediaArray = mediaArray.concat([{id: mediaId}]);
     const data = {media: updatedMediaArray};
     putAsset(assetId, data);
-  }, [assetResult, mediaId, assetId, putAsset]);
+    get();
+  }, [assetResult, mediaId, assetId, putAsset, get]);
 
   useFocusEffect(
     React.useCallback(() => {
