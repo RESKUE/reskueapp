@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   useTheme,
   Button,
@@ -56,20 +57,19 @@ export default function TaskDetailScreen({navigation, route}) {
     requestUserMe();
   }, [requestUserMe]);
 
-  React.useEffect(() => {
-    requestTask(route.params.id);
-  }, [requestTask, route.params]);
-
-  React.useEffect(() => {
-    requestTaskHelpers(route.params.id);
-  }, [requestTaskHelpers, route.params]);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestTask(route.params.id);
+      requestTaskHelpers(route.params.id);
+      requestSubtasks(route.params.id);
+    }, [requestTask, requestTaskHelpers, requestSubtasks, route.params]),
+  );
 
   React.useEffect(() => {
     if (taskResult) {
       setTask(new Task(taskResult.data));
-      requestSubtasks(taskResult.data.id);
     }
-  }, [requestSubtasks, taskResult]);
+  }, [taskResult]);
 
   React.useEffect(() => {
     if (subtaskResult?.data) {

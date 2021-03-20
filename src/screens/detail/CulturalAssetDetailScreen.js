@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
@@ -38,17 +39,13 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   );
   const {requestTasks, result: taskResult} = useTasks();
 
-  React.useEffect(() => {
-    requestAsset(route.params.id);
-  }, [requestAsset, route.params.id]);
-
-  React.useEffect(() => {
-    requestAssetChildren();
-  }, [requestAssetChildren]);
-
-  React.useEffect(() => {
-    requestTasks();
-  }, [requestTasks]);
+  useFocusEffect(
+    React.useCallback(() => {
+      requestAsset(route.params.id);
+      requestAssetChildren();
+      requestTasks();
+    }, [requestAsset, requestAssetChildren, requestTasks, route.params]),
+  );
 
   // Set this CulturalAsset from requested id data
   React.useEffect(() => {
