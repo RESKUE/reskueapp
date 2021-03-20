@@ -6,6 +6,8 @@ import {
   SortingButton,
   SortingOption,
   SearchProvider,
+  FilteringButton,
+  RadioFilteringOption,
 } from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import TaskListItem from '../../components/listItems/TaskListItem';
@@ -30,6 +32,18 @@ export default function TaskListScreen({navigation}) {
     <Scaffold>
       <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
         <SearchBar field="name" operation="~">
+          <FilteringButton>
+            <RadioFilteringOption
+              field="isEndangered"
+              operation="="
+              options={[
+                {name: 'Egal', value: null},
+                {name: 'Nein', value: 0},
+                {name: 'Ja', value: 1},
+              ]}
+              label="In Gefahr"
+            />
+          </FilteringButton>
           <SortingButton>
             <SortingOption field="name" label="Name" />
           </SortingButton>
