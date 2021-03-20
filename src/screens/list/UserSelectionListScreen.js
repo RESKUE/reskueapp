@@ -1,6 +1,13 @@
 import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
-import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  LoadingIndicator,
+  FancyList,
+  SearchBar,
+  SortingButton,
+  SortingOption,
+  SearchProvider,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserSelectionListItem from '../../components/listItems/UserSelectionListItem';
 import ListActions from '../../components/ListActions';
@@ -8,7 +15,7 @@ import useUsers from '../../handlers/UsersHook';
 
 export default function UserSelectionListScreen() {
   const {colors} = useTheme();
-  const {requestUsers, result: userResult} = useUsers();
+  const {requestUsers, setQuery, result: userResult} = useUsers();
 
   React.useEffect(() => {
     requestUsers();
@@ -20,6 +27,13 @@ export default function UserSelectionListScreen() {
 
   return (
     <Scaffold>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="name" operation="~">
+          <SortingButton>
+            <SortingOption field="name" label="Name" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
       <ListActions>
         <IconButton
           color={colors.primary}

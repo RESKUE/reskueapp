@@ -1,6 +1,13 @@
 import React from 'react';
 import {useTheme, IconButton} from 'react-native-paper';
-import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  FancyList,
+  LoadingIndicator,
+  SearchBar,
+  SortingButton,
+  SortingOption,
+  SearchProvider,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetSelectionListItem from '../../components/listItems/CulturalAssetSelectionListItem';
 import ListActions from '../../components/ListActions';
@@ -8,7 +15,7 @@ import useAssets from '../../handlers/AssetsHook';
 
 export default function CulturalAssetSelectionListScreen({navigation, route}) {
   const {colors} = useTheme();
-  const {requestAssets, result: assetResult} = useAssets();
+  const {requestAssets, setQuery, result: assetResult} = useAssets();
 
   const selectionType = route.params.selectionType;
 
@@ -43,6 +50,14 @@ export default function CulturalAssetSelectionListScreen({navigation, route}) {
 
   return (
     <Scaffold>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="name" operation="~">
+          <SortingButton>
+            <SortingOption field="name" label="Name" />
+            <SortingOption field="priority" label="Priorität" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
       <ListActions>
         <IconButton
           color={colors.primary}

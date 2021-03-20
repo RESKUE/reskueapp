@@ -3,19 +3,22 @@ import {StyleSheet} from 'react-native';
 import {List, IconButton, Button, useTheme} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import useUsergroups from '../../handlers/UsergroupsHook';
+import ListActions from '../../components/ListActions';
 import {
   ErrorIndicator,
-  FancyList,
   LoadingIndicator,
+  FancyList,
+  SearchBar,
+  SortingButton,
+  SortingOption,
+  SearchProvider,
 } from '@ilt-pse/react-native-kueres';
 
 export default function GroupSelectionScreen({navigation, route}) {
   const [selection, setSelection] = React.useState([]);
-  const {result, requestUsergroups} = useUsergroups();
+  const {result, setQuery, requestUsergroups} = useUsergroups();
   const {colors} = useTheme();
   const content = result?.data?.content;
-
-  console.log('SELECTION', selection);
 
   React.useEffect(() => {
     requestUsergroups();
@@ -31,6 +34,20 @@ export default function GroupSelectionScreen({navigation, route}) {
 
   return (
     <Scaffold>
+      <SearchProvider onQueryUpdate={(query) => setQuery(query)}>
+        <SearchBar field="name" operation="~">
+          <SortingButton>
+            <SortingOption field="name" label="Name" />
+          </SortingButton>
+        </SearchBar>
+      </SearchProvider>
+      <ListActions>
+        <IconButton
+          color={colors.primary}
+          icon="reload"
+          onPress={() => requestUsergroups()}
+        />
+      </ListActions>
       <FancyList
         title="Wähle eine Benutzergruppe"
         data={content || []}
