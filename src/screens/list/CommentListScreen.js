@@ -1,5 +1,9 @@
 import React from 'react';
-import {LoadingIndicator, usePolling} from '@ilt-pse/react-native-kueres';
+import {
+  LoadingIndicator,
+  InfoIndicator,
+  usePolling,
+} from '@ilt-pse/react-native-kueres';
 import {useFocusEffect} from '@react-navigation/native';
 import {View, StyleSheet} from 'react-native';
 import {
@@ -41,9 +45,14 @@ export default function CommentListScreen({route}) {
   return (
     <>
       <Scaffold>
-        {comments.map((data, key) => {
-          return <CommentListItem key={key} data={data} />;
-        })}
+        {comments.length > 0 ? (
+          <CommentsList comments={comments} />
+        ) : (
+          <InfoIndicator
+            icon="message-reply-text"
+            text="Noch keine Kommentare"
+          />
+        )}
       </Scaffold>
       {file && (
         <View>
@@ -142,6 +151,16 @@ export default function CommentListScreen({route}) {
   function isFormValid() {
     return !!text;
   }
+}
+
+function CommentsList({comments}) {
+  return (
+    <>
+      {comments.map((data, key) => {
+        return <CommentListItem key={key} data={data} />;
+      })}
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

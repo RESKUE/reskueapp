@@ -1,5 +1,9 @@
 import React from 'react';
-import {FancyGrid, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  FancyGrid,
+  InfoIndicator,
+  LoadingIndicator,
+} from '@ilt-pse/react-native-kueres';
 import {useFocusEffect} from '@react-navigation/native';
 import {IconButton, useTheme} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
@@ -18,6 +22,7 @@ export default function MediaListScreen({navigation, route}) {
   const assetId = route.params?.assetId;
   const mediaId = route.params?.mediaId;
   const mediaUrl = `culturalAsset/${assetId}/media`;
+  const content = result?.data?.content ?? [];
 
   const linkMedia = React.useCallback(() => {
     // Unfortunately the backend requires a separate step to link an media
@@ -60,10 +65,14 @@ export default function MediaListScreen({navigation, route}) {
           />
         </ListActions>
       )}
-      <FancyGrid
-        dataList={result.data?.content ?? []}
-        component={MediaListItem}
-      />
+      {content.length > 0 ? (
+        <FancyGrid dataList={content} component={MediaListItem} />
+      ) : (
+        <InfoIndicator
+          icon="folder-multiple-image"
+          text="Keine Media vorhanden"
+        />
+      )}
     </Scaffold>
   );
 
