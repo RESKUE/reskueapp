@@ -21,5 +21,15 @@ export default function useComment() {
     [client],
   );
 
-  return {result, post};
+  const del = React.useCallback(
+    async (id) => {
+      const url = appConfig.rest.baseUrl + `/comment/${id}`;
+      const options = {method: 'DELETE'};
+      const policy = FetchPolicy.networkOnly;
+      return await client.request(url, options, policy);
+    },
+    [client],
+  );
+
+  return {result, post, del};
 }

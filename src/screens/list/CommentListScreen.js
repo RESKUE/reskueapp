@@ -18,14 +18,16 @@ import CommentListItem from '../../components/listItems/mediaListItems/CommentLi
 import Scaffold from '../../components/baseComponents/Scaffold';
 import useComments from '../../handlers/CommentsHook';
 import useComment from '../../handlers/CommentHook';
+import useUserMe from '../../handlers/UserMeHook';
 import useMedia from '../../handlers/MediaHook';
 
 export default function CommentListScreen({route}) {
   const [submitting, setSubmitting] = React.useState(false);
   const [text, setText] = React.useState();
   const [file, setFile] = React.useState();
+  const {requestUserMe, result: me} = useUserMe();
   const {result: commentsResult, get: getComments} = useComments();
-  const {post: postComment} = useComment();
+  const {post: postComment, del: deleteComment} = useComment();
   const {post: postMedia} = useMedia();
   const {colors} = useTheme();
   const assetId = route.params.assetId ?? null;
@@ -44,7 +46,11 @@ export default function CommentListScreen({route}) {
   useFocusEffect(refresh);
   usePolling(4000, refresh);
 
-  if (!commentsResult) {
+  React.useEffect(() => {
+    requestUserMe();
+  }, [requestUserMe]);
+
+  if (!commentsResult || !me) {
     return <LoadingIndicator />;
   }
 
@@ -52,7 +58,11 @@ export default function CommentListScreen({route}) {
     <>
       <Scaffold>
         {comments.length > 0 ? (
-          <CommentsList comments={comments} />
+          <CommentsList
+            comments={comments}
+            viewerId={me?.data?.id}
+            deletionCallback={deleteCommentAndRefresh}
+          />
         ) : (
           <InfoIndicator
             icon="message-reply-text"
@@ -160,13 +170,24 @@ export default function CommentListScreen({route}) {
   function isFormValid() {
     return !!text;
   }
+
+  async function deleteCommentAndRefresh(id) {
+    await deleteComment(id);
+    refresh();
+  }
 }
 
-function CommentsList({comments}) {
+function CommentsList({comments, viewerId, deletionCallback}) {
   return (
     <>
       {comments.map((data, key) => {
-        return <CommentListItem key={key} data={data} />;
+        return (
+          <CommentListItem
+            key={key}
+            data={data}
+            extraData={{viewerId, deletionCallback}}
+          />
+        );
       })}
     </>
   );
