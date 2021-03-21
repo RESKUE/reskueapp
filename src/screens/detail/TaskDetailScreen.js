@@ -166,9 +166,6 @@ export default function TaskDetailScreen({navigation, route}) {
       id: taskResult.data.culturalAsset,
     });
 
-  const goMedia = () => navigation.push('MediaListScreen');
-  const goComments = () => console.log('Go to CommentList');
-
   if (task === null || task.data === null) {
     return <LoadingIndicator />;
   }
@@ -268,10 +265,9 @@ export default function TaskDetailScreen({navigation, route}) {
       ) : null}
 
       <View style={styles.center}>
-        <FloatingWhiteButton onPress={goMedia} content="Weiter zu den Medien" />
         <FloatingWhiteButton
-          onPress={goComments}
-          content="Weiter zu den Kommentaren"
+          onPress={openComments}
+          content="Zu den Kommentaren"
         />
       </View>
     </Scaffold>
@@ -340,6 +336,10 @@ export default function TaskDetailScreen({navigation, route}) {
       }
     });
     return true;
+  }
+
+  function openComments() {
+    navigation.push('CommentListScreen', {taskId: task.data.id});
   }
 }
 

@@ -1,11 +1,11 @@
 import React from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {View, StyleSheet} from 'react-native';
 import {
   LoadingIndicator,
   InfoIndicator,
   usePolling,
 } from '@ilt-pse/react-native-kueres';
-import {useFocusEffect} from '@react-navigation/native';
-import {View, StyleSheet} from 'react-native';
 import {
   useTheme,
   TextInput,
@@ -28,15 +28,21 @@ export default function CommentListScreen({route}) {
   const {post: postComment} = useComment();
   const {post: postMedia} = useMedia();
   const {colors} = useTheme();
-  const assetId = route.params.assetId;
+  const assetId = route.params.assetId ?? null;
+  const taskId = route.params.taskId ?? null;
   const comments = commentsResult?.data?.content ?? [];
-  usePolling(4000, getComments);
 
   const refresh = React.useCallback(() => {
-    getComments(`/culturalAsset/${assetId}/comments`);
-  }, [getComments, assetId]);
+    if (assetId) {
+      getComments(`/culturalAsset/${assetId}/comments`);
+    }
+    if (taskId) {
+      getComments(`/task/${taskId}/comments`);
+    }
+  }, [getComments, assetId, taskId]);
 
   useFocusEffect(refresh);
+  usePolling(4000, refresh);
 
   if (!commentsResult) {
     return <LoadingIndicator />;
@@ -126,10 +132,13 @@ export default function CommentListScreen({route}) {
   }
 
   async function createComment(mediaId) {
-    const data = {
-      text: text,
-      commentCulturalAsset: {id: assetId},
-    };
+    const data = {text: text};
+    if (assetId) {
+      data.commentCulturalAsset = {id: assetId};
+    }
+    if (taskId) {
+      data.commentTask = {id: taskId};
+    }
     if (mediaId) {
       data.media = [{id: mediaId}];
     }
