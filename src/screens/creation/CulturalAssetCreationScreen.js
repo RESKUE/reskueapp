@@ -147,10 +147,10 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     if (
       culturalAsset.data.name === '' ||
       !culturalAsset.data.latitude ||
-      !culturalAsset.data.longitude
+      (!culturalAsset.data.longitude && culturalAsset.data.address === '')
     ) {
       ToastAndroid.show(
-        'Es muss ein Name und Location gewählt werden!',
+        'Es muss ein Name und Location oder Adresse gewählt werden!',
         ToastAndroid.SHORT,
       );
       return;
@@ -203,7 +203,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         style={styles.buttonSpacing}
       />
       <TextInput
-        label="Besonderheiten"
+        label="Besonderheiten bei Handhabung"
         value={culturalAsset.data.label}
         onChangeText={onChangeLabel}
         style={styles.inputSpacing}

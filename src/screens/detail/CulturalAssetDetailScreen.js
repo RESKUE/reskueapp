@@ -117,6 +117,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         <Card.Cover source={{uri: coverUri}} />
         <Card.Content style={styles.content}>
           <Paragraph>{culturalAsset?.data?.description}</Paragraph>
+          <Paragraph style={styles.bold}>
+            Beachte im Umgang: {culturalAsset?.data?.label}
+          </Paragraph>
         </Card.Content>
         <Divider />
         <Card.Actions>
@@ -127,6 +130,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
             </Button>
           )}
         </Card.Actions>
+        <Card.Content>
+          <Paragraph>{culturalAsset?.data?.address}</Paragraph>
+        </Card.Content>
       </Card>
 
       {childrenAssets.length !== 0 && (
@@ -257,5 +263,8 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 });
