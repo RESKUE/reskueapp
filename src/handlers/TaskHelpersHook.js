@@ -8,7 +8,7 @@ export default function useTaskHelpers() {
   const {client: getClient, result: getResult} = useClient({
     authenticated: true,
   });
-  const {client: updateClient, result: updateResult} = useClient({
+  const {client: updateClient} = useClient({
     authenticated: true,
   });
 
@@ -26,7 +26,7 @@ export default function useTaskHelpers() {
       const url =
         appConfig.rest.baseUrl + `/task/${taskId}/assignHelper/${userId}`;
       const options = {method: 'PUT'};
-      await updateClient.request(url, options, policy);
+      return await updateClient.request(url, options, policy);
     },
     [updateClient],
   );
@@ -36,14 +36,13 @@ export default function useTaskHelpers() {
       const url =
         appConfig.rest.baseUrl + `/task/${taskId}/removeHelper/${userId}`;
       const options = {method: 'PUT'};
-      await updateClient.request(url, options, policy);
+      return await updateClient.request(url, options, policy);
     },
     [updateClient],
   );
 
   return {
     getResult,
-    updateResult,
     requestTaskHelpers,
     assignTaskHelper,
     removeTaskHelper,

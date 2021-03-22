@@ -5,7 +5,7 @@ import appConfig from '../../app.json';
 const policy = FetchPolicy.cacheAndNetwork;
 
 export default function useSubtask() {
-  const {client, result} = useClient({authenticated: true});
+  const {client} = useClient({authenticated: true});
 
   const putSubtask = React.useCallback(
     async (subtaskId, subtask) => {
@@ -17,10 +17,10 @@ export default function useSubtask() {
         },
         body: JSON.stringify(subtask),
       };
-      await client.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
     [client],
   );
 
-  return {result, putSubtask};
+  return {putSubtask};
 }

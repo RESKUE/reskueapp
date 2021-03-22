@@ -8,7 +8,6 @@ import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
-import useAssetCreation from '../../handlers/AssetCreationHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useTasks from '../../handlers/TasksHook';
 import CulturalAsset from '../../models/CulturalAsset';
@@ -30,7 +29,12 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const [tasks, setTasks] = React.useState([]);
 
   const {colors} = useTheme();
-  const {requestAsset, requestAssetDeletion, result: assetResult} = useAsset();
+  const {
+    requestAsset,
+    requestAssetDeletion,
+    put,
+    result: assetResult,
+  } = useAsset();
   const {
     requestAsset: requestAssetParent,
     result: assetParentResult,
@@ -38,7 +42,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
-  const {putAsset, result: updateResult} = useAssetCreation();
   const {requestTasks, result: taskResult} = useTasks();
 
   useFocusEffect(
@@ -95,12 +98,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       }
     }
   }, [culturalAsset, assetChildrenResult]);
-
-  React.useEffect(() => {
-    if (updateResult?.data) {
-      requestAsset(route.params.id);
-    }
-  }, [requestAsset, updateResult, route.params]);
 
   if (!culturalAsset || !childrenAssets || !parentAsset || !tasks) {
     return <LoadingIndicator />;
@@ -216,18 +213,23 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   async function deleteAsset() {
     hideMenu();
     const result = await requestAssetDeletion(culturalAsset.data.id);
-    if (result.data?.deleted) {
+    if (result?.data?.deleted) {
       navigation.goBack();
     } else {
       console.log('Asset deletion failed:', result, result?.error);
     }
   }
 
-  function toggleIsEndangered() {
+  async function toggleIsEndangered() {
     hideMenu();
     const isEndangeredAsInt = !culturalAsset.data.isEndangered ? 1 : 0;
     const putBody = {isEndangered: isEndangeredAsInt};
-    putAsset(culturalAsset.data.id, putBody);
+    const result = await put(culturalAsset.data.id, putBody);
+    if (result?.data) {
+      requestAsset(route.params.id);
+    } else {
+      console.log('isEndangered toggle failed:', result, result?.error);
+    }
   }
 
   function goTaskCreation() {

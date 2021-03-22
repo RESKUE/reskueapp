@@ -23,21 +23,6 @@ export default function useAssetCreation() {
     [client],
   );
 
-  const putAsset = React.useCallback(
-    async (id, culturalAsset) => {
-      const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
-      const options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(culturalAsset),
-      };
-      await client.request(url, options, policy);
-    },
-    [client],
-  );
-
   const putSetParent = React.useCallback(
     async (assetId, parentId) => {
       const url =
@@ -52,7 +37,6 @@ export default function useAssetCreation() {
   return {
     result,
     postAsset,
-    putAsset,
     putSetParent,
   };
 }

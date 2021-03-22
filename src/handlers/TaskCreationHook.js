@@ -34,7 +34,7 @@ export default function useTaskCreation() {
         },
         body: JSON.stringify(task),
       };
-      await taskClient.request(url, options, policy);
+      return await taskClient.request(url, options, policy);
     },
     [taskClient],
   );

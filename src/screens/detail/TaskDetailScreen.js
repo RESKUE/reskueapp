@@ -34,6 +34,7 @@ export default function TaskDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
   const [task, setTask] = React.useState(null);
+  const [subtasks, setSubtasks] = React.useState(null);
   const [helpers, setHelpers] = React.useState(null);
   const [user, setUser] = React.useState(null);
 
@@ -44,11 +45,10 @@ export default function TaskDetailScreen({navigation, route}) {
     assignTaskHelper,
     removeTaskHelper,
     getResult: helpersResult,
-    updateResult,
   } = useTaskHelpers();
-  const {putTask, taskResult: taskUpdateResult} = useTaskCreation();
+  const {putTask} = useTaskCreation();
   const {requestSubtasks, result: subtaskResult} = useSubtasks();
-  const {putSubtask, result: subtaskUpdateResult} = useSubtask();
+  const {putSubtask} = useSubtask();
   const {requestUserMe, result: userResult} = useUserMe();
 
   React.useEffect(() => {
@@ -73,7 +73,7 @@ export default function TaskDetailScreen({navigation, route}) {
     if (subtaskResult?.data) {
       setSubtasks(subtaskResult.data.content);
     }
-  }, [subtaskResult, setSubtasks]);
+  }, [subtaskResult]);
 
   React.useEffect(() => {
     if (userResult?.data) {
@@ -82,80 +82,11 @@ export default function TaskDetailScreen({navigation, route}) {
     }
   }, [userResult]);
 
-  const taskDataExpression = task?.data;
-  const setSubtasks = React.useCallback(
-    (subtasks) => {
-      const updatedTask = new Task(taskDataExpression);
-      updatedTask.data.subtasks = subtasks;
-      setTask(updatedTask);
-    },
-    [taskDataExpression],
-  );
-
   React.useEffect(() => {
     if (helpersResult?.data) {
       setHelpers(helpersResult.data.content);
     }
   }, [helpersResult]);
-
-  React.useEffect(() => {
-    if (updateResult?.data) {
-      requestTaskHelpers(updateResult.data.id);
-    }
-  }, [updateResult, requestTaskHelpers]);
-
-  React.useEffect(() => {
-    if (taskUpdateResult?.data) {
-      setTask(new Task(taskUpdateResult.data));
-    }
-  }, [taskUpdateResult]);
-
-  React.useEffect(() => {
-    if (subtaskUpdateResult?.data) {
-      requestTask(route.params.id);
-    }
-  }, [subtaskUpdateResult, route.params, requestTask]);
-
-  const onChangeSubtaskState = (subtaskId, subtaskState) => {
-    const stateAsInt = subtaskState ? 1 : 0;
-    const putBody = {state: stateAsInt};
-    putSubtask(subtaskId, putBody);
-  };
-
-  const resetState = () => {
-    const putBody = {state: 0};
-    putTask(task.data.id, putBody);
-
-    //task.data.subtasks.forEach((subtask) => {
-    //  putSubtask(subtask.id, {state: 0});
-    //});
-  };
-
-  const onBeginTask = () => {
-    assignTaskHelper(task.data.id, user.id);
-    const updatedState = Math.max(1, task.data.state);
-    const putBody = {state: updatedState};
-    putTask(task.data.id, putBody);
-  };
-  const onCompleteTask = () => {
-    if (!canComplete()) {
-      ToastAndroid.show(
-        'Es müssen alle Pflicht-Teilaufgaben bearbeitet werden!',
-        ToastAndroid.SHORT,
-      );
-      return;
-    }
-    removeTaskHelper(task.data.id, user.id);
-    const updatedState = Math.max(3, task.data.state);
-    const putBody = {isEndangered: 0, state: updatedState};
-    putTask(task.data.id, putBody);
-  };
-  const onCancelTask = () => {
-    removeTaskHelper(task.data.id, user.id);
-    const updatedState = Math.max(2, task.data.state);
-    const putBody = {state: updatedState};
-    putTask(task.data.id, putBody);
-  };
 
   const goMap = () =>
     navigation.push('CulturalAssetMapScreen', {
@@ -166,7 +97,7 @@ export default function TaskDetailScreen({navigation, route}) {
       id: taskResult.data.culturalAsset,
     });
 
-  if (task === null || task.data === null) {
+  if (task === null || task.data === null || subtasks === null) {
     return <LoadingIndicator />;
   }
 
@@ -246,11 +177,11 @@ export default function TaskDetailScreen({navigation, route}) {
         ) : null}
         {getButtons()}
       </Card>
-      {task.data.subtasks.length !== 0 && (
+      {subtasks.length !== 0 && (
         <View style={styles.listSpacing}>
           <FancyList
             title="Teilaufgaben"
-            data={task.data.subtasks}
+            data={subtasks}
             extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
             component={getSubtaskComponent()}
           />
@@ -322,6 +253,95 @@ export default function TaskDetailScreen({navigation, route}) {
       navigation.goBack();
     } else {
       console.log('Task deletion failed:', result?.data, result?.error);
+    }
+  }
+
+  async function onBeginTask() {
+    const updateResult = await assignTaskHelper(task.data.id, user.id);
+    if (updateResult?.data) {
+      requestTaskHelpers(updateResult.data.id);
+    } else {
+      console.log(
+        'Assigning helper failed:',
+        updateResult,
+        updateResult?.error,
+      );
+      return;
+    }
+    const updatedState = Math.max(1, task.data.state);
+    const putBody = {state: updatedState};
+
+    const result = await putTask(task.data.id, putBody);
+    if (result.data) {
+      setTask(new Task(result.data));
+    } else {
+      console.log('Starting Task failed:', result, result?.error);
+    }
+  }
+
+  async function onCompleteTask() {
+    if (!canComplete()) {
+      ToastAndroid.show(
+        'Es müssen alle Pflicht-Teilaufgaben bearbeitet werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+    const updatedState = Math.max(3, task.data.state);
+    const putBody = {isEndangered: 0, state: updatedState};
+    const result = await putTask(task.data.id, putBody);
+    if (result.data) {
+      setTask(new Task(result.data));
+    } else {
+      console.log('Completing Task failed:', result, result?.error);
+      return;
+    }
+
+    const updateResult = await removeTaskHelper(task.data.id, user.id);
+    if (updateResult?.data) {
+      requestTaskHelpers(updateResult.data.id);
+    } else {
+      console.log('Remove helper failed:', updateResult, updateResult?.error);
+    }
+  }
+
+  async function onCancelTask() {
+    const updatedState = Math.max(2, task.data.state);
+    const putBody = {state: updatedState};
+    const result = await putTask(task.data.id, putBody);
+    if (result.data) {
+      setTask(new Task(result.data));
+    } else {
+      console.log('Cancelling task failed:', result, result?.error);
+      return;
+    }
+
+    const updateResult = await removeTaskHelper(task.data.id, user.id);
+    if (updateResult?.data) {
+      requestTaskHelpers(updateResult.data.id);
+    } else {
+      console.log('Remove helper failed:', updateResult, updateResult?.error);
+    }
+  }
+
+  async function resetState() {
+    const putBody = {state: 0};
+    const result = await putTask(task.data.id, putBody);
+    if (result.data) {
+      setTask(new Task(result.data));
+    } else {
+      console.log('Reseting Task failed:', result, result?.error);
+    }
+  }
+
+  async function onChangeSubtaskState(subtaskId, subtaskState) {
+    const stateAsInt = subtaskState ? 1 : 0;
+    const putBody = {state: stateAsInt};
+    const result = await putSubtask(subtaskId, putBody);
+    if (result.data) {
+      requestSubtasks(route.params.id);
+    } else {
+      console.log('Changing subtask-state failed:', result, result?.error);
     }
   }
 

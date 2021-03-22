@@ -25,7 +25,7 @@ export default function useAsset() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data),
       };
-      await client.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
     [client],
   );
