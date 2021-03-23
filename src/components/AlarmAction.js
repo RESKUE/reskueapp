@@ -18,6 +18,7 @@ export default function AlarmAction() {
       icon="bell"
       color={colors.redish}
       onPress={launchNotificationCreation}
+      testID="alarmActionBell"
     />
   );
 

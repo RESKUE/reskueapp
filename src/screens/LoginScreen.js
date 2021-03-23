@@ -53,6 +53,7 @@ export default function LoginScreen() {
             onChangeText={setUsername}
             autoCompleteType="username"
             label="Benutzername"
+            testID="loginScreenUsernameInput"
           />
           <TextInput
             style={styles.element}
@@ -60,15 +61,17 @@ export default function LoginScreen() {
             dense={true}
             value={password}
             onChangeText={setPassword}
-            autoCompleteType="password"
             secureTextEntry={true}
+            textContentType="password"
             label="Passwort"
+            testID="loginScreenPasswordInput"
           />
           <Button
             style={styles.element}
             color={colors.primary}
             mode="contained"
-            onPress={login}>
+            onPress={login}
+            testID="loginScreenLoginButton">
             Anmelden
           </Button>
         </Surface>

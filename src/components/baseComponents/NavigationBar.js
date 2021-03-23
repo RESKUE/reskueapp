@@ -27,7 +27,11 @@ export default function NavigationBar({authService, navigation}) {
 
   return (
     <Appbar style={styles.bottom}>
-      <Appbar.Action icon="close-circle-outline" onPress={logout} />
+      <Appbar.Action
+        icon="close-circle-outline"
+        onPress={logout}
+        testID="navigationBarLogoutButton"
+      />
       <Appbar.Action icon="map-outline" onPress={goMap} />
       <Appbar.Action icon="home" onPress={goHome} />
       <Appbar.Action icon="view-list" onPress={goMyTask} />
