@@ -27,3 +27,25 @@ One needs to [authenticate with our private Package Registry](https://docs.gitla
 2. Start an Android emulator / Connect an Android device
 3. Run `npm run start` (keep it running)
 4. Run `npm run android`
+
+## Tests
+
+### Unit-, Itegration and ComponentTests
+
+...are automatically run by CI.
+You can also manually run these test with `npm run test`.
+The test files are located in the `__tests__` directory.
+
+### End to end tests
+
+End-to-end (e2e) tests are not automatically run by CI.
+This is due to their non-trivial setup, speed and them being more prone to flakiness.
+
+#### Setup
+
+1. Run the RESKUE Backend in production mode
+2. Have `admin` and `helper` users with password `1234`
+3. Have a Pixel 3a Android R Emulator with the name `Pixel_3a_API_30_x86`. (alternatively add a new configuration to `.detoxrc.json`)
+4. Keep `npm run start` running in a terminal
+5. Build a debug test version of the app with `npm run e2e-build-debug`
+6. Run the tests with `npm run e2e-test-debug`

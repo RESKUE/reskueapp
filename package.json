@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "e2e-build-debug": "detox build --configuration android.emu.debug",
+    "e2e-test-debug": "detox test --configuration android.emu.debug",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
