@@ -17,6 +17,7 @@ export default function CulturalAssetCreationListItem({data, extraData}) {
       description={culturalAsset.data.description}
       right={() => (
         <IconButton
+          testID="removeAssetIconButton"
           icon="close"
           color={colors.primary}
           onPress={removeCulturalAsset}

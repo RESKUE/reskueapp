@@ -7,3 +7,8 @@ it('cultural asset list item renders correctly', () => {
   const data = {id: 1, name: 'mona', desc: 'lisa'};
   renderer.create(<CulturalAssetListItem data={data} />);
 });
+
+it('cultural asset list item renders correctly for endangered asset', () => {
+  const data = {id: 1, name: 'mona', desc: 'lisa', isEndangered: 1};
+  renderer.create(<CulturalAssetListItem data={data} />);
+});
