@@ -3,7 +3,7 @@ import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
 import appConfig from '../../app.json';
 
 export default function useAsset() {
-  const {requestClient, result} = useClient({authenticated: true});
+  const {client: requestClient, result} = useClient({authenticated: true});
   const {client} = useClient({authenticated: true});
 
   const requestAsset = React.useCallback(
@@ -46,7 +46,7 @@ export default function useAsset() {
     [client],
   );
 
-  const requestAssetDeletion = React.useCallback(
+  const remove = React.useCallback(
     async (id) => {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
       const policy = FetchPolicy.cacheAndNetwork;
@@ -56,5 +56,5 @@ export default function useAsset() {
     [client],
   );
 
-  return {result, requestAsset, post, put, requestAssetDeletion};
+  return {result, requestAsset, post, put, remove};
 }

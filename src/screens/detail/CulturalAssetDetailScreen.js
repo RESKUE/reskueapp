@@ -29,12 +29,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const [tasks, setTasks] = React.useState([]);
 
   const {colors} = useTheme();
-  const {
-    requestAsset,
-    requestAssetDeletion,
-    put,
-    result: assetResult,
-  } = useAsset();
+  const {requestAsset, remove, put, result: assetResult} = useAsset();
   const {
     requestAsset: requestAssetParent,
     result: assetParentResult,
@@ -59,7 +54,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
       const parentId = assetResult?.data?.culturalAssetParent;
       if (parentId) {
-        requestAssetParent(assetResult.data.culturalAssetParent);
+        requestAssetParent(parentId);
       } else {
         setParentAsset({});
       }
@@ -218,7 +213,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   async function deleteAsset() {
     hideMenu();
-    const result = await requestAssetDeletion(culturalAsset.data.id);
+    const result = await remove(culturalAsset.data.id);
     if (result?.data?.deleted) {
       navigation.goBack();
     } else {
