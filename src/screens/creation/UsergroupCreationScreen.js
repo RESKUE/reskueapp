@@ -140,16 +140,14 @@ export default function UsergroupCreationScreen({navigation, route}) {
       ToastAndroid.show('Es muss ein Name gewählt werden!', ToastAndroid.SHORT);
       return;
     }
+    const userIds = [];
+    usergroup.users.forEach((user) => {
+      userIds.push({id: user.id});
+    });
+    const formattedUsergroup = {name: usergroup.name, users: userIds};
     if (screenType === 'update') {
-      console.log(usergroup);
-      putUsergroup(usergroup.id, usergroup);
+      putUsergroup(formattedUsergroup.id, formattedUsergroup);
     } else {
-      const userIds = [];
-      usergroup.users.forEach((user) => {
-        userIds.push({id: user.id});
-      });
-      const formattedUsergroup = {name: usergroup.name, users: userIds};
-      console.log(formattedUsergroup);
       postUsergroup(formattedUsergroup);
     }
   };
