@@ -60,7 +60,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
 
   React.useEffect(() => {
     if (usersResult?.data && !usersLoaded) {
-      console.log(usersResult.data.content);
       setUsers(usersResult.data.content);
     }
   }, [setUsers, usersResult, usersLoaded]);
@@ -96,8 +95,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
         name: usergroup.name,
         users: userList,
       };
-      console.log(updatedUsergroup);
-      console.log(usergroup);
       setUserGroup(updatedUsergroup);
       setUsersLoaded(true);
     },
@@ -146,7 +143,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
     });
     const formattedUsergroup = {name: usergroup.name, users: userIds};
     if (screenType === 'update') {
-      putUsergroup(formattedUsergroup.id, formattedUsergroup);
+      putUsergroup(usergroup.id, formattedUsergroup);
     } else {
       postUsergroup(formattedUsergroup);
     }
