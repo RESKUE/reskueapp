@@ -8,7 +8,7 @@ export default function AssetTags({data}) {
     <View style={styles.chips}>
       <SmallChip>{getPriorityLabel(data.priority)}</SmallChip>
       <SmallChip>Ebene {data.level}</SmallChip>
-      {data.label && <SmallChip>{data.label}</SmallChip>}
+      {!!data.label && <SmallChip>{data.label}</SmallChip>}
       {!!data.isEndangered && <SmallChip>In Gefahr!</SmallChip>}
     </View>
   );
