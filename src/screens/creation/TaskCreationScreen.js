@@ -185,8 +185,12 @@ export default function TaskCreationScreen({navigation, route}) {
     task.data.subtasks.forEach((subtask) => {
       delete subtask.localId;
     });
+    task.data.subtasks.forEach((subtask) => {
+      delete subtask.task;
+    });
 
     if (screenType === 'update') {
+      console.log(task.data);
       putTask(task.data.id, task.data);
     } else {
       console.log(task.data);
