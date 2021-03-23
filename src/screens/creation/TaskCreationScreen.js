@@ -21,7 +21,6 @@ export default function TaskCreationScreen({navigation, route}) {
     new Task({
       name: '',
       description: '',
-      tags: [],
       state: 0,
       subtasks: [],
       recommendedHelperUsers: 1,
@@ -180,12 +179,17 @@ export default function TaskCreationScreen({navigation, route}) {
       );
       return;
     }
+
     task.data.culturalAsset = {id: task.data.culturalAsset.id};
 
+    task.data.subtasks.forEach((subtask) => {
+      delete subtask.localId;
+    });
+
     if (screenType === 'update') {
-      console.log(task.data);
       putTask(task.data.id, task.data);
     } else {
+      console.log(task.data);
       postTask(task.data);
     }
   };
