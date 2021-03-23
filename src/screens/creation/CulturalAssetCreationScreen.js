@@ -14,12 +14,8 @@ import CulturalAssetUnpressableListItem from '../../components/listItems/Cultura
 import ListActions from '../../components/ListActions';
 import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
 import useAsset from '../../handlers/AssetHook';
-import useAssets from '../../handlers/AssetsHook';
-import useAssetCreation from '../../handlers/AssetCreationHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
-  const {requestAsset, result: baseAssetResult} = useAsset();
-
   const screenType = route.params?.screenType;
 
   const [culturalAsset, setCulturalAsset] = React.useState(
@@ -32,16 +28,14 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       level: 0,
     }),
   );
-  const [parentAsset, setParentAsset] = React.useState([]);
+  const [parentAsset, setParentAsset] = React.useState(null);
 
   const {colors} = useTheme();
-  const {requestAssets, result: assetResult} = useAssets();
+  const {requestAsset, post, put, result: baseAssetResult} = useAsset();
   const {
-    postAsset,
-    putAsset,
-    putSetParent,
-    result: creationResult,
-  } = useAssetCreation();
+    requestAsset: requestParentAsset,
+    result: parentAssetResult,
+  } = useAsset();
 
   React.useEffect(() => {
     if (screenType === 'update') {
@@ -51,24 +45,26 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }, [requestAsset, screenType, route.params.id]);
 
   React.useEffect(() => {
-    requestAssets();
-  }, [requestAssets]);
-
-  React.useEffect(() => {
-    if (baseAssetResult) {
+    if (baseAssetResult?.data) {
       setCulturalAsset(new CulturalAsset(baseAssetResult.data));
       if (baseAssetResult.data.culturalAssetParent) {
-        setParentAsset([baseAssetResult.data.culturalAssetParent]);
+        requestParentAsset(baseAssetResult.data.culturalAssetParent);
       }
     }
-  }, [baseAssetResult]);
+  }, [baseAssetResult, requestParentAsset]);
 
   React.useEffect(() => {
     const routeParentId = route.params?.parentId;
     if (routeParentId != null) {
-      onChangeParent(routeParentId);
+      requestParentAsset(routeParentId);
     }
-  }, [route.params, onChangeParent]);
+  }, [route.params, requestParentAsset]);
+
+  React.useEffect(() => {
+    if (parentAssetResult?.data) {
+      setParentAsset([parentAssetResult.data]);
+    }
+  }, [parentAssetResult]);
 
   React.useEffect(() => {
     const location = route.params?.location;
@@ -76,17 +72,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       onChangeLocation(location);
     }
   }, [route.params, onChangeLocation]);
-
-  React.useEffect(() => {
-    if (creationResult?.data != null) {
-      parentAsset.forEach((asset) => {
-        putSetParent(creationResult.data.id, asset.id);
-      });
-      navigation.goBack();
-    } else {
-      console.log('Creation result: ' + creationResult);
-    }
-  }, [creationResult, parentAsset, navigation, putSetParent]);
 
   const onChangeName = (name) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
@@ -112,14 +97,6 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     updatedCulturalAsset.data.address = newAddress;
     setCulturalAsset(updatedCulturalAsset);
   };
-  const onChangeParent = React.useCallback(
-    (parentId) => {
-      setParentAsset([
-        assetResult.data.content.find((asset) => asset.id === parentId),
-      ]);
-    },
-    [assetResult],
-  );
   const onChangeLabel = (label) => {
     const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
     updatedCulturalAsset.data.label = label;
@@ -143,31 +120,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     });
   };
 
-  const finishCreation = () => {
-    if (
-      culturalAsset.data.name === '' ||
-      !culturalAsset.data.latitude ||
-      (!culturalAsset.data.longitude && culturalAsset.data.address === '')
-    ) {
-      ToastAndroid.show(
-        'Es muss ein Name und Location oder Adresse gewählt werden!',
-        ToastAndroid.SHORT,
-      );
-      return;
-    }
-
-    if (screenType === 'update') {
-      putAsset(culturalAsset.data.id, culturalAsset.data);
-    } else {
-      //if(parentAsset !== [])
-      //{
-      //  culturalAsset.data.culturalAssetParent = {id: parentAsset[0].id};
-      //}
-      postAsset(culturalAsset.data);
-    }
-  };
-
-  if (assetResult === null || culturalAsset === null) {
+  if (parentAsset === null || culturalAsset === null) {
     return <LoadingIndicator />;
   }
 
@@ -245,6 +198,42 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       </Button>
     </Scaffold>
   );
+
+  async function finishCreation() {
+    if (
+      culturalAsset.data.name === '' ||
+      !culturalAsset.data.latitude ||
+      (!culturalAsset.data.longitude && culturalAsset.data.address === '')
+    ) {
+      ToastAndroid.show(
+        'Es muss ein Name und Location oder Adresse gewählt werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    if (parentAsset !== []) {
+      culturalAsset.data.culturalAssetParent = {id: parentAsset[0].id};
+    } else {
+      culturalAsset.data.culturalAssetParent = {};
+    }
+
+    if (screenType === 'update') {
+      const updateResult = await put(culturalAsset.data.id, culturalAsset.data);
+      if (updateResult?.data != null) {
+        navigation.goBack();
+      } else {
+        console.log('Update result: ', updateResult);
+      }
+    } else {
+      const creationResult = await post(culturalAsset.data);
+      if (creationResult?.data != null) {
+        navigation.goBack();
+      } else {
+        console.log('Creation result: ' + creationResult);
+      }
+    }
+  }
 }
 
 const styles = StyleSheet.create({

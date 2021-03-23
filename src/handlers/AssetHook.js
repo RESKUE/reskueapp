@@ -3,15 +3,31 @@ import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
 import appConfig from '../../app.json';
 
 export default function useAsset() {
-  const {client, result} = useClient({authenticated: true});
-  const {client: deletionClient} = useClient({authenticated: true});
+  const {requestClient, result} = useClient({authenticated: true});
+  const {client} = useClient({authenticated: true});
 
   const requestAsset = React.useCallback(
     async (id) => {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
       const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'GET'};
-      await client.request(url, options, policy);
+      await requestClient.request(url, options, policy);
+    },
+    [requestClient],
+  );
+
+  const post = React.useCallback(
+    async (culturalAsset) => {
+      const url = appConfig.rest.baseUrl + '/culturalAsset';
+      const policy = FetchPolicy.networkOnly;
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(culturalAsset),
+      };
+      return await client.request(url, options, policy);
     },
     [client],
   );
@@ -35,10 +51,10 @@ export default function useAsset() {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
       const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'DELETE'};
-      return await deletionClient.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
-    [deletionClient],
+    [client],
   );
 
-  return {result, requestAsset, put, requestAssetDeletion};
+  return {result, requestAsset, post, put, requestAssetDeletion};
 }
