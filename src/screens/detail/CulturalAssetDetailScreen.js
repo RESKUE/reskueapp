@@ -9,7 +9,7 @@ import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
-import useTasks from '../../handlers/TasksHook';
+import useAssetTasks from '../../handlers/AssetTasksHook';
 import CulturalAsset from '../../models/CulturalAsset';
 import {
   useTheme,
@@ -37,14 +37,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
     route.params.id,
   );
-  const {requestTasks, result: taskResult} = useTasks();
+  const {requestAssetTasks, result: taskResult} = useAssetTasks();
 
   useFocusEffect(
     React.useCallback(() => {
       requestAsset(route.params.id);
       requestAssetChildren();
-      requestTasks();
-    }, [requestAsset, requestAssetChildren, requestTasks, route.params]),
+      requestAssetTasks(route.params.id);
+    }, [requestAsset, requestAssetChildren, requestAssetTasks, route.params]),
   );
 
   // Set this CulturalAsset from requested id data
@@ -71,15 +71,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   // Set tasks of this CulturalAsset
   React.useEffect(() => {
     if (taskResult?.data && culturalAsset) {
-      if (culturalAsset.data.tasks) {
-        const taskIds = culturalAsset.data.tasks?.map((task) => task.id);
-        const foundTasks = taskResult.data.content.filter((task) =>
-          taskIds.includes(task.id),
-        );
-        setTasks(foundTasks);
-      } else {
-        setTasks([]);
-      }
+      setTasks(taskResult?.data.content);
+    } else {
+      setTasks([]);
     }
   }, [culturalAsset, taskResult]);
 
