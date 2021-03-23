@@ -1,13 +1,15 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
+import {Provider} from 'react-native-paper';
+import {AuthContext} from '@ilt-pse/react-native-kueres';
 import React from 'react';
 import TaskListScreen from '../src/screens/list/TaskListScreen';
-import {AuthContext} from '@ilt-pse/react-native-kueres';
 
 it('task list screen renders correctly', () => {
-  renderer.create(
-    <AuthContext.Provider value={{clientRoles: []}}>
-      <TaskListScreen />
-    </AuthContext.Provider>,
+  render(
+    <Provider>
+      <AuthContext.Provider value={{clientRoles: []}}>
+        <TaskListScreen />
+      </AuthContext.Provider>
+    </Provider>,
   );
 });

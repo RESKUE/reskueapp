@@ -1,7 +1,5 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
-import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
+import React from 'react';
 import SubtaskListItem from '../src/components/listItems/SubtaskListItem';
 
 it('subtask list item renders correctly', () => {
@@ -12,7 +10,7 @@ it('subtask list item renders correctly', () => {
     isRequired: 1,
     state: 1,
   };
-  renderer.create(<SubtaskListItem data={data} />);
+  render(<SubtaskListItem data={data} />);
 });
 
 test('pressing list item works correctly', () => {

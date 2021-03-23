@@ -1,12 +1,10 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
-import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
+import React from 'react';
 import CulturalAssetCreationListItem from '../src/components/listItems/CulturalAssetCreationListItem';
 
 it('cultural asset creation list item renders correctly', () => {
   const data = {id: 1, name: 'mona', desc: 'lisa'};
-  renderer.create(<CulturalAssetCreationListItem data={data} />);
+  render(<CulturalAssetCreationListItem data={data} />);
 });
 
 test('pressing right iconbutton works correctly', () => {
@@ -19,6 +17,5 @@ test('pressing right iconbutton works correctly', () => {
   const {getByTestId} = render(
     <CulturalAssetCreationListItem data={data} extraData={extraData} />,
   );
-
   fireEvent.press(getByTestId('removeAssetIconButton'));
 });

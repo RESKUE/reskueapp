@@ -1,7 +1,5 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
-import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
+import React from 'react';
 import SubtaskCreationListItem from '../src/components/listItems/SubtaskCreationListItem';
 
 it('subtask creation list item renders correctly', () => {
@@ -11,7 +9,7 @@ it('subtask creation list item renders correctly', () => {
     description: 'desc',
     isRequired: 1,
   };
-  renderer.create(<SubtaskCreationListItem data={data} />);
+  render(<SubtaskCreationListItem data={data} />);
 });
 
 test('pressing checkbox of list item works correctly', () => {

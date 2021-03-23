@@ -1,8 +1,7 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import LocationSelectionScreen from '../src/screens/map/LocationSelectionScreen';
 
 it('location selection screen renders correctly', () => {
-  renderer.create(<LocationSelectionScreen />);
+  render(<LocationSelectionScreen />);
 });

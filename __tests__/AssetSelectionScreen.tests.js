@@ -1,8 +1,7 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import AssetSelectionScreen from '../src/screens/selection/AssetSelectionScreen';
 
 it('asset selection screen renders correctly', () => {
-  renderer.create(<AssetSelectionScreen />);
+  render(<AssetSelectionScreen />);
 });

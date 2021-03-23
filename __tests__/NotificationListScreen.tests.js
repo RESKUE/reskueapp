@@ -1,8 +1,12 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
+import {Provider} from 'react-native-paper';
 import React from 'react';
 import NotificationListScreen from '../src/screens/list/NotificationListScreen';
 
 it('notification list screen renders correctly', () => {
-  renderer.create(<NotificationListScreen />);
+  render(
+    <Provider>
+      <NotificationListScreen />
+    </Provider>,
+  );
 });

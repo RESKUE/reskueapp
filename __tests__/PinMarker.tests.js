@@ -1,5 +1,4 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import PinMarker from '../src/components/PinMarker';
 
@@ -8,5 +7,5 @@ it('pin marker renders correctly', () => {
     latitude: 0,
     longitude: 0,
   };
-  renderer.create(<PinMarker coordinate={coordinate} />);
+  render(<PinMarker coordinate={coordinate} />);
 });

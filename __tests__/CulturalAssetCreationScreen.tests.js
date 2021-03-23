@@ -1,9 +1,8 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import CulturalAssetCreationScreen from '../src/screens/creation/CulturalAssetCreationScreen';
 
 it('cultural asset creation screen renders correctly', () => {
   const route = {params: {id: 1}};
-  renderer.create(<CulturalAssetCreationScreen route={route} />);
+  render(<CulturalAssetCreationScreen route={route} />);
 });

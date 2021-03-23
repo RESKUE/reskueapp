@@ -1,13 +1,12 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import MarkerInfo from '../src/components/MarkerInfo';
 
 it('marker info renders correctly', () => {
-  renderer.create(<MarkerInfo />);
+  render(<MarkerInfo />);
 });
 
 it('marker info returns no children if visible is false', () => {
-  const output = renderer.create(<MarkerInfo visible={false} />);
-  expect(output.root.children).toEqual([]);
+  const {container} = render(<MarkerInfo visible={false} />);
+  expect(container.children).toEqual([]);
 });

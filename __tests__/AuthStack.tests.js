@@ -1,11 +1,10 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import AuthStack from '../src/routing/AuthStack';
 import Router from '../src/routing/Router';
 
 it('auth stack render correctly', () => {
-  renderer.create(
+  render(
     <Router>
       <AuthStack />
     </Router>,

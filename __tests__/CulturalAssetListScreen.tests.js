@@ -1,13 +1,15 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
+import {Provider} from 'react-native-paper';
+import {AuthContext} from '@ilt-pse/react-native-kueres';
 import React from 'react';
 import CulturalAssetListScreen from '../src/screens/list/CulturalAssetListScreen';
-import {AuthContext} from '@ilt-pse/react-native-kueres';
 
 it('cultural asset list screen renders correctly', () => {
-  renderer.create(
-    <AuthContext.Provider value={{clientRoles: []}}>
-      <CulturalAssetListScreen />
-    </AuthContext.Provider>,
+  render(
+    <Provider>
+      <AuthContext.Provider value={{clientRoles: []}}>
+        <CulturalAssetListScreen />
+      </AuthContext.Provider>
+    </Provider>,
   );
 });

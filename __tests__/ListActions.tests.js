@@ -1,8 +1,7 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
 import React from 'react';
 import ListActions from '../src/components/ListActions';
 
 it('list actions render correctly', () => {
-  renderer.create(<ListActions />);
+  render(<ListActions />);
 });
