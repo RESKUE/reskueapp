@@ -13,7 +13,12 @@ export default function UserCreationListItem({data, extraData}) {
       key={data.id}
       title={data.name}
       right={() => (
-        <IconButton icon="close" color={colors.primary} onPress={removeUser} />
+        <IconButton
+          testID="removeUserIconButton"
+          icon="close"
+          color={colors.primary}
+          onPress={removeUser}
+        />
       )}
     />
   );

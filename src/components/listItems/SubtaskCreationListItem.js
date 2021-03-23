@@ -25,7 +25,7 @@ export default function SubtaskCreationListItem({data, extraData}) {
     <View style={styles.row}>
       <View style={styles.column}>
         <Checkbox
-          testID='subtaskCheckbox'
+          testID="subtaskCheckbox"
           color={colors.primary}
           uncheckedColor={colors.primary}
           status={data.isRequired ? 'checked' : 'unchecked'}
@@ -40,7 +40,12 @@ export default function SubtaskCreationListItem({data, extraData}) {
         style={styles.textInput}
         mode="outlined"
       />
-      <IconButton testID='deleteSubtaskIconButton' icon="close" color={colors.primary} onPress={deleteSubtask} />
+      <IconButton
+        testID="deleteSubtaskIconButton"
+        icon="close"
+        color={colors.primary}
+        onPress={deleteSubtask}
+      />
     </View>
   );
 }
