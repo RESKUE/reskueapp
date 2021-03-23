@@ -8,8 +8,19 @@ it('subtask unpressable list item renders correctly', () => {
     id: 1,
     text: 'text',
     description: 'desc',
-    isRequired: true,
-    state: 'checked',
+    isRequired: 1,
+    state: 1,
+  };
+  renderer.create(<SubtaskUnpressableListItem data={data} />);
+});
+
+it('subtask unpressable list item renders correctly with different data', () => {
+  const data = {
+    id: 1,
+    text: 'text',
+    description: 'desc',
+    isRequired: 0,
+    state: 0,
   };
   renderer.create(<SubtaskUnpressableListItem data={data} />);
 });

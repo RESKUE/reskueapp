@@ -11,8 +11,8 @@ import {
 export default function SubtaskCreationListItem({data, extraData}) {
   const {colors} = useTheme();
 
-  function setIsRequired(state) {
-    extraData.changeIsRequiredCallback(data.localId, state);
+  function setIsRequired(isRequired) {
+    extraData.changeIsRequiredCallback(data.localId, isRequired);
   }
   function onChangeText(updatedText) {
     extraData.changeTextCallback(data.localId, updatedText);
@@ -25,6 +25,7 @@ export default function SubtaskCreationListItem({data, extraData}) {
     <View style={styles.row}>
       <View style={styles.column}>
         <Checkbox
+          testID='subtaskCheckbox'
           color={colors.primary}
           uncheckedColor={colors.primary}
           status={data.isRequired ? 'checked' : 'unchecked'}
@@ -39,7 +40,7 @@ export default function SubtaskCreationListItem({data, extraData}) {
         style={styles.textInput}
         mode="outlined"
       />
-      <IconButton icon="close" color={colors.primary} onPress={deleteSubtask} />
+      <IconButton testID='deleteSubtaskIconButton' icon="close" color={colors.primary} onPress={deleteSubtask} />
     </View>
   );
 }

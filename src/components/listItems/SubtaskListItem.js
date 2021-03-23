@@ -17,6 +17,7 @@ export default function SubtaskListItem({data, extraData}) {
       left={() => (
         <View style={styles.column}>
           <Checkbox
+            testID='subtaskCheckbox'
             color={colors.primary}
             uncheckedColor={colors.primary}
             status={data.state ? 'checked' : 'unchecked'}
