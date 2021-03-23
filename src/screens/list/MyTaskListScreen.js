@@ -11,7 +11,7 @@ import {
 } from '@ilt-pse/react-native-kueres';
 import ListActions from '../../components/ListActions';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import MyTaskListItem from '../../components/listItems/MyTaskListItem';
+import TaskListItem from '../../components/listItems/TaskListItem';
 import useTasks from '../../handlers/TasksHook';
 
 export default function MyTaskListScreen() {
@@ -48,7 +48,7 @@ export default function MyTaskListScreen() {
       <FancyList
         title="Meine Aufgaben"
         data={content ?? []}
-        component={MyTaskListItem}
+        component={TaskListItem}
       />
     </Scaffold>
   );
