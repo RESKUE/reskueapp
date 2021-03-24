@@ -41,6 +41,8 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     if (screenType === 'update') {
       console.log('Request asset with id: ' + route.params.id);
       requestAsset(route.params.id);
+    } else {
+      setParentAsset([]);
     }
   }, [requestAsset, screenType, route.params.id]);
 
