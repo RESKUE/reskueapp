@@ -82,16 +82,18 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }
 
   return (
-    <Scaffold>
+    <Scaffold testID="assetCreationScreenScaffold">
       <TextInput
         label="Name"
         value={culturalAsset.name}
         onChangeText={onNameChange}
+        testID="assetCreationScreenNameInput"
       />
       <TextInput
         label="Beschreibung"
         value={culturalAsset.description}
         onChangeText={onDescriptionChange}
+        testID="assetCreationScreenDescriptionInput"
       />
       <Button
         icon="map-marker"
@@ -111,6 +113,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         value={culturalAsset.address}
         onChangeText={onAddressChange}
         style={styles.buttonSpacing}
+        testID="assetCreationScreenAddressInput"
       />
       <TextInput
         label="Besonderheiten bei Handhabung"
@@ -149,7 +152,8 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         icon="check"
         mode="contained"
         onPress={submit}
-        style={styles.buttonSpacing}>
+        style={styles.buttonSpacing}
+        testID="assetCreationScreenSubmitButton">
         Fertig
       </Button>
     </Scaffold>

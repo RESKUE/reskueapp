@@ -157,7 +157,12 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         visible={menuVisible}
         onDismiss={hideMenu}
         anchor={
-          <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+          <IconButton
+            {...props}
+            icon="dots-vertical"
+            onPress={showMenu}
+            testID="assetDetailScreenMenuButton"
+          />
         }>
         <Menu.Item
           onPress={toggleIsEndangered}
@@ -167,8 +172,16 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
               : 'Markiere in Gefahr'
           }
         />
-        <Menu.Item onPress={goUpdate} title="Bearbeiten" />
-        <Menu.Item onPress={deleteAsset} title="Löschen" />
+        <Menu.Item
+          onPress={goUpdate}
+          title="Bearbeiten"
+          testID="assetDetailScreenEditButton"
+        />
+        <Menu.Item
+          onPress={deleteAsset}
+          title="Löschen"
+          testID="assetDetailScreenDeleteButton"
+        />
       </Menu>
     );
   }

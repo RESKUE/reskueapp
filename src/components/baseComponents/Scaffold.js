@@ -1,10 +1,12 @@
 import React from 'react';
 import {View, ScrollView, StyleSheet} from 'react-native';
 
-export default function Scaffold({children}) {
+export default function Scaffold({children, testID}) {
   return (
     <View style={styles.scaffold}>
-      <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
+      <ScrollView testID={testID} contentContainerStyle={styles.content}>
+        {children}
+      </ScrollView>
     </View>
   );
 }

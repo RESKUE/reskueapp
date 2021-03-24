@@ -81,6 +81,7 @@ export default function CulturalAssetListScreen({navigation}) {
             color={colors.primary}
             icon="plus-circle-outline"
             onPress={goAssetCreation}
+            testID="assetListScreenAddButton"
           />
         )}
       </ListActions>
