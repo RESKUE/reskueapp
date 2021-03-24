@@ -53,6 +53,7 @@
     "eslint-plugin-detox": "^1.0.0",
     "husky": "^4.3.8",
     "jest": "^25.1.0",
+    "jest-circus": "^26.6.3",
     "jest-transform-stub": "^2.0.0",
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "^2.2.1",
