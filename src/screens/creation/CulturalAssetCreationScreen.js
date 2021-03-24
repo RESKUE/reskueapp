@@ -64,7 +64,11 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   React.useEffect(() => {
     // Update the cultural asset location if it has been update via the location selection screen.
-    if (selectedLocation) {
+    if (
+      selectedLocation &&
+      culturalAsset.longitude !== selectedLocation.longitude &&
+      culturalAsset.latitude !== selectedLocation.latitude
+    ) {
       setCulturalAsset({
         ...culturalAsset,
         longitude: selectedLocation.longitude,
