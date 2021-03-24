@@ -15,7 +15,7 @@
     "postinstall": "npx husky install"
   },
   "dependencies": {
-    "@ilt-pse/react-native-kueres": "^2.6.0",
+    "@ilt-pse/react-native-kueres": "^2.7.0",
     "@react-native-async-storage/async-storage": "^1.13.4",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.3",
