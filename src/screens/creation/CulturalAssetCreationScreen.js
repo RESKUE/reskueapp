@@ -9,120 +9,71 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {Priorities} from '../../models/CulturalAsset';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
 import ListActions from '../../components/ListActions';
-import CulturalAsset, {Priorities} from '../../models/CulturalAsset';
 import useAsset from '../../handlers/AssetHook';
 
 export default function CulturalAssetCreationScreen({navigation, route}) {
-  const screenType = route.params?.screenType;
-
-  const [culturalAsset, setCulturalAsset] = React.useState(
-    new CulturalAsset({
-      name: '',
-      description: '',
-      priority: 0,
-      address: '',
-      label: '',
-      level: 0,
-    }),
-  );
-  const [parentAsset, setParentAsset] = React.useState(null);
-
   const {colors} = useTheme();
-  const {requestAsset, post, put, result: baseAssetResult} = useAsset();
-  const {
-    requestAsset: requestParentAsset,
-    result: parentAssetResult,
-  } = useAsset();
+  const {requestAsset, post, put} = useAsset();
+  const {requestAsset: requestParent} = useAsset();
 
-  React.useEffect(() => {
-    if (screenType === 'update') {
-      console.log('Request asset with id: ' + route.params.id);
-      requestAsset(route.params.id);
-    } else {
-      setParentAsset([]);
+  const [parentAsset, setParentAsset] = React.useState(null);
+  const [culturalAsset, setCulturalAsset] = React.useState({});
+
+  const assetId = route.params?.id ?? null;
+  const updatingExistingAsset = assetId !== null;
+  const selectedParent = route.params?.selectedAsset ?? null;
+  const selectedLocation = route.params?.location ?? null;
+
+  const fetchExistingData = React.useCallback(async () => {
+    const assetResult = await requestAsset(assetId);
+    const parentId = assetResult?.data?.culturalAssetParent ?? null;
+
+    if (!assetResult?.data) {
+      console.log('Failed to fetch asset:', assetResult?.error);
+      return;
     }
-  }, [requestAsset, screenType, route.params.id]);
 
-  React.useEffect(() => {
-    if (baseAssetResult?.data) {
-      setCulturalAsset(new CulturalAsset(baseAssetResult.data));
-      if (baseAssetResult.data.culturalAssetParent) {
-        requestParentAsset(baseAssetResult.data.culturalAssetParent);
+    if (parentId !== null) {
+      const parentResult = await requestParent(parentId);
+      if (!parentResult?.data) {
+        console.log('Failed to fetch parent:', assetResult?.error);
+        return;
       }
+      setParentAsset(parentResult.data);
     }
-  }, [baseAssetResult, requestParentAsset]);
+
+    setCulturalAsset(assetResult.data);
+  }, [assetId, requestAsset, requestParent, setParentAsset, setCulturalAsset]);
 
   React.useEffect(() => {
-    const routeParentId = route.params?.parentId;
-    if (routeParentId != null) {
-      requestParentAsset(routeParentId);
+    if (updatingExistingAsset) {
+      fetchExistingData();
     }
-  }, [route.params, requestParentAsset]);
+  }, [updatingExistingAsset, fetchExistingData]);
 
   React.useEffect(() => {
-    if (parentAssetResult?.data) {
-      setParentAsset([parentAssetResult.data]);
+    // Update the parent cultural asset if one has been selected via the asset selection screen.
+    if (selectedParent) {
+      setParentAsset(selectedParent);
     }
-  }, [parentAssetResult]);
+  }, [selectedParent, setParentAsset]);
 
   React.useEffect(() => {
-    const location = route.params?.location;
-    if (location) {
-      onChangeLocation(location);
+    // Update the cultural asset location if it has been update via the location selection screen.
+    if (selectedLocation) {
+      setCulturalAsset({
+        ...culturalAsset,
+        longitude: selectedLocation.longitude,
+        latitude: selectedLocation.latitude,
+      });
     }
-  }, [route.params, onChangeLocation]);
+  }, [selectedLocation, culturalAsset, setCulturalAsset]);
 
-  const onChangeName = (name) => {
-    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.name = name;
-    setCulturalAsset(updatedCulturalAsset);
-  };
-  const onChangeDescription = (description) => {
-    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.description = description;
-    setCulturalAsset(updatedCulturalAsset);
-  };
-  const onChangeLocation = React.useCallback(
-    (location) => {
-      const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-      updatedCulturalAsset.data.longitude = location.longitude;
-      updatedCulturalAsset.data.latitude = location.latitude;
-      setCulturalAsset(updatedCulturalAsset);
-    },
-    [culturalAsset.data],
-  );
-  const onChangeAddress = (newAddress) => {
-    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.address = newAddress;
-    setCulturalAsset(updatedCulturalAsset);
-  };
-  const onChangeLabel = (label) => {
-    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.label = label;
-    setCulturalAsset(updatedCulturalAsset);
-  };
-  const onChangePriority = (prio) => {
-    const updatedCulturalAsset = new CulturalAsset(culturalAsset.data);
-    updatedCulturalAsset.data.priority = prio;
-    setCulturalAsset(updatedCulturalAsset);
-  };
-
-  function goLocationSelection() {
-    navigation.push('LocationSelectionScreen', {
-      parent: 'CulturalAssetCreationScreen',
-    });
-  }
-
-  const goParentSelection = () => {
-    navigation.push('CulturalAssetSelectionListScreen', {
-      selectionType: 'parent',
-    });
-  };
-
-  if (parentAsset === null || culturalAsset === null) {
+  if (!culturalAsset) {
     return <LoadingIndicator />;
   }
 
@@ -130,62 +81,61 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
     <Scaffold>
       <TextInput
         label="Name"
-        value={culturalAsset.data.name}
-        onChangeText={onChangeName}
+        value={culturalAsset.name}
+        onChangeText={onNameChange}
       />
       <TextInput
         label="Beschreibung"
-        value={culturalAsset.data.description}
-        onChangeText={onChangeDescription}
+        value={culturalAsset.description}
+        onChangeText={onDescriptionChange}
       />
       <Button
         icon="map-marker"
         mode="contained"
-        onPress={goLocationSelection}
+        onPress={openLocationSelection}
         style={styles.buttonSpacing}>
         Wähle Location
       </Button>
-      {culturalAsset.data.latitude || culturalAsset.longitude ? (
+      {culturalAsset.latitude || culturalAsset.longitude ? (
         <View>
-          <Text>{`Breite: ${culturalAsset.data.latitude}`}</Text>
-          <Text>{`Länge: ${culturalAsset.data.longitude}`}</Text>
+          <Text>{`Breite: ${culturalAsset.latitude}`}</Text>
+          <Text>{`Länge: ${culturalAsset.longitude}`}</Text>
         </View>
       ) : null}
       <TextInput
         label="Adresse"
-        value={culturalAsset.data.address}
-        onChangeText={onChangeAddress}
+        value={culturalAsset.address}
+        onChangeText={onAddressChange}
         style={styles.buttonSpacing}
       />
       <TextInput
         label="Besonderheiten bei Handhabung"
-        value={culturalAsset.data.label}
-        onChangeText={onChangeLabel}
+        value={culturalAsset.label}
+        onChangeText={onLabelChange}
         style={styles.inputSpacing}
       />
-
       <ListActions>
         <IconButton
           color={colors.primary}
           icon="plus-circle-outline"
-          onPress={goParentSelection}
+          onPress={openParentSelection}
         />
       </ListActions>
       <FancyList
         title="Obergruppe"
-        data={parentAsset}
+        data={parentAsset ? [parentAsset] : []}
         component={CulturalAssetUnpressableListItem}
       />
       <View style={styles.priorityBox}>
         <Text>Wähle Priorität:</Text>
         {Priorities.map((prio, index) => (
-          <View key={prio.value} style={styles.chipWrapper}>
+          <View key={index} style={styles.chipWrapper}>
             <Chip
               icon="alert-circle"
               mode="flat"
               height={30}
-              selected={prio.value === culturalAsset.data.priority}
-              onPress={() => onChangePriority(prio.value)}>
+              selected={prio.value === culturalAsset.priority}
+              onPress={() => onPriorityChange(prio.value)}>
               {prio.name}
             </Chip>
           </View>
@@ -194,45 +144,78 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       <Button
         icon="check"
         mode="contained"
-        onPress={finishCreation}
+        onPress={submit}
         style={styles.buttonSpacing}>
         Fertig
       </Button>
     </Scaffold>
   );
 
-  async function finishCreation() {
-    if (
-      culturalAsset.data.name === '' ||
-      !culturalAsset.data.latitude ||
-      (!culturalAsset.data.longitude && culturalAsset.data.address === '')
-    ) {
+  function onNameChange(newName) {
+    setCulturalAsset({...culturalAsset, name: newName});
+  }
+
+  function onDescriptionChange(newDescription) {
+    setCulturalAsset({...culturalAsset, description: newDescription});
+  }
+
+  function onAddressChange(newAddress) {
+    setCulturalAsset({...culturalAsset, address: newAddress});
+  }
+
+  function onLabelChange(newLabel) {
+    setCulturalAsset({...culturalAsset, label: newLabel});
+  }
+
+  function onPriorityChange(newPriority) {
+    setCulturalAsset({...culturalAsset, priority: newPriority});
+  }
+
+  function openLocationSelection() {
+    navigation.push('LocationSelectionScreen', {
+      parent: 'CulturalAssetCreationScreen',
+    });
+  }
+
+  function openParentSelection() {
+    navigation.push('AssetSelectionScreen', {
+      previousRouteName: 'CulturalAssetCreationScreen',
+    });
+  }
+
+  async function submit() {
+    if (!culturalAsset.name) {
+      ToastAndroid.show('Bitte wähle einen Namen!', ToastAndroid.SHORT);
+      return;
+    }
+
+    if (!culturalAsset.longitude && !culturalAsset.address) {
       ToastAndroid.show(
-        'Es muss ein Name und Location oder Adresse gewählt werden!',
+        'Bitte wähle Koordinaten oder eine Adresse aus!',
         ToastAndroid.SHORT,
       );
       return;
     }
 
-    if (parentAsset !== []) {
-      culturalAsset.data.culturalAssetParent = {id: parentAsset[0].id};
+    if (parentAsset) {
+      culturalAsset.culturalAssetParent = {id: parentAsset.id};
     } else {
-      culturalAsset.data.culturalAssetParent = {};
+      culturalAsset.culturalAssetParent = null;
     }
 
-    if (screenType === 'update') {
-      const updateResult = await put(culturalAsset.data.id, culturalAsset.data);
-      if (updateResult?.data != null) {
+    if (updatingExistingAsset) {
+      const updateResult = await put(culturalAsset.id, culturalAsset);
+      if (updateResult?.data) {
         navigation.goBack();
       } else {
-        console.log('Update result: ', updateResult);
+        console.log('Update failed:', updateResult?.error);
       }
     } else {
-      const creationResult = await post(culturalAsset.data);
-      if (creationResult?.data != null) {
+      const creationResult = await post(culturalAsset);
+      if (creationResult?.data) {
         navigation.goBack();
       } else {
-        console.log('Creation result: ' + creationResult);
+        console.log('Creation failed:', creationResult?.error);
       }
     }
   }

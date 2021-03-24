@@ -11,7 +11,7 @@ export default function useAsset() {
       const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
       const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'GET'};
-      await requestClient.request(url, options, policy);
+      return await requestClient.request(url, options, policy);
     },
     [requestClient],
   );
