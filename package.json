@@ -9,9 +9,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint --max-warnings=0 index.js src __tests__",
+    "lint": "eslint --max-warnings=0 index.js src __tests__ e2e",
     "coverage": "jest --collect-coverage",
-    "format": "prettier --write index.js src/**/*.js __tests__/**/*.js",
+    "format": "prettier --write index.js src/**/*.js __tests__/**/*.js e2e",
     "postinstall": "npx husky install"
   },
   "dependencies": {
@@ -49,6 +49,7 @@
     "babel-jest": "^25.1.0",
     "detox": "^18.8.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-detox": "^1.0.0",
     "husky": "^4.3.8",
     "jest": "^25.1.0",
     "jest-transform-stub": "^2.0.0",
