@@ -4,11 +4,11 @@ import {AppRegistry} from 'react-native';
 import App from './src/App';
 import appConfig from './app.json';
 
-NotificationService.register(
-  appConfig.rest.baseUrl + '/notification',
-  appConfig.auth,
-  new TokenStorage(),
-);
+NotificationService.setup({
+  baseUrl: appConfig.rest.baseUrl,
+  authConfig: appConfig.auth,
+  tokenStorage: new TokenStorage(),
+});
 
 NotificationService.start();
 
