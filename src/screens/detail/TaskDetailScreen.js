@@ -17,7 +17,6 @@ import {
 } from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskListItem from '../../components/listItems/SubtaskListItem';
-import SubtaskUnpressableListItem from '../../components/listItems/SubtaskUnpressableListItem';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useTask from '../../handlers/TaskHook';
@@ -132,13 +131,13 @@ export default function TaskDetailScreen({navigation, route}) {
     }
   };
 
-  const getSubtaskComponent = () => {
+  function getSubtaskOnPressCallback() {
     if (isUserHelper()) {
-      return SubtaskListItem;
+      return onChangeSubtaskState;
     } else {
-      return SubtaskUnpressableListItem;
+      return () => {};
     }
-  };
+  }
 
   return (
     <Scaffold>
@@ -182,8 +181,10 @@ export default function TaskDetailScreen({navigation, route}) {
           <FancyList
             title="Teilaufgaben"
             data={subtasks}
-            extraData={{changeSubtaskStateCallback: onChangeSubtaskState}}
-            component={getSubtaskComponent()}
+            extraData={{
+              changeSubtaskStateCallback: getSubtaskOnPressCallback(),
+            }}
+            component={SubtaskListItem}
           />
         </View>
       )}

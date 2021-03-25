@@ -11,7 +11,7 @@ import {
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import {Priorities} from '../../models/CulturalAsset';
 import Scaffold from '../../components/baseComponents/Scaffold';
-import CulturalAssetUnpressableListItem from '../../components/listItems/CulturalAssetUnpressableListItem';
+import CulturalAssetCreationListItem from '../../components/listItems/CulturalAssetCreationListItem';
 import ListActions from '../../components/ListActions';
 import useAsset from '../../handlers/AssetHook';
 
@@ -132,7 +132,9 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         title="Obergruppe"
         placeholder="Hat keine Obergruppe"
         data={parentAsset ? [parentAsset] : []}
-        component={CulturalAssetUnpressableListItem}
+        //TODO: Make parent removable
+        extraData={{removeCallback: () => {}}}
+        component={CulturalAssetCreationListItem}
       />
       <View style={styles.priorityBox}>
         <Text>Wähle Priorität:</Text>
