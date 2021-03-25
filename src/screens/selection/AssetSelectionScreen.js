@@ -49,6 +49,7 @@ export default function AssetSelectionScreen({route}) {
       </ListActions>
       <FancyList
         title="Wähle ein Kulturgut"
+        placeholder="Kein Kulturgut gewählt"
         data={content || []}
         extraData={route.params}
         component={AssetSelectionItem}

@@ -87,6 +87,7 @@ export default function CulturalAssetListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Kulturgüter"
+        placeholder="Keine Kulturgüter vorhanden"
         data={result?.data?.content || []}
         component={CulturalAssetListItem}
       />

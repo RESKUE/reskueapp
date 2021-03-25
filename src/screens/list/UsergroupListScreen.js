@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useTheme, IconButton, Text} from 'react-native-paper';
+import {useTheme, IconButton} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   FancyList,
@@ -68,20 +68,18 @@ export default function UsergroupListScreen({navigation}) {
           />
         )}
       </ListActions>
-      {myUsergroupResult?.data?.content.length === 0 ? (
-        <Text style={styles.content}>Du bist in keiner Gruppe</Text>
-      ) : (
-        <View style={styles.content}>
-          <FancyList
-            title="Meine Gruppen"
-            data={myUsergroupResult?.data?.content}
-            component={UsergroupListItem}
-          />
-        </View>
-      )}
+      <View style={styles.content}>
+        <FancyList
+          title="Meine Gruppen"
+          placeholder="Du bist in keiner Gruppe"
+          data={myUsergroupResult?.data?.content ?? []}
+          component={UsergroupListItem}
+        />
+      </View>
       {isAdmin && (
         <FancyList
           title="Gruppen"
+          placeholder="Keine Gruppen vorhanden"
           data={result?.data?.content || []}
           component={UsergroupListItem}
         />

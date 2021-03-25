@@ -47,6 +47,7 @@ export default function MyTaskListScreen() {
       </ListActions>
       <FancyList
         title="Meine Aufgaben"
+        placeholder="Keine Aufgaben vorhanden"
         data={content ?? []}
         component={TaskListItem}
       />

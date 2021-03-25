@@ -70,6 +70,7 @@ export default function TaskListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Aufgaben"
+        placeholder="Keine Aufgaben vorhanden"
         data={result?.data?.content || []}
         component={TaskListItem}
       />

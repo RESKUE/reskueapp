@@ -49,6 +49,7 @@ export default function UsergroupDetailScreen({navigation, route}) {
       </Card>
       <FancyList
         title="Mitglieder"
+        placeholder="Keine Mitglieder vorhanden"
         data={users}
         component={UserUnpressableListItem}
       />

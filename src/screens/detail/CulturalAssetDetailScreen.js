@@ -139,7 +139,12 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           onPress={goTaskCreation}
         />
       </ListActions>
-      <FancyList title="Aufgaben" data={tasks} component={TaskListItem} />
+      <FancyList
+        title="Aufgaben"
+        placeholder="Keine Aufgaben vorhanden"
+        data={tasks}
+        component={TaskListItem}
+      />
 
       <View style={styles.center}>
         <FloatingWhiteButton onPress={goMedia} content="Weiter zu den Medien" />

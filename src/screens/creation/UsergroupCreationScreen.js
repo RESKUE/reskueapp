@@ -170,6 +170,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
       <Divider style={styles.dividerStyle} />
       <FancyList
         title="Mitglieder"
+        placeholder="Keine Mitglieder ausgewählt"
         data={usergroup.users}
         extraData={{removeCallback: removeUser}}
         component={UserCreationListItem}

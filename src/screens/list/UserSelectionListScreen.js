@@ -43,6 +43,7 @@ export default function UserSelectionListScreen() {
       </ListActions>
       <FancyList
         title="Wähle Mitglied"
+        placeholder="Noch keine Mitglieder gewählt"
         data={userResult.data?.content || []}
         component={UserSelectionListItem}
       />

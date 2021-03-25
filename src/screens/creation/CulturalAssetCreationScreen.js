@@ -130,6 +130,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       </ListActions>
       <FancyList
         title="Obergruppe"
+        placeholder="Hat keine Obergruppe"
         data={parentAsset ? [parentAsset] : []}
         component={CulturalAssetUnpressableListItem}
       />

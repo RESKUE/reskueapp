@@ -242,6 +242,7 @@ export default function TaskCreationScreen({navigation, route}) {
       </ListActions>
       <FancyList
         title="Teilaufgaben"
+        placeholder="Keine Teilaufgaben vorhanden"
         data={task.data.subtasks}
         extraData={{
           removeCallback: removeSubtask,

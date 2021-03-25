@@ -50,6 +50,7 @@ export default function GroupSelectionScreen({navigation, route}) {
       </ListActions>
       <FancyList
         title="Wähle eine Benutzergruppe"
+        placeholer="Keine Benutzergruppe gewählt"
         data={content || []}
         component={GroupSelectionItem}
       />

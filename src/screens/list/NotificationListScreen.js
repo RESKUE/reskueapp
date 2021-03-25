@@ -48,6 +48,7 @@ export default function NotificationListScreen({navigation}) {
       </ListActions>
       <FancyList
         title="Benachrichtigungen"
+        placeholder="Keine Benachrichtigungen"
         data={result?.data?.content ?? []}
         extraData={{onPress: onPress}}
         component={NotificationListItem}
