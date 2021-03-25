@@ -9,21 +9,7 @@ export default class Task {
         return state.name;
       }
     }
-
     return 'Fehler';
-  }
-
-  getHelpersNeeded() {
-    return this.data.numOfHelpersRecommended - this.data.helper.length;
-  }
-
-  hasSubtasks() {
-    return this.data.substasks.length === 0;
-  }
-
-  isCulturalAssetEndangered() {
-    //TODO: Get CulturalAsset from id and return asset.isEndangered()
-    return false;
   }
 }
 
