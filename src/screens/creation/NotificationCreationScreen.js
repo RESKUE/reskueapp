@@ -50,23 +50,23 @@ export default function NotificationCreationScreen({navigation, route}) {
       />
       <View style={[styles.spacing, styles.inputRow]}>
         <TextInput
-          label="Kulturgutgruppe"
-          style={styles.inputRowItem}
-          editable={false}
-          disabled={submitting}
-          value={asset?.name ?? null}
-          right={
-            <TextInput.Icon name="select-group" onPress={openAssetSelection} />
-          }
-        />
-        <TextInput
-          label="Benutzergruppen"
+          label="Gruppe*"
           style={styles.inputRowItem}
           editable={false}
           disabled={submitting}
           value={getGroupNames().join(', ')}
           right={
             <TextInput.Icon name="select-group" onPress={openGroupSelection} />
+          }
+        />
+        <TextInput
+          label="Kulturgüter"
+          style={styles.inputRowItem}
+          editable={false}
+          disabled={submitting}
+          value={asset?.name ?? null}
+          right={
+            <TextInput.Icon name="select-group" onPress={openAssetSelection} />
           }
         />
       </View>
@@ -81,7 +81,7 @@ export default function NotificationCreationScreen({navigation, route}) {
   );
 
   function isFormValid() {
-    return !!title && !!message;
+    return !!title && !!message && groups.length > 0;
   }
 
   function getGroupNames() {
