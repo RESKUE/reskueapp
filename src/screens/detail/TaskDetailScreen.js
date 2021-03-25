@@ -190,7 +190,7 @@ export default function TaskDetailScreen({navigation, route}) {
       {task.data.isEndangered ? (
         <FancyList
           title="Helfer"
-          placeholder="Keine Helper vorhanden"
+          placeholder="Keine Helfer vorhanden"
           data={helpers || []}
           component={UserUnpressableListItem}
         />
