@@ -55,7 +55,8 @@ export default function TaskCreationScreen({navigation, route}) {
 
   React.useEffect(() => {
     const selectedAsset = route.params?.selectedAsset;
-    if (selectedAsset) {selectedAsset
+    if (selectedAsset) {
+      selectedAsset;
       onChangeAsset(selectedAsset);
     } else if (screenType === 'creation') {
       setAsset([]);

@@ -131,14 +131,6 @@ export default function TaskDetailScreen({navigation, route}) {
     }
   };
 
-  function getSubtaskOnPressCallback() {
-    if (isUserHelper()) {
-      return onChangeSubtaskState;
-    } else {
-      return () => {};
-    }
-  }
-
   return (
     <Scaffold>
       <Card style={styles.card}>
@@ -181,9 +173,7 @@ export default function TaskDetailScreen({navigation, route}) {
           <FancyList
             title="Teilaufgaben"
             data={subtasks}
-            extraData={{
-              changeSubtaskStateCallback: getSubtaskOnPressCallback(),
-            }}
+            extraData={getSubtaskExtraData()}
             component={SubtaskListItem}
           />
         </View>
@@ -230,6 +220,14 @@ export default function TaskDetailScreen({navigation, route}) {
     const recommendedHelpers = `Empf. Helferanzahl: ${task.data.recommendedHelperUsers}`;
     const subtitle = `${status} | ${recommendedHelpers}`;
     return subtitle;
+  }
+
+  function getSubtaskExtraData() {
+    if (isUserHelper()) {
+      return {changeSubtaskStateCallback: onChangeSubtaskState};
+    } else {
+      return {};
+    }
   }
 
   function showMenu() {
