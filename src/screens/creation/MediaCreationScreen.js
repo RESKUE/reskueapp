@@ -59,7 +59,9 @@ export default function MediaCreationScreen({navigation, route}) {
 
   function getData() {
     const data = new FormData();
-    data.append('altText', altText);
+    if (altText) {
+      data.append('altText', altText);
+    }
     data.append('file', file);
     return data;
   }
