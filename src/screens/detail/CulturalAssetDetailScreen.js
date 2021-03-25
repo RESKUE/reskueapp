@@ -247,7 +247,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   function goTaskCreation() {
     navigation.push('TaskCreationScreen', {
-      assetId: culturalAsset.data.id,
+      selectedAsset: culturalAsset.data,
     });
   }
 

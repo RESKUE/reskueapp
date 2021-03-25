@@ -54,17 +54,17 @@ export default function TaskCreationScreen({navigation, route}) {
   }, [requestAsset, requestSubtasks, baseTaskResult, task.data]);
 
   React.useEffect(() => {
-    const assetId = route.params?.assetId;
-    if (assetId) {
-      requestAsset(assetId);
+    const selectedAsset = route.params?.selectedAsset;
+    if (selectedAsset) {selectedAsset
+      onChangeAsset(selectedAsset);
     } else if (screenType === 'creation') {
       setAsset([]);
     }
-  }, [requestAsset, screenType, route.params]);
+  }, [requestAsset, onChangeAsset, screenType, route.params]);
 
   React.useEffect(() => {
     if (assetResult?.data) {
-      onChangeAsset();
+      onChangeAsset(assetResult.data);
     }
   }, [onChangeAsset, assetResult]);
 
@@ -98,14 +98,17 @@ export default function TaskCreationScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
-  const onChangeAsset = React.useCallback(() => {
-    const updatedTask = new Task(task.data);
-    if (assetResult) {
-      updatedTask.data.culturalAsset = assetResult.data;
-      setAsset([assetResult.data]);
-    }
-    setTask(updatedTask);
-  }, [assetResult, task.data]);
+  const onChangeAsset = React.useCallback(
+    (updatedAsset) => {
+      const updatedTask = new Task(task.data);
+      if (updatedAsset) {
+        updatedTask.data.culturalAsset = updatedAsset;
+        setAsset([updatedAsset]);
+      }
+      setTask(updatedTask);
+    },
+    [task.data],
+  );
 
   function removeCulturalAsset() {
     const updatedTask = new Task(task.data);
@@ -165,11 +168,11 @@ export default function TaskCreationScreen({navigation, route}) {
     setTask(updatedTask);
   };
 
-  const goAssetSelection = () => {
-    navigation.push('CulturalAssetSelectionListScreen', {
-      selectionType: 'task',
+  function goAssetSelection() {
+    navigation.push('AssetSelectionScreen', {
+      previousRouteName: 'TaskCreationScreen',
     });
-  };
+  }
 
   const finishCreation = () => {
     if (task.data.name === '' || !task.data.culturalAsset) {
@@ -229,6 +232,7 @@ export default function TaskCreationScreen({navigation, route}) {
       </ListActions>
       <FancyList
         title="Kulturgut"
+        placeholder="Kein Kulturgut vorhanden"
         data={asset}
         extraData={{removeCallback: removeCulturalAsset}}
         component={CulturalAssetCreationListItem}
