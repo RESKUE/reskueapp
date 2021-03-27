@@ -1,8 +1,6 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const policy = FetchPolicy.cacheAndNetwork;
 
 export default function useTaskCreation() {
   const {client: taskClient, result: taskResult} = useClient({
@@ -11,7 +9,7 @@ export default function useTaskCreation() {
 
   const postTask = React.useCallback(
     async (task) => {
-      const url = appConfig.rest.baseUrl + '/task';
+      const url = `${Config.APP_REST_BASE_URL}/task`;
       const options = {
         method: 'POST',
         headers: {
@@ -19,6 +17,7 @@ export default function useTaskCreation() {
         },
         body: JSON.stringify(task),
       };
+      const policy = FetchPolicy.cacheAndNetwork;
       await taskClient.request(url, options, policy);
     },
     [taskClient],
@@ -26,7 +25,7 @@ export default function useTaskCreation() {
 
   const putTask = React.useCallback(
     async (id, task) => {
-      const url = appConfig.rest.baseUrl + `/task/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/task/${id}`;
       const options = {
         method: 'PUT',
         headers: {
@@ -34,6 +33,7 @@ export default function useTaskCreation() {
         },
         body: JSON.stringify(task),
       };
+      const policy = FetchPolicy.cacheAndNetwork;
       return await taskClient.request(url, options, policy);
     },
     [taskClient],

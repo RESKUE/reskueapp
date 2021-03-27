@@ -1,15 +1,13 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const baseUrl = appConfig.rest.baseUrl + '/notification';
 
 export default function useNotification() {
   const {client, result} = useClient({authenticated: true});
 
   const get = React.useCallback(
     async (id) => {
-      const url = `${baseUrl}/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/notification/${id}`;
       const options = {method: 'GET'};
       const policy = FetchPolicy.cacheAndNetwork;
       await client.request(url, options, policy);
@@ -19,7 +17,7 @@ export default function useNotification() {
 
   const post = React.useCallback(
     async (data) => {
-      const url = `${baseUrl}/autoSender`;
+      const url = `${Config.APP_REST_BASE_URL}/notification/autoSender`;
       const options = {
         method: 'POST',
         body: JSON.stringify(data),

@@ -1,10 +1,6 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const policy = FetchPolicy.cacheAndNetwork;
-const options = {method: 'GET'};
-const baseUrl = appConfig.rest.baseUrl + '/userGroup';
 
 export default function useUsergroups() {
   const {client, result} = useClient({authenticated: true});
@@ -14,13 +10,17 @@ export default function useUsergroups() {
   });
 
   const requestUsergroups = React.useCallback(async () => {
-    const url = baseUrl + '?' + query;
+    const url = `${Config.APP_REST_BASE_URL}/userGroup?${query}`;
+    const policy = FetchPolicy.cacheAndNetwork;
+    const options = {method: 'GET'};
     await client.request(url, options, policy);
   }, [query, client]);
 
   const requestMyUsergroups = React.useCallback(
     async (userId) => {
-      const url = appConfig.rest.baseUrl + `/user/${userId}/userGroups`;
+      const url = `${Config.APP_REST_BASE_URL}/user/${userId}/userGroups`;
+      const policy = FetchPolicy.cacheAndNetwork;
+      const options = {method: 'GET'};
       await myUsergroupClient.request(url, options, policy);
     },
     [myUsergroupClient],

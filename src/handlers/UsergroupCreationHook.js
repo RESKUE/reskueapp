@@ -1,8 +1,6 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const policy = FetchPolicy.cacheAndNetwork;
 
 export default function useUsergroupCreation() {
   const {client, result} = useClient({
@@ -11,7 +9,7 @@ export default function useUsergroupCreation() {
 
   const postUsergroup = React.useCallback(
     async (usergroup) => {
-      const url = appConfig.rest.baseUrl + '/userGroup';
+      const url = `${Config.APP_REST_BASE_URL}/userGroup`;
       const options = {
         method: 'POST',
         headers: {
@@ -19,6 +17,7 @@ export default function useUsergroupCreation() {
         },
         body: JSON.stringify(usergroup),
       };
+      const policy = FetchPolicy.cacheAndNetwork;
       await client.request(url, options, policy);
     },
     [client],
@@ -26,7 +25,7 @@ export default function useUsergroupCreation() {
 
   const putUsergroup = React.useCallback(
     async (id, usergroup) => {
-      const url = appConfig.rest.baseUrl + `/userGroup/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/userGroup/${id}`;
       const options = {
         method: 'PUT',
         headers: {
@@ -34,6 +33,7 @@ export default function useUsergroupCreation() {
         },
         body: JSON.stringify(usergroup),
       };
+      const policy = FetchPolicy.cacheAndNetwork;
       await client.request(url, options, policy);
     },
     [client],

@@ -1,6 +1,6 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
 
 export default function useAsset() {
   const {client: requestClient, result} = useClient({authenticated: true});
@@ -8,7 +8,7 @@ export default function useAsset() {
 
   const requestAsset = React.useCallback(
     async (id) => {
-      const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/culturalAsset/${id}`;
       const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'GET'};
       return await requestClient.request(url, options, policy);
@@ -18,7 +18,7 @@ export default function useAsset() {
 
   const post = React.useCallback(
     async (culturalAsset) => {
-      const url = appConfig.rest.baseUrl + '/culturalAsset';
+      const url = `${Config.APP_REST_BASE_URL}/culturalAsset`;
       const policy = FetchPolicy.networkOnly;
       const options = {
         method: 'POST',
@@ -34,7 +34,7 @@ export default function useAsset() {
 
   const put = React.useCallback(
     async (id, data) => {
-      const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/culturalAsset/${id}`;
       const policy = FetchPolicy.networkOnly;
       const options = {
         method: 'PUT',
@@ -48,7 +48,7 @@ export default function useAsset() {
 
   const remove = React.useCallback(
     async (id) => {
-      const url = appConfig.rest.baseUrl + `/culturalAsset/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/culturalAsset/${id}`;
       const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'DELETE'};
       return await client.request(url, options, policy);

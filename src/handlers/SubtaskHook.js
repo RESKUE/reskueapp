@@ -1,15 +1,13 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const policy = FetchPolicy.cacheAndNetwork;
 
 export default function useSubtask() {
   const {client} = useClient({authenticated: true});
 
   const putSubtask = React.useCallback(
     async (subtaskId, subtask) => {
-      const url = appConfig.rest.baseUrl + `/subtask/${subtaskId}`;
+      const url = `${Config.APP_REST_BASE_URL}/subtask/${subtaskId}`;
       const options = {
         method: 'PUT',
         headers: {
@@ -17,6 +15,7 @@ export default function useSubtask() {
         },
         body: JSON.stringify(subtask),
       };
+      const policy = FetchPolicy.cacheAndNetwork;
       return await client.request(url, options, policy);
     },
     [client],

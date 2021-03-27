@@ -5,10 +5,10 @@ import {
   AuthService,
   TokenStorage,
 } from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
 import theme from './Theme';
+import authConfig from '../models/AuthConfig';
 
-const authService = new AuthService(appConfig.auth, new TokenStorage());
+const authService = new AuthService(authConfig, new TokenStorage());
 
 setInterval(() => {
   authService.refresh();

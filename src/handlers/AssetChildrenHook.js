@@ -1,15 +1,14 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const policy = FetchPolicy.cacheAndNetwork;
-const options = {method: 'GET'};
 
 export default function useAssetChildren(id) {
   const {client, result} = useClient({authenticated: true});
 
   const requestAssetChildren = React.useCallback(async () => {
-    const url = appConfig.rest.baseUrl + `/culturalAsset/${id}/children`;
+    const url = `${Config.APP_REST_BASE_URL}/culturalAsset/${id}/children`;
+    const policy = FetchPolicy.cacheAndNetwork;
+    const options = {method: 'GET'};
     await client.request(url, options, policy);
   }, [client, id]);
 

@@ -1,8 +1,6 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const policy = FetchPolicy.cacheAndNetwork;
 
 export default function useTask() {
   const {client: getClient, result: getResult} = useClient({
@@ -14,8 +12,9 @@ export default function useTask() {
 
   const requestTask = React.useCallback(
     async (id) => {
-      const url = appConfig.rest.baseUrl + `/task/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/task/${id}`;
       const options = {method: 'GET'};
+      const policy = FetchPolicy.cacheAndNetwork;
       await getClient.request(url, options, policy);
     },
     [getClient],
@@ -23,8 +22,9 @@ export default function useTask() {
 
   const requestTaskDeletion = React.useCallback(
     async (id) => {
-      const url = appConfig.rest.baseUrl + `/task/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/task/${id}`;
       const options = {method: 'DELETE'};
+      const policy = FetchPolicy.cacheAndNetwork;
       return await deletionClient.request(url, options, policy);
     },
     [deletionClient],

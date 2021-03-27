@@ -1,15 +1,13 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
-import appConfig from '../../app.json';
-
-const baseUrl = appConfig.rest.baseUrl;
 
 export default function useComment() {
   const {client, result} = useClient({authenticated: true});
 
   const post = React.useCallback(
     async (data) => {
-      const url = `${baseUrl}/comment/autoAuthor`;
+      const url = `${Config.APP_REST_BASE_URL}/comment/autoAuthor`;
       const options = {
         method: 'POST',
         body: JSON.stringify(data),
@@ -23,7 +21,7 @@ export default function useComment() {
 
   const del = React.useCallback(
     async (id) => {
-      const url = appConfig.rest.baseUrl + `/comment/${id}`;
+      const url = `${Config.APP_REST_BASE_URL}/comment/${id}`;
       const options = {method: 'DELETE'};
       const policy = FetchPolicy.networkOnly;
       return await client.request(url, options, policy);
