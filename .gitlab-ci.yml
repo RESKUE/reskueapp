@@ -32,7 +32,7 @@ before_script:
 stages:
   - test
   - build
-  - release
+  - staging
 
 lint:
   stage: test
@@ -64,14 +64,14 @@ assembleDebug:
       - ./node_modules
       - ./android/.gradle
 
-assembleRelease:
-  stage: release
+assembleStaging:
+  stage: staging
   tags:
     - ILT
   when: manual
   script:
     - cd android
-    - ./gradlew assembleRelease
+    - ENVFILE=.env.staging ./gradlew assembleRelease
   artifacts:
     paths:
       - ./android/app/build/outputs
