@@ -106,6 +106,7 @@ describe('Login flow', () => {
       .not.toBeVisible()
       .withTimeout(5000);
 
+  
     // Open and delete the asset
     await element(by.text('Louvre Museum')).tap();
     await element(by.id('assetDetailScreenMenuButton')).tap();
