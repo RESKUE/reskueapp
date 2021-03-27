@@ -66,5 +66,5 @@ test('pressing iconbutton of list item works correctly', () => {
     <SubtaskCreationListItem data={data} extraData={extraData} />,
   );
 
-  fireEvent.press(getByTestId('deleteSubtaskIconButton'));
+  fireEvent.press(getByTestId('subTaskDeleteButton'));
 });

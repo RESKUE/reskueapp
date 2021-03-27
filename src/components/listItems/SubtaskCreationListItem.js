@@ -42,7 +42,6 @@ export default function SubtaskCreationListItem({data, extraData}) {
         testID="subTaskInput"
       />
       <IconButton
-        testID="deleteSubtaskIconButton"
         icon="close"
         color={colors.primary}
         onPress={deleteSubtask}
