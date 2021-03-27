@@ -24,6 +24,7 @@ import {
   Menu,
   Caption,
 } from 'react-native-paper';
+import useRoles from '../../handlers/RolesHook';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
@@ -159,11 +160,14 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
       )}
 
       <ListActions>
-        <IconButton
-          color={colors.primary}
-          icon="plus-circle-outline"
-          onPress={goTaskCreation}
-        />
+        {isAdmin && (
+          <IconButton
+            color={colors.primary}
+            icon="plus-circle-outline"
+            onPress={goTaskCreation}
+            testID="TaskListScreenAddButton"
+          />
+        )}
       </ListActions>
       <FancyList
         title="Aufgaben"

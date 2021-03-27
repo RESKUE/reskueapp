@@ -7,7 +7,7 @@ describe('Login flow', () => {
     await device.reloadReactNative();
   });
 
-  it('should create, update and delete user Group and users successfully', async () => {
+  it('should create, update and delete task and subtask successfully', async () => {
     // Login as admin
     await expect(element(by.id('loginScreenUsernameInput'))).toBeVisible();
     await element(by.id('loginScreenUsernameInput')).typeText('admin\n');
