@@ -62,6 +62,7 @@ export default function TaskListScreen({navigation}) {
             color={colors.primary}
             icon="plus-circle-outline"
             onPress={goTaskCreation}
+            testID="TaskListScreenAddButton"
           />
         )}
       </ListActions>

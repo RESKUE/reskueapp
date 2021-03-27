@@ -206,11 +206,11 @@ export default function TaskDetailScreen({navigation, route}) {
           visible={menuVisible}
           onDismiss={hideMenu}
           anchor={
-            <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+            <IconButton {...props} icon="dots-vertical" onPress={showMenu} testID="TaskDetailScreenMenuButton" />
           }>
           <Menu.Item onPress={resetState} title="Setze Status zurück" />
-          <Menu.Item onPress={goUpdate} title="Bearbeiten" />
-          <Menu.Item onPress={deleteTask} title="Löschen" />
+          <Menu.Item onPress={goUpdate} title="Bearbeiten" testID="TaskEditButton" />
+          <Menu.Item onPress={deleteTask} title="Löschen" testID="TaskDeleteButton" />
         </Menu>
       );
     } else {

@@ -39,12 +39,14 @@ export default function SubtaskCreationListItem({data, extraData}) {
         onChangeText={(text) => onChangeText(text)}
         style={styles.textInput}
         mode="outlined"
+        testID="subTaskInput"
       />
       <IconButton
         testID="deleteSubtaskIconButton"
         icon="close"
         color={colors.primary}
         onPress={deleteSubtask}
+        testID="subTaskDeleteButton"
       />
     </View>
   );

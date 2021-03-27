@@ -72,6 +72,7 @@ export default function TaskCreationScreen({navigation, route}) {
         value={task?.name}
         onChangeText={onNameChange}
         disabled={submitting}
+        testID="taskCreationNameInput"
       />
       <TextInput
         label="Beschreibung"
@@ -92,6 +93,7 @@ export default function TaskCreationScreen({navigation, route}) {
           icon={getIconName()}
           onPress={openAssetSelection}
           disabled={submitting}
+          testID="assetSelectionButton"
         />
       </ListActions>
       <FancyList
@@ -107,6 +109,7 @@ export default function TaskCreationScreen({navigation, route}) {
           icon="plus-circle-outline"
           onPress={addSubtask}
           disabled={submitting}
+          testID="addSubTaskButton"
         />
       </ListActions>
       <FancyList
@@ -126,6 +129,7 @@ export default function TaskCreationScreen({navigation, route}) {
         onPress={submit}
         loading={submitting}
         style={styles.buttonSpacing}>
+        testID="creationDoneButton">
         Fertig
       </Button>
     </Scaffold>
