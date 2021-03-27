@@ -72,6 +72,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         value={usergroup?.name}
         onChangeText={onNameChange}
         disabled={submitting}
+        testID="userGroupNameInput"
       />
       <ListActions>
         <IconButton
@@ -79,6 +80,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
           icon="account-plus-outline"
           onPress={openUserSelection}
           disabled={submitting}
+          testID="userSelection"
         />
       </ListActions>
       <FancyList
@@ -94,6 +96,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         onPress={submit}
         loading={submitting}
         style={styles.buttonSpacing}>
+        testID="userGroupCreationDone">
         Fertig
       </Button>
     </Scaffold>

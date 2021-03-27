@@ -62,6 +62,7 @@ export default function UsergroupListScreen({navigation}) {
             color={colors.primary}
             icon="plus-circle-outline"
             onPress={goGroupCreation}
+            testID="userListScreenAddButton"
           />
         )}
       </ListActions>
