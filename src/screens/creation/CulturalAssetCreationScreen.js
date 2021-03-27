@@ -133,6 +133,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
           icon="plus-circle-outline"
           onPress={openParentSelection}
           disabled={submitting}
+          testID="addParentButton"
         />
       </ListActions>
       <FancyList
