@@ -39,6 +39,7 @@ export default function NotificationCreationScreen({navigation, route}) {
         onChangeText={setTitle}
         disabled={submitting}
         style={styles.spacing}
+        testID="alarmTitelInput"
       />
       <TextInput
         label="Nachricht*"
@@ -47,6 +48,7 @@ export default function NotificationCreationScreen({navigation, route}) {
         onChangeText={setMessage}
         disabled={submitting}
         style={styles.spacing}
+        testID="alarmMessageInput"
       />
       <View style={[styles.spacing, styles.inputRow]}>
         <TextInput
@@ -56,7 +58,7 @@ export default function NotificationCreationScreen({navigation, route}) {
           disabled={submitting}
           value={getGroupNames().join(', ')}
           right={
-            <TextInput.Icon name="select-group" onPress={openGroupSelection} />
+            <TextInput.Icon name="select-group" onPress={openGroupSelection} testID="selectUserGroupButton" />
           }
         />
         <TextInput
@@ -66,7 +68,7 @@ export default function NotificationCreationScreen({navigation, route}) {
           disabled={submitting}
           value={asset?.name ?? null}
           right={
-            <TextInput.Icon name="select-group" onPress={openAssetSelection} />
+            <TextInput.Icon name="select-group" onPress={openAssetSelection} testID="selectAssetButton"/>
           }
         />
       </View>
@@ -74,7 +76,8 @@ export default function NotificationCreationScreen({navigation, route}) {
         disabled={!isFormValid() || submitting}
         mode="contained"
         onPress={submit}
-        loading={submitting}>
+        loading={submitting}
+        testID="setAlarmButton">
         Senden
       </Button>
     </Scaffold>

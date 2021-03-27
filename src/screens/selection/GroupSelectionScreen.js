@@ -54,7 +54,7 @@ export default function GroupSelectionScreen({navigation, route}) {
         data={content || []}
         component={GroupSelectionItem}
       />
-      <Button style={styles.spacing} mode="contained" onPress={submit}>
+      <Button style={styles.spacing} mode="contained" onPress={submit} testID="groupSelectionDone">
         Bestätigen
       </Button>
     </Scaffold>
@@ -73,6 +73,7 @@ export default function GroupSelectionScreen({navigation, route}) {
             icon={getIconName(data?.id)}
             color={colors.primary}
             onPress={() => toggle(data)}
+            testID="groupCheckbox"
           />
         )}
       />
