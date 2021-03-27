@@ -1,6 +1,7 @@
 import React from 'react';
 import mockReactNativeReanimated from 'react-native-reanimated/mock';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
+import fetchMock from 'jest-fetch-mock';
 
 jest.useFakeTimers();
 
@@ -55,3 +56,5 @@ jest.mock('react-native-keychain', () => {
     resetGenericPassword: jest.fn(),
   };
 });
+
+fetchMock.enableMocks();
