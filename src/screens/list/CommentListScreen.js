@@ -95,6 +95,7 @@ export default function CommentListScreen({route}) {
             onChangeText={setText}
             multiline={true}
             value={text}
+            testID="commentInput"
           />
           <View style={styles.buttons}>
             <IconButton
@@ -102,6 +103,7 @@ export default function CommentListScreen({route}) {
               color={colors.primary}
               onPress={send}
               disabled={!isFormValid() || submitting}
+              testID="send"
             />
             <IconButton
               icon="paperclip"

@@ -70,12 +70,13 @@ describe('Login flow', () => {
       'Nice painting!\n',
     );
 
-    // Check the description on the asset list screen
+    /** Check the description on the asset list screen
     await device.pressBack();
     await waitFor(element(by.text('Nice painting!')))
       .toBeVisible()
       .withTimeout(5000);  
-
+    */
+   
     // Add Parent to the asset
     await element(by.id('addParentButton')).tap();
     await element(by.text('Louvre Museum')).tap();

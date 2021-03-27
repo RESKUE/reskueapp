@@ -116,7 +116,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   return (
-    <Scaffold>
+    <Scaffold testID="assetDetailScreenScaffold">
       <Card style={styles.card}>
         <Card.Title
           title={culturalAsset.name}
@@ -177,6 +177,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         <FloatingWhiteButton
           onPress={goComments}
           content="Weiter zu den Kommentaren"
+          testID="commentButton"
         />
       </View>
     </Scaffold>
