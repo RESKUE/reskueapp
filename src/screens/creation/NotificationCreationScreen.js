@@ -58,7 +58,11 @@ export default function NotificationCreationScreen({navigation, route}) {
           disabled={submitting}
           value={getGroupNames().join(', ')}
           right={
-            <TextInput.Icon name="select-group" onPress={openGroupSelection} testID="selectUserGroupButton" />
+            <TextInput.Icon
+              name="select-group"
+              onPress={openGroupSelection}
+              testID="selectUserGroupButton"
+            />
           }
         />
         <TextInput
@@ -68,7 +72,11 @@ export default function NotificationCreationScreen({navigation, route}) {
           disabled={submitting}
           value={asset?.name ?? null}
           right={
-            <TextInput.Icon name="select-group" onPress={openAssetSelection} testID="selectAssetButton"/>
+            <TextInput.Icon
+              name="select-group"
+              onPress={openAssetSelection}
+              testID="selectAssetButton"
+            />
           }
         />
       </View>

@@ -21,24 +21,21 @@ describe('Login flow', () => {
     await element(by.id('userListScreenAddButton')).tap();
 
     // Add a group and users
-    await element(by.id('userGroupNameInput')).typeText(
-      'User Group test\n',
-    );
+    await element(by.id('userGroupNameInput')).typeText('User Group test\n');
     await element(by.id('userSelection')).tap();
     await element(by.text('helper')).tap();
     await element(by.id('userSelection')).tap();
     await element(by.text('admin')).tap();
     await element(by.id('userGroupCreationDone')).tap();
-    
+
     // Edit the group
     await element(by.text('User Group test')).tap();
     await element(by.id('userGroupDetailScreenMenuButton')).tap();
     await element(by.id('editButton')).tap();
-          // couldn't find how to give the X button a ref to delete a user
-    await element(by.id('userGroupCreationDone')).tap(); 
+    // couldn't find how to give the X button a ref to delete a user
+    await element(by.id('userGroupCreationDone')).tap();
 
-
-   //Delete the group
+    //Delete the group
     await element(by.text('User Group test')).tap();
     await element(by.id('userGroupDetailScreenMenuButton')).tap();
     await element(by.id('deleteButton')).tap();

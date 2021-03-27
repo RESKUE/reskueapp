@@ -78,7 +78,7 @@ describe('Login flow', () => {
     await waitFor(element(by.text('Louvre Museum')))
       .toBeVisible()
       .withTimeout(5000);
-   
+
     // Scroll to the submit button and tap it
     await waitFor(element(by.id('assetCreationScreenSubmitButton')))
       .toBeVisible()
@@ -106,7 +106,6 @@ describe('Login flow', () => {
       .not.toBeVisible()
       .withTimeout(5000);
 
-  
     // Open and delete the asset
     await element(by.text('Louvre Museum')).tap();
     await element(by.id('assetDetailScreenMenuButton')).tap();

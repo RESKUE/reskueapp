@@ -54,7 +54,11 @@ export default function GroupSelectionScreen({navigation, route}) {
         data={content || []}
         component={GroupSelectionItem}
       />
-      <Button style={styles.spacing} mode="contained" onPress={submit} testID="groupSelectionDone">
+      <Button
+        style={styles.spacing}
+        mode="contained"
+        onPress={submit}
+        testID="groupSelectionDone">
         Bestätigen
       </Button>
     </Scaffold>

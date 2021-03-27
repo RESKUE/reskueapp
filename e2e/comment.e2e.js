@@ -50,7 +50,7 @@ describe('Login flow', () => {
     await waitFor(element(by.text('Mona Lisa')))
       .toBeVisible()
       .withTimeout(5000);
-    
+
     // Navigate to the assets comment screen
     await element(by.text('Mona Lisa')).tap();
     await waitFor(element(by.text('Mona Lisa')))
@@ -62,15 +62,15 @@ describe('Login flow', () => {
     await element(by.id('commentInput')).typeText('this is a test\n');
     await element(by.id('send')).tap();
 
-     // Wait shortly for the comment to become visible in the comment list
-     await waitFor(element(by.text('this is a test')))
-     .toBeVisible()
-     .withTimeout(5000);
-    
+    // Wait shortly for the comment to become visible in the comment list
+    await waitFor(element(by.text('this is a test')))
+      .toBeVisible()
+      .withTimeout(5000);
+
     // select and delete the comment
     await element(by.text('this is a test')).tap();
     await element(by.text('Delete')).tap();
-    
+
     // Check that the comment has been deleted
     await waitFor(element(by.text('this is a test')))
       .not.toBeVisible()

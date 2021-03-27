@@ -61,10 +61,19 @@ export default function UsergroupDetailScreen({navigation, route}) {
           visible={menuVisible}
           onDismiss={hideMenu}
           anchor={
-            <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+          <IconButton
+            {...props}
+            icon="dots-vertical"
+            onPress={showMenu}
+            testID="userGroupDetailScreenMenuButton"
+          />
           }>
         <Menu.Item onPress={goUpdate} title="Bearbeiten" testID="editButton" />
-        <Menu.Item onPress={onDeleteUsergroup} title="Löschen" testID="deleteButton" />
+        <Menu.Item
+          onPress={onDeleteUsergroup}
+          title="Löschen"
+          testID="deleteButton"
+        />
         </Menu>
       );
     } else {

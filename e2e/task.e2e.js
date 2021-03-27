@@ -46,9 +46,7 @@ describe('Login flow', () => {
     await element(by.id('TaskListScreenAddButton')).tap();
 
     // Add a task and subtask
-    await element(by.id('taskCreationNameInput')).typeText(
-      'Task test\n',
-    );
+    await element(by.id('taskCreationNameInput')).typeText('Task test\n');
     await element(by.id('assetSelectionButton')).tap();
     await element(by.text('test asset')).tap();
 
@@ -56,7 +54,7 @@ describe('Login flow', () => {
     await waitFor(element(by.text('test asset')))
       .toBeVisible()
       .withTimeout(5000);
-    
+
     await element(by.id('addSubTaskButton')).tap();
     await element(by.id('subTaskInput')).typeText('help\n');
     await element(by.id('creationDoneButton')).tap();
