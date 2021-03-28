@@ -10,22 +10,19 @@ import useAsset from '../../handlers/AssetHook';
 import useSubtasks from '../../handlers/SubtaksHook';
 import useTask from '../../handlers/TaskHook';
 import useTaskCreation from '../../handlers/TaskCreationHook';
-import Task from '../../models/Task';
 
 export default function TaskCreationScreen({navigation, route}) {
   const {requestTask, getResult: baseTaskResult} = useTask();
 
   const screenType = route.params?.screenType;
 
-  const [task, setTask] = React.useState(
-    new Task({
-      name: '',
-      description: '',
-      state: 0,
-      subtasks: [],
-      recommendedHelperUsers: 1,
-    }),
-  );
+  const [task, setTask] = React.useState({
+    name: '',
+    description: '',
+    state: 0,
+    subtasks: [],
+    recommendedHelperUsers: 1,
+  });
   const [asset, setAsset] = React.useState(null);
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
 
@@ -35,15 +32,15 @@ export default function TaskCreationScreen({navigation, route}) {
   const {postTask, putTask, taskResult} = useTaskCreation();
 
   React.useEffect(() => {
-    if (screenType === 'update' && !task.data.id) {
+    if (screenType === 'update' && !task.id) {
       console.log('Request task with id: ' + route.params.id);
       requestTask(route.params.id);
     }
-  }, [requestTask, screenType, route.params.id, task.data]);
+  }, [requestTask, screenType, route.params.id, task]);
 
   React.useEffect(() => {
-    if (baseTaskResult && !task.data.id) {
-      setTask(new Task(baseTaskResult.data));
+    if (baseTaskResult && !task.id) {
+      setTask(baseTaskResult.data);
       if (baseTaskResult.data.culturalAsset) {
         requestAsset(baseTaskResult.data.culturalAsset);
       }
@@ -51,7 +48,7 @@ export default function TaskCreationScreen({navigation, route}) {
         requestSubtasks(baseTaskResult.data.id);
       }
     }
-  }, [requestAsset, requestSubtasks, baseTaskResult, task.data]);
+  }, [requestAsset, requestSubtasks, baseTaskResult, task]);
 
   React.useEffect(() => {
     const selectedAsset = route.params?.selectedAsset;
@@ -84,47 +81,39 @@ export default function TaskCreationScreen({navigation, route}) {
   }, [taskResult, navigation]);
 
   const onChangeName = (name) => {
-    const updatedTask = new Task(task.data);
-    updatedTask.data.name = name;
-    setTask(updatedTask);
+    setTask({...task, name});
   };
   const onChangeDescription = (description) => {
-    const updatedTask = new Task(task.data);
-    updatedTask.data.description = description;
-    setTask(updatedTask);
+    setTask({...task, description});
   };
   const onChangeRecommendedHelperUsers = (recommendedHelperUsers) => {
-    const updatedTask = new Task(task.data);
-    updatedTask.data.recommendedHelperUsers = recommendedHelperUsers;
-    setTask(updatedTask);
+    setTask({...task, recommendedHelperUsers});
   };
 
   const onChangeAsset = React.useCallback(
     (updatedAsset) => {
-      const updatedTask = new Task(task.data);
+      const updatedTask = {...task};
       if (updatedAsset) {
-        updatedTask.data.culturalAsset = updatedAsset;
+        updatedTask.culturalAsset = updatedAsset;
         setAsset([updatedAsset]);
       }
       setTask(updatedTask);
     },
-    [task.data],
+    [task],
   );
 
   function removeCulturalAsset() {
-    const updatedTask = new Task(task.data);
-    updatedTask.data.culturalAsset = null;
+    const updatedTask = {...task};
+    updatedTask.culturalAsset = null;
+    setTask(updatedTask);
     setAsset([]);
   }
 
-  const taskDataExpression = task?.data;
   const setSubtasks = React.useCallback(
     (subtasks) => {
-      const updatedTask = new Task(taskDataExpression);
-      updatedTask.data.subtasks = subtasks;
-      setTask(updatedTask);
+      setTask({...task, subtasks});
     },
-    [taskDataExpression],
+    [task],
   );
 
   const addSubtask = () => {
@@ -134,34 +123,34 @@ export default function TaskCreationScreen({navigation, route}) {
       text: '',
       isRequired: false,
     };
-    const updatedTask = new Task(task.data);
-    updatedTask.data.subtasks.push(emptySubtask);
+    const updatedTask = {...task};
+    updatedTask.subtasks.push(emptySubtask);
     setSubtaskIdCounter(subtaskIdCounter + 1);
     setTask(updatedTask);
   };
 
   const onChangeSubtaskText = (subtaskId, text) => {
-    const updatedTask = new Task(task.data);
-    const index = updatedTask.data.subtasks.findIndex(
+    const updatedTask = {...task};
+    const index = updatedTask.subtasks.findIndex(
       (subtask) => subtask.localId === subtaskId,
     );
-    updatedTask.data.subtasks[index].text = text;
+    updatedTask.subtasks[index].text = text;
     setTask(updatedTask);
   };
 
   const onChangeSubtaskIsRequired = (subtaskId, isRequired) => {
-    const updatedTask = new Task(task.data);
-    const index = updatedTask.data.subtasks.findIndex(
+    const updatedTask = {...task};
+    const index = updatedTask.subtasks.findIndex(
       (subtask) => subtask.localId === subtaskId,
     );
-    updatedTask.data.subtasks[index].isRequired = isRequired;
+    updatedTask.subtasks[index].isRequired = isRequired;
     setTask(updatedTask);
   };
 
   const removeSubtask = (subtaskId) => {
-    const updatedTask = new Task(task.data);
-    updatedTask.data.subtasks.splice(
-      updatedTask.data.subtasks.findIndex(
+    const updatedTask = {...task};
+    updatedTask.subtasks.splice(
+      updatedTask.subtasks.findIndex(
         (subtask) => subtask.localId === subtaskId,
       ),
       1,
@@ -176,7 +165,7 @@ export default function TaskCreationScreen({navigation, route}) {
   }
 
   const finishCreation = () => {
-    if (task.data.name === '' || !task.data.culturalAsset) {
+    if (!task.name || !task.culturalAsset) {
       ToastAndroid.show(
         'Es muss ein Name und ein zugehöriges Kulturgut gewählt werden!',
         ToastAndroid.SHORT,
@@ -184,44 +173,40 @@ export default function TaskCreationScreen({navigation, route}) {
       return;
     }
 
-    task.data.culturalAsset = {id: task.data.culturalAsset.id};
-
-    task.data.subtasks.forEach((subtask) => {
+    // Adjust data format for backend
+    task.culturalAsset = {id: task.culturalAsset.id};
+    task.subtasks.forEach((subtask) => {
       delete subtask.localId;
     });
-    task.data.subtasks.forEach((subtask) => {
+    task.subtasks.forEach((subtask) => {
       delete subtask.task;
     });
 
     if (screenType === 'update') {
-      console.log(task.data);
-      putTask(task.data.id, task.data);
+      console.log('Updating task:', task);
+      putTask(task.id, task);
     } else {
-      console.log(task.data);
-      postTask(task.data);
+      console.log('Creating task:', task);
+      postTask(task);
     }
   };
 
-  if (asset === null) {
+  if (!asset) {
     return <LoadingIndicator />;
   }
 
   return (
     <Scaffold>
-      <TextInput
-        label="Name"
-        value={task.data.name}
-        onChangeText={onChangeName}
-      />
+      <TextInput label="Name" value={task.name} onChangeText={onChangeName} />
       <TextInput
         label="Beschreibung"
-        value={task.data.description}
+        value={task.description}
         onChangeText={onChangeDescription}
       />
       <TextInput
         label="Empfohlene Helferanzahl"
         keyboardType="number-pad"
-        value={task.data.recommendedHelperUsers.toString()}
+        value={task.recommendedHelperUsers.toString()}
         onChangeText={onChangeRecommendedHelperUsers}
       />
       <ListActions>
@@ -248,7 +233,7 @@ export default function TaskCreationScreen({navigation, route}) {
       <FancyList
         title="Teilaufgaben"
         placeholder="Keine Teilaufgaben vorhanden"
-        data={task.data.subtasks}
+        data={task.subtasks}
         extraData={{
           removeCallback: removeSubtask,
           changeTextCallback: onChangeSubtaskText,

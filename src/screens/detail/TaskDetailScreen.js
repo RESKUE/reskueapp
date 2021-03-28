@@ -25,7 +25,7 @@ import useTaskHelpers from '../../handlers/TaskHelpersHook';
 import useUserMe from '../../handlers/UserMeHook';
 import useSubtask from '../../handlers/SubtaskHook';
 import useSubtasks from '../../handlers/SubtaksHook';
-import Task from '../../models/Task';
+import TaskStates from '../../models/TaskStates';
 
 export default function TaskDetailScreen({navigation, route}) {
   const {clientRoles} = React.useContext(AuthContext);
@@ -64,7 +64,7 @@ export default function TaskDetailScreen({navigation, route}) {
 
   React.useEffect(() => {
     if (taskResult) {
-      setTask(new Task(taskResult.data));
+      setTask(taskResult.data);
     }
   }, [taskResult]);
 
@@ -96,59 +96,58 @@ export default function TaskDetailScreen({navigation, route}) {
       id: taskResult.data.culturalAsset,
     });
 
-  if (task === null || task.data === null || subtasks === null) {
+  if (!task || !subtasks) {
     return <LoadingIndicator />;
   }
 
   const getButtons = () => {
     //If the task isn't endangered you can't work on it
-    if (task?.data?.isEndangered === 0) {
+    if (!task.isEndangered) {
       return null;
-    } else {
-      //If the user is a helper he can finish the task
-      if (isUserHelper()) {
-        return (
-          <Card.Actions>
-            <Button color={colors.primary} onPress={onCompleteTask}>
-              Beenden
-            </Button>
-            <Button color={colors.redish} onPress={onCancelTask}>
-              Abbrechen
-            </Button>
-          </Card.Actions>
-        );
-      }
-      //If the user isn't a helper he start working on the task
-      else {
-        return (
-          <Card.Actions>
-            <Button color={colors.primary} onPress={onBeginTask}>
-              Aufgabe annehmen
-            </Button>
-          </Card.Actions>
-        );
-      }
     }
+
+    //If the user is a helper he can finish the task
+    if (isUserHelper()) {
+      return (
+        <Card.Actions>
+          <Button color={colors.primary} onPress={onCompleteTask}>
+            Beenden
+          </Button>
+          <Button color={colors.redish} onPress={onCancelTask}>
+            Abbrechen
+          </Button>
+        </Card.Actions>
+      );
+    }
+
+    //If the user isn't a helper he start working on the task
+    return (
+      <Card.Actions>
+        <Button color={colors.primary} onPress={onBeginTask}>
+          Aufgabe annehmen
+        </Button>
+      </Card.Actions>
+    );
   };
 
   return (
     <Scaffold>
       <Card style={styles.card}>
         <Card.Title
-          title={task.data.name}
+          title={task.name}
           subtitle={getSubtitle()}
           right={buildMenu}
         />
-        {task.data.description === '' ? null : (
+        {task.description && (
           <View>
             <Divider />
             <Card.Content style={styles.content}>
-              <Paragraph>{task.data.description}</Paragraph>
+              <Paragraph>{task.description}</Paragraph>
             </Card.Content>
           </View>
         )}
         <Divider />
-        {taskResult.data?.culturalAsset ? (
+        {taskResult.culturalAsset && (
           <Card.Actions>
             <Button
               color={colors.primary}
@@ -165,10 +164,10 @@ export default function TaskDetailScreen({navigation, route}) {
               Zum Kulturgut
             </Button>
           </Card.Actions>
-        ) : null}
+        )}
         {getButtons()}
       </Card>
-      {subtasks.length !== 0 && (
+      {subtasks.length > 0 && (
         <View style={styles.listSpacing}>
           <FancyList
             title="Teilaufgaben"
@@ -178,14 +177,14 @@ export default function TaskDetailScreen({navigation, route}) {
           />
         </View>
       )}
-      {task.data.isEndangered ? (
+      {!!task.isEndangered && (
         <FancyList
           title="Helfer"
           placeholder="Keine Helfer vorhanden"
           data={helpers || []}
           component={UserUnpressableListItem}
         />
-      ) : null}
+      )}
 
       <View style={styles.center}>
         <FloatingWhiteButton
@@ -216,8 +215,8 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   function getSubtitle() {
-    const status = `Status: ${task.getTaskStateName()}`;
-    const recommendedHelpers = `Empf. Helferanzahl: ${task.data.recommendedHelperUsers}`;
+    const status = `Status: ${TaskStates[task.state]}`;
+    const recommendedHelpers = `Empf. Helferanzahl: ${task.recommendedHelperUsers}`;
     const subtitle = `${status} | ${recommendedHelpers}`;
     return subtitle;
   }
@@ -242,13 +241,13 @@ export default function TaskDetailScreen({navigation, route}) {
     hideMenu();
     navigation.push('TaskCreationScreen', {
       screenType: 'update',
-      id: task.data.id,
+      id: task.id,
     });
   }
 
   async function deleteTask() {
     hideMenu();
-    const result = await requestTaskDeletion(task.data.id);
+    const result = await requestTaskDeletion(task.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {
@@ -257,7 +256,7 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   async function onBeginTask() {
-    const updateResult = await assignTaskHelper(task.data.id, user.id);
+    const updateResult = await assignTaskHelper(task.id, user.id);
     if (updateResult?.data) {
       requestTaskHelpers(updateResult.data.id);
     } else {
@@ -268,12 +267,12 @@ export default function TaskDetailScreen({navigation, route}) {
       );
       return;
     }
-    const updatedState = Math.max(1, task.data.state);
+    const updatedState = Math.max(1, task.state);
     const putBody = {state: updatedState};
 
-    const result = await putTask(task.data.id, putBody);
+    const result = await putTask(task.id, putBody);
     if (result.data) {
-      setTask(new Task(result.data));
+      setTask(result.data);
     } else {
       console.log('Starting Task failed:', result, result?.error);
     }
@@ -287,17 +286,17 @@ export default function TaskDetailScreen({navigation, route}) {
       );
       return;
     }
-    const updatedState = Math.max(3, task.data.state);
+    const updatedState = Math.max(3, task.state);
     const putBody = {isEndangered: 0, state: updatedState};
-    const result = await putTask(task.data.id, putBody);
+    const result = await putTask(task.id, putBody);
     if (result.data) {
-      setTask(new Task(result.data));
+      setTask(result.data);
     } else {
       console.log('Completing Task failed:', result, result?.error);
       return;
     }
 
-    const updateResult = await removeTaskHelper(task.data.id, user.id);
+    const updateResult = await removeTaskHelper(task.id, user.id);
     if (updateResult?.data) {
       requestTaskHelpers(updateResult.data.id);
     } else {
@@ -306,19 +305,19 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   async function onCancelTask() {
-    const updatedState = Math.max(2, task.data.state);
+    const updatedState = Math.max(2, task.state);
     const putBody = {state: updatedState};
     const result = await putTask(task.data.id, putBody);
     if (result.data) {
-      setTask(new Task(result.data));
+      setTask(result.data);
     } else {
       console.log('Cancelling task failed:', result, result?.error);
       return;
     }
 
-    const updateResult = await removeTaskHelper(task.data.id, user.id);
+    const updateResult = await removeTaskHelper(task.id, user.id);
     if (updateResult?.data) {
-      requestTaskHelpers(updateResult.data.id);
+      requestTaskHelpers(updateResult.id);
     } else {
       console.log('Remove helper failed:', updateResult, updateResult?.error);
     }
@@ -326,9 +325,9 @@ export default function TaskDetailScreen({navigation, route}) {
 
   async function resetState() {
     const putBody = {state: 0};
-    const result = await putTask(task.data.id, putBody);
+    const result = await putTask(task.id, putBody);
     if (result.data) {
-      setTask(new Task(result.data));
+      setTask(result.data);
     } else {
       console.log('Reseting Task failed:', result, result?.error);
     }
@@ -350,7 +349,7 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   function canComplete() {
-    task.data.subtasks.forEach((subtask) => {
+    task.subtasks.forEach((subtask) => {
       if (subtask.state === 0 && subtask.isRequired) {
         return false;
       }
@@ -359,7 +358,7 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   function openComments() {
-    navigation.push('CommentListScreen', {taskId: task.data.id});
+    navigation.push('CommentListScreen', {taskId: task.id});
   }
 }
 
