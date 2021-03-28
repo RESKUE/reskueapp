@@ -39,10 +39,10 @@ describe('Login flow', () => {
       .toBeVisible()
       .withTimeout(5000);
 
-    // Navigate to the user group list screen
+    // Navigate to the task list screen
     await element(by.text('AUFGABEN')).tap();
 
-    // Navigate to the asset creation screen
+    // Navigate to the task creation screen
     await element(by.id('TaskListScreenAddButton')).tap();
 
     // Add a task and subtask

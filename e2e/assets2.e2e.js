@@ -87,13 +87,11 @@ describe('Login flow', () => {
     await element(by.id('assetCreationScreenSubmitButton')).tap();
 
     // Check the description on the asset list screen
-    await device.pressBack();
     await waitFor(element(by.text('Nice painting!')))
       .toBeVisible()
       .withTimeout(5000);
 
     // Set the asset in danger and reset it and then delete it
-    await element(by.text('Mona Lisa')).tap();
     await element(by.id('assetDetailScreenMenuButton')).tap();
     await element(by.text('Markiere in Gefahr')).tap();
     await element(by.id('assetDetailScreenMenuButton')).tap();
