@@ -94,8 +94,5 @@ describe('Login flow', () => {
 
     // Logout
     await element(by.id('navigationBarLogoutButton')).tap();
-
-
-    
   });
 });

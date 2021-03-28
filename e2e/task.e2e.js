@@ -65,7 +65,7 @@ describe('Login flow', () => {
     await element(by.id('TaskEditButton')).tap();
     await element(by.id('addSubTaskButton')).tap();
     await element(by.id('subTaskInput')).typeText('help me again\n');
-         // agin can't put a ref for a specific X button to delete a specific subtask
+    // agin can't put a ref for a specific X button to delete a specific subtask
     await element(by.id('creationDoneButton')).tap();
 
     //Delete the task

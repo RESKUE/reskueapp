@@ -69,7 +69,7 @@ describe('Login flow', () => {
     await element(by.id('assetCreationScreenDescriptionInput')).typeText(
       'Nice painting!\n',
     );
-  
+
     // Add Parent to the asset
     await element(by.id('addParentButton')).tap();
     await element(by.text('Louvre Museum')).tap();
@@ -86,12 +86,12 @@ describe('Login flow', () => {
       .scroll(150, 'down');
     await element(by.id('assetCreationScreenSubmitButton')).tap();
 
-     // Check the description on the asset list screen
+    // Check the description on the asset list screen
     await device.pressBack();
     await waitFor(element(by.text('Nice painting!')))
       .toBeVisible()
-      .withTimeout(5000);  
-    
+      .withTimeout(5000);
+
     // Set the asset in danger and reset it and then delete it
     await element(by.text('Mona Lisa')).tap();
     await element(by.id('assetDetailScreenMenuButton')).tap();

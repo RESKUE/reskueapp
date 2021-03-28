@@ -113,10 +113,16 @@ export default function TaskDetailScreen({navigation, route}) {
       if (isUserHelper()) {
         return (
           <Card.Actions>
-            <Button color={colors.primary} onPress={onCompleteTask} testID="finishTaskButton">
+            <Button
+              color={colors.primary}
+              onPress={onCompleteTask}
+              testID="finishTaskButton">
               Beenden
             </Button>
-            <Button color={colors.redish} onPress={onCancelTask} testID="cancelTaskButton">
+            <Button
+              color={colors.redish}
+              onPress={onCancelTask}
+              testID="cancelTaskButton">
               Abbrechen
             </Button>
           </Card.Actions>
@@ -126,7 +132,10 @@ export default function TaskDetailScreen({navigation, route}) {
       else {
         return (
           <Card.Actions>
-            <Button color={colors.primary} onPress={onBeginTask} testID="startTaskButton">
+            <Button
+              color={colors.primary}
+              onPress={onBeginTask}
+              testID="startTaskButton">
               Aufgabe annehmen
             </Button>
           </Card.Actions>
