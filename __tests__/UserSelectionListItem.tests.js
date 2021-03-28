@@ -1,6 +1,6 @@
 import {render} from '@testing-library/react-native';
 import React from 'react';
-import UserSelectionListItem from '../src/components/listItems/UserCreationListItem';
+import UserSelectionListItem from '../src/components/listItems/UserSelectionListItem';
 
 it('user selection list item renders correctly', () => {
   const data = {id: 1, name: 'name'};
