@@ -20,6 +20,7 @@ jest.mock('@react-navigation/native', () => {
     useNavigation: () => ({
       navigate: jest.fn(),
       push: jest.fn(),
+      reset: jest.fn(),
     }),
   };
 });
