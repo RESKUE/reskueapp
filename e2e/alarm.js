@@ -94,5 +94,76 @@ describe('Login flow', () => {
     
     // Logout
     await element(by.id('navigationBarLogoutButton')).tap();
+
+    // Login as helper
+    await expect(element(by.id('loginScreenUsernameInput'))).toBeVisible();
+    await element(by.id('loginScreenUsernameInput')).typeText('helper\n');
+    await element(by.id('loginScreenPasswordInput')).typeText('1234\n');
+    await element(by.id('loginScreenLoginButton')).tap();
+
+    // Navigate to the notification screen
+    await element(by.id('navigationBarNotficationButton')).tap();
+
+    //Select the message
+    await element(by.text('Alarm')).tap();
+
+    //Navigate to the endangered asset and start working on task
+    await element(by.id('goToAssetButton')).tap();
+    await element(by.text('Task test')).tap();
+    await element(by.id('startTaskButton')).tap();
+         // TODO : check subtask
+    await element(by.id('goToCommentButton')).tap();
+    await expect(element(by.id('commentInput'))).toBeVisible();
+    await element(by.id('commentInput')).typeText('wake up it is a dream\n');
+    await element(by.id('send')).tap();
+    await device.pressBack();
+    // TODO : id become finishTaskButton if the previous TODO is done
+    await element(by.id('cancelTaskButton')).tap();
+    await device.pressBack();
+
+    // Logout
+    await element(by.id('navigationBarLogoutButton')).tap();
+
+    //Clean up
+
+    // Login as admin
+    await expect(element(by.id('loginScreenUsernameInput'))).toBeVisible();
+    await element(by.id('loginScreenUsernameInput')).typeText('admin\n');
+    await element(by.id('loginScreenPasswordInput')).typeText('1234\n');
+    await element(by.id('loginScreenLoginButton')).tap();
+
+    // Open and delete the asset
+    await element(by.text('Mona Lisa')).tap();
+    await element(by.id('assetDetailScreenMenuButton')).tap();
+    await element(by.id('assetDetailScreenDeleteButton')).tap();
+
+    // Check that the asset has been deleted
+    await waitFor(element(by.text('Mona Lisa')))
+      .not.toBeVisible()
+      .withTimeout(5000);
+
+    //Delete the task
+    await element(by.text('AUFGABEN')).tap();
+    await element(by.text('Task test')).tap();
+    await element(by.id('TaskDetailScreenMenuButton')).tap();
+    await element(by.id('TaskDeleteButton')).tap();
+
+    // Check that the task has been deleted
+    await waitFor(element(by.text('Task test')))
+      .not.toBeVisible()
+      .withTimeout(5000);
+
+    //Delete the user group
+    await element(by.text('GRUPPEN')).tap();
+    await element(by.text('User Group test')).tap();
+    await element(by.id('userGroupDetailScreenMenuButton')).tap();
+    await element(by.id('deleteButton')).tap();
+
+
+    // Logout
+    await element(by.id('navigationBarLogoutButton')).tap();
+
+
+
   });
 });

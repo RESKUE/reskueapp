@@ -108,6 +108,30 @@ export default function TaskDetailScreen({navigation, route}) {
     //If the task isn't endangered you can't work on it
     if (!task.isEndangered) {
       return null;
+    } else {
+      //If the user is a helper he can finish the task
+      if (isUserHelper()) {
+        return (
+          <Card.Actions>
+            <Button color={colors.primary} onPress={onCompleteTask} testID="finishTaskButton">
+              Beenden
+            </Button>
+            <Button color={colors.redish} onPress={onCancelTask} testID="cancelTaskButton">
+              Abbrechen
+            </Button>
+          </Card.Actions>
+        );
+      }
+      //If the user isn't a helper he start working on the task
+      else {
+        return (
+          <Card.Actions>
+            <Button color={colors.primary} onPress={onBeginTask} testID="startTaskButton">
+              Aufgabe annehmen
+            </Button>
+          </Card.Actions>
+        );
+      }
     }
 
     //If the user is a helper he can finish the task
@@ -194,6 +218,7 @@ export default function TaskDetailScreen({navigation, route}) {
         <FloatingWhiteButton
           onPress={openComments}
           content="Zu den Kommentaren"
+          testID="goToCommentButton"
         />
       </View>
     </Scaffold>

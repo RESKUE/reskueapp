@@ -36,7 +36,7 @@ export default function NotificationDetailScreen({navigation, route}) {
         </Card.Content>
       </Card>
       {content?.entity && (
-        <Button style={styles.button} mode="contained" onPress={onPress}>
+        <Button style={styles.button} mode="contained" onPress={onPress} testID="goToAssetButton">
           Zum betroffenen Kulturgut
         </Button>
       )}
