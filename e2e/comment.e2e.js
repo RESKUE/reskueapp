@@ -79,6 +79,21 @@ describe('Login flow', () => {
     // Logout
     await element(by.id('navigationBarLogoutButton')).tap();
 
+    //Clean up
+
+    // Login as admin
+    await expect(element(by.id('loginScreenUsernameInput'))).toBeVisible();
+    await element(by.id('loginScreenUsernameInput')).typeText('admin\n');
+    await element(by.id('loginScreenPasswordInput')).typeText('1234\n');
+    await element(by.id('loginScreenLoginButton')).tap();
+
+    // Open and delete the asset
+    await element(by.text('Mona Lisa')).tap();
+    await element(by.id('assetDetailScreenMenuButton')).tap();
+    await element(by.id('assetDetailScreenDeleteButton')).tap();
+
+    // Logout
+    await element(by.id('navigationBarLogoutButton')).tap();
 
 
     
