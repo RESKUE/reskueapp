@@ -21,14 +21,26 @@ test('pressing list item works correctly', () => {
     isRequired: 0,
     state: 0,
   };
-  const extraData = {
-    changeSubtaskStateCallback: (id, state) => {
-      return id && state;
-    },
-  };
+  const extraData = {changeSubtaskStateCallback: jest.fn()};
   const {getByTestId} = render(
     <SubtaskListItem data={data} extraData={extraData} />,
   );
+
+  fireEvent.press(getByTestId('subtaskCheckbox'));
+  expect(extraData.changeSubtaskStateCallback.mock.calls.length).toBe(1);
+  expect(extraData.changeSubtaskStateCallback.mock.calls[0][0]).toBe(1);
+  expect(extraData.changeSubtaskStateCallback.mock.calls[0][1]).toBe(true);
+});
+
+test('the callback is optional', () => {
+  const data = {
+    id: 1,
+    text: 'text',
+    description: 'desc',
+    isRequired: 0,
+    state: 0,
+  };
+  const {getByTestId} = render(<SubtaskListItem data={data} />);
 
   fireEvent.press(getByTestId('subtaskCheckbox'));
 });

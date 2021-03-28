@@ -6,29 +6,8 @@ export default function SubtaskListItem({data, extraData}) {
   const {colors} = useTheme();
 
   function onPress() {
-    extraData.changeSubtaskStateCallback(data.id, !data.state);
-  }
-
-  function getCheckbox() {
     if (extraData?.changeSubtaskStateCallback) {
-      return (
-        <Checkbox
-          testID="subtaskCheckbox"
-          color={colors.primary}
-          uncheckedColor={colors.primary}
-          status={data.state ? 'checked' : 'unchecked'}
-          onPress={onPress}
-        />
-      );
-    } else {
-      return (
-        <Checkbox
-          testID="subtaskCheckbox"
-          color={colors.primary}
-          uncheckedColor={colors.primary}
-          status={data.state ? 'checked' : 'unchecked'}
-        />
-      );
+      extraData.changeSubtaskStateCallback(data.id, !data.state);
     }
   }
 
@@ -39,12 +18,18 @@ export default function SubtaskListItem({data, extraData}) {
       description={data.description}
       left={() => (
         <View style={styles.column}>
-          {getCheckbox()}
-          {data.isRequired ? (
+          <Checkbox
+            testID="subtaskCheckbox"
+            color={colors.primary}
+            uncheckedColor={colors.primary}
+            status={data.state ? 'checked' : 'unchecked'}
+            onPress={onPress}
+          />
+          {data.isRequired && (
             <Text style={[styles.requiredText, {color: colors.redish}]}>
               Pflicht
             </Text>
-          ) : null}
+          )}
         </View>
       )}
     />
