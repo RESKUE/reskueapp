@@ -10,7 +10,7 @@ export default function AlarmAction() {
 
   if (!isAdmin) {
     // Preserve layout using an invisible placeholder.
-    return <Appbar.Action />;
+    return <Appbar.Action testID="alarmActionBellPlaceholder" />;
   }
 
   return (
