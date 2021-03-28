@@ -5,25 +5,21 @@ import {useTheme, TouchableRipple} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MediaType} from '@ilt-pse/react-native-kueres';
 
-export default function MediaListItem({data}) {
+export default function MediaListItem({testID, data}) {
   const {colors} = useTheme();
   const navigation = useNavigation();
   const bg = {backgroundColor: colors.primary};
   const type = MediaType.fromMime(data.mimeType);
   const icon = MediaType.nameIcon(type);
 
-  function onPress() {
-    navigation.push('MediaDetailScreen', {
-      mediaId: data.id,
-      mimeType: data.mimeType,
-    });
-  }
-
   const altText = data.altText.substring(0, 24);
   const isAltTextTrimmed = data.altText.length > altText.length;
 
   return (
-    <TouchableRipple style={[styles.item, bg]} onPress={onPress}>
+    <TouchableRipple
+      testID={testID}
+      style={[styles.item, bg]}
+      onPress={onPress}>
       <View>
         <Icon style={styles.half} name={icon} size={36} />
         <Text style={styles.half}>
@@ -33,6 +29,13 @@ export default function MediaListItem({data}) {
       </View>
     </TouchableRipple>
   );
+
+  function onPress() {
+    navigation.push('MediaDetailScreen', {
+      mediaId: data.id,
+      mimeType: data.mimeType,
+    });
+  }
 }
 
 const styles = StyleSheet.create({
