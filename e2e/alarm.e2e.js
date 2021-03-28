@@ -103,7 +103,7 @@ describe('Login flow', () => {
     await element(by.id('goToAssetButton')).tap();
     await element(by.text('Task test')).tap();
     await element(by.id('startTaskButton')).tap();
-         // TODO : check subtask
+    // TODO : check subtask
     await element(by.id('goToCommentButton')).tap();
     await expect(element(by.id('commentInput'))).toBeVisible();
     await element(by.id('commentInput')).typeText('wake up it is a dream\n');
@@ -151,11 +151,7 @@ describe('Login flow', () => {
     await element(by.id('userGroupDetailScreenMenuButton')).tap();
     await element(by.id('deleteButton')).tap();
 
-
     // Logout
     await element(by.id('navigationBarLogoutButton')).tap();
-
-
-
   });
 });
