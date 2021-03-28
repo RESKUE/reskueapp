@@ -4,12 +4,12 @@ import {useNavigation} from '@react-navigation/native';
 import {List, TouchableRipple, useTheme} from 'react-native-paper';
 import AssetTags from '../AssetTags';
 
-export default function CulturalAssetListItem({data}) {
+export default function CulturalAssetListItem({testID, data}) {
   const navigation = useNavigation();
   const {colors} = useTheme();
 
   return (
-    <TouchableRipple key={data.id} onPress={onPress}>
+    <TouchableRipple testID={testID} key={data.id} onPress={onPress}>
       <View>
         <List.Item
           title={data.name}
