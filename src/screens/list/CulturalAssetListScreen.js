@@ -6,7 +6,7 @@ import CulturalAssetListItem from '../../components/listItems/CulturalAssetListI
 import ListActions from '../../components/ListActions';
 import useAssets from '../../handlers/AssetsHook';
 import useRoles from '../../handlers/RolesHook';
-import {Priorities} from '../../models/CulturalAsset';
+import Priorities from '../../models/AssetPriorities';
 import {
   FancyList,
   SearchBar,

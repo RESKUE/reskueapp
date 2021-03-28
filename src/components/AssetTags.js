@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Chip} from 'react-native-paper';
-import {Priorities} from '../models/CulturalAsset';
+import Priorities from '../models/AssetPriorities';
 
 export default function AssetTags({data}) {
   return (

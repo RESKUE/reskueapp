@@ -8,7 +8,7 @@ import {
   RadioFilteringOption,
   SearchProvider,
 } from '@ilt-pse/react-native-kueres';
-import {Priorities} from '../../models/CulturalAsset';
+import Priorities from '../../models/AssetPriorities';
 import useAssets from '../../handlers/AssetsHook';
 import MapContainer from '../../components/MapContainer';
 import AssetMarker from '../../components/AssetMarker';

@@ -9,7 +9,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
-import {Priorities} from '../../models/CulturalAsset';
+import Priorities from '../../models/AssetPriorities';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetCreationListItem from '../../components/listItems/CulturalAssetCreationListItem';
 import ListActions from '../../components/ListActions';

@@ -10,7 +10,6 @@ import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useAssetTasks from '../../handlers/AssetTasksHook';
-import CulturalAsset from '../../models/CulturalAsset';
 import {
   useTheme,
   Button,
@@ -50,7 +49,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   // Set this CulturalAsset from requested id data
   React.useEffect(() => {
     if (assetResult) {
-      setCulturalAsset(new CulturalAsset(assetResult.data));
+      setCulturalAsset(assetResult.data);
 
       const parentId = assetResult?.data?.culturalAssetParent;
       if (parentId) {
@@ -92,22 +91,22 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     return <LoadingIndicator />;
   }
 
-  const cleanName = (culturalAsset.data?.name ?? '').replace(' ', '');
+  const cleanName = culturalAsset.name.replace(' ', '');
   const coverUri = `https://loremflickr.com/g/350/200/${cleanName}`;
 
   return (
     <Scaffold>
       <Card style={styles.card}>
         <Card.Title
-          title={culturalAsset?.data?.name}
+          title={culturalAsset.name}
           subtitle={getSubtitle()}
           right={buildMenu}
         />
         <Card.Cover source={{uri: coverUri}} />
         <Card.Content style={styles.content}>
-          <Paragraph>{culturalAsset?.data?.description}</Paragraph>
+          <Paragraph>{culturalAsset.description}</Paragraph>
           <Paragraph style={styles.bold}>
-            Beachte im Umgang: {culturalAsset?.data?.label}
+            Beachte im Umgang: {culturalAsset.label}
           </Paragraph>
         </Card.Content>
         <Divider />
@@ -120,7 +119,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           )}
         </Card.Actions>
         <Card.Content>
-          <Paragraph>{culturalAsset?.data?.address}</Paragraph>
+          <Paragraph>{culturalAsset.address}</Paragraph>
         </Card.Content>
       </Card>
 
@@ -172,7 +171,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         <Menu.Item
           onPress={toggleIsEndangered}
           title={
-            culturalAsset.data.isEndangered
+            culturalAsset.isEndangered
               ? 'Entferne in Gefahr'
               : 'Markiere in Gefahr'
           }
@@ -192,8 +191,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function getSubtitle() {
-    const priority = culturalAsset?.data?.priority;
-    const isEndangered = culturalAsset?.data?.isEndangered ?? false;
+    const priority = culturalAsset.priority;
+    const isEndangered = !!culturalAsset.isEndangered;
     const label = isEndangered ? 'In Gefahr!' : 'Nicht in Gefahr.';
     const subtitle = `${label}  |  Priorität: ${priority}`;
     return subtitle;
@@ -208,7 +207,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function goMap() {
-    navigation.push('CulturalAssetMapScreen', {id: culturalAsset.data.id});
+    navigation.push('CulturalAssetMapScreen', {id: culturalAsset.id});
   }
 
   function goAssetGroup() {
@@ -219,13 +218,13 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     hideMenu();
     navigation.push('CulturalAssetCreationScreen', {
       screenType: 'update',
-      id: culturalAsset.data.id,
+      id: culturalAsset.id,
     });
   }
 
   async function deleteAsset() {
     hideMenu();
-    const result = await remove(culturalAsset.data.id);
+    const result = await remove(culturalAsset.id);
     if (result?.data?.deleted) {
       navigation.goBack();
     } else {
@@ -235,9 +234,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   async function toggleIsEndangered() {
     hideMenu();
-    const isEndangeredAsInt = !culturalAsset.data.isEndangered ? 1 : 0;
+    const isEndangeredAsInt = !culturalAsset.isEndangered ? 1 : 0;
     const putBody = {isEndangered: isEndangeredAsInt};
-    const result = await put(culturalAsset.data.id, putBody);
+    const result = await put(culturalAsset.id, putBody);
     if (result?.data) {
       requestAsset(route.params.id);
     } else {
@@ -247,16 +246,16 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   function goTaskCreation() {
     navigation.push('TaskCreationScreen', {
-      selectedAsset: culturalAsset.data,
+      selectedAsset: culturalAsset,
     });
   }
 
   function goMedia() {
-    navigation.push('MediaListScreen', {assetId: culturalAsset.data.id});
+    navigation.push('MediaListScreen', {assetId: culturalAsset.id});
   }
 
   function goComments() {
-    navigation.push('CommentListScreen', {assetId: culturalAsset.data.id});
+    navigation.push('CommentListScreen', {assetId: culturalAsset.id});
   }
 }
 
