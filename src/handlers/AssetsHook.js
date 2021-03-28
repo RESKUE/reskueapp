@@ -9,7 +9,7 @@ export default function useAssets() {
   const requestAssets = React.useCallback(async () => {
     const policy = FetchPolicy.cacheAndNetwork;
     const options = {method: 'GET'};
-    const url = `${Config.APP_REST_BASE_URL}'/culturalAsset?${query}`;
+    const url = `${Config.APP_REST_BASE_URL}/culturalAsset?${query}`;
     await client.request(url, options, policy);
   }, [query, client]);
 
