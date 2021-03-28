@@ -1,27 +1,24 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {List} from 'react-native-paper';
+import {List, useTheme} from 'react-native-paper';
 
-export default function TaskListItem({data}) {
+export default function TaskListItem({testID, data}) {
+  const {colors} = useTheme();
   const navigation = useNavigation();
+  const backgroundColor = data.isEndangered ? colors.redish : '#ffffff';
 
-  function onPress() {
-    navigation.push('TaskDetailScreen', {id: data.id});
-  }
-  function getBackgroundColor() {
-    if (data.isEndangered) {
-      return '#a51d01';
-    } else {
-      return '#ffffff';
-    }
-  }
   return (
     <List.Item
-      style={{backgroundColor: getBackgroundColor()}}
+      style={{backgroundColor: backgroundColor}}
       key={data.id}
       title={data.name}
       description={data.description}
       onPress={onPress}
+      testID={testID}
     />
   );
+
+  function onPress() {
+    navigation.push('TaskDetailScreen', {id: data.id});
+  }
 }
