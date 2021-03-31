@@ -138,7 +138,7 @@ export default function TaskDetailScreen({navigation, route}) {
           subtitle={getSubtitle()}
           right={buildMenu}
         />
-        {task.description && (
+        {!!task.description && (
           <View>
             <Divider />
             <Card.Content style={styles.content}>
@@ -147,7 +147,7 @@ export default function TaskDetailScreen({navigation, route}) {
           </View>
         )}
         <Divider />
-        {taskResult.culturalAsset && (
+        {!!taskResult.culturalAsset && (
           <Card.Actions>
             <Button
               color={colors.primary}
