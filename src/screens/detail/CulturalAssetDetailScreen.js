@@ -33,15 +33,16 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     requestAsset: requestAssetParent,
     result: assetParentResult,
   } = useAsset();
-  const {requestAssetChildren, result: assetChildrenResult} = useAssetChildren(
-    route.params.id,
-  );
+  const {
+    requestAssetChildren,
+    result: assetChildrenResult,
+  } = useAssetChildren();
   const {requestAssetTasks, result: taskResult} = useAssetTasks();
 
   useFocusEffect(
     React.useCallback(() => {
       requestAsset(route.params.id);
-      requestAssetChildren();
+      requestAssetChildren(route.params.id);
       requestAssetTasks(route.params.id);
     }, [requestAsset, requestAssetChildren, requestAssetTasks, route.params]),
   );

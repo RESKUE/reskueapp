@@ -6,10 +6,10 @@ test('request asset children works correctly', async () => {
   fetch.mockOnce(JSON.stringify(networkData));
 
   const id = 1;
-  const {result, waitForNextUpdate} = renderHook(() => useAssetChildren(id));
+  const {result, waitForNextUpdate} = renderHook(() => useAssetChildren());
 
   await act(async () => {
-    result.current.requestAssetChildren();
+    result.current.requestAssetChildren(id);
     await waitForNextUpdate();
   });
 
