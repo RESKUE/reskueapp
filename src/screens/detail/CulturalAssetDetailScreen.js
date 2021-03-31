@@ -8,6 +8,7 @@ import CulturalAssetListItem from '../../components/listItems/CulturalAssetListI
 import TaskListItem from '../../components/listItems/TaskListItem';
 import ListActions from '../../components/ListActions';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
+import Priorities from '../../models/AssetPriorities';
 import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useAssetTasks from '../../handlers/AssetTasksHook';
@@ -215,7 +216,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function getSubtitle() {
-    const priority = culturalAsset.priority;
+    const priority =
+      Priorities.find((e) => e.value === culturalAsset.priority)?.name ??
+      'Unbekannt';
     const isEndangered = !!culturalAsset.isEndangered;
     const label = isEndangered ? 'In Gefahr!' : 'Nicht in Gefahr.';
     const subtitle = `${label}  |  Priorität: ${priority}`;
