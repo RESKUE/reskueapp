@@ -1,4 +1,5 @@
 import React from 'react';
+import Config from 'react-native-config';
 import {StyleSheet, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
@@ -10,6 +11,7 @@ import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useAssetTasks from '../../handlers/AssetTasksHook';
+import useMedias from '../../handlers/MediasHook';
 import {
   useTheme,
   Button,
@@ -26,6 +28,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const [parentAsset, setParentAsset] = React.useState(null);
   const [childrenAssets, setChildrenAssets] = React.useState(null);
   const [tasks, setTasks] = React.useState(null);
+  const [cover, setCover] = React.useState();
 
   const assetId = route.params.id;
 
@@ -40,13 +43,21 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     result: assetChildrenResult,
   } = useAssetChildren();
   const {requestAssetTasks, result: taskResult} = useAssetTasks();
+  const {get: requestCover, result: coverResult} = useMedias();
 
   useFocusEffect(
     React.useCallback(() => {
       requestAsset(assetId);
       requestAssetChildren(assetId);
       requestAssetTasks(assetId);
-    }, [requestAsset, requestAssetChildren, requestAssetTasks, assetId]),
+      requestCover(`culturalAsset/${assetId}/media?filter=mimeType~image`);
+    }, [
+      requestAsset,
+      requestAssetChildren,
+      requestAssetTasks,
+      requestCover,
+      assetId,
+    ]),
   );
 
   // Set this CulturalAsset and requests its parent
@@ -84,12 +95,21 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     }
   }, [assetChildrenResult]);
 
+  // Assemble and store this assets cover image URI
+  React.useEffect(() => {
+    if (coverResult?.data) {
+      const images = coverResult.data.content ?? [];
+      const firstMediaId = images[0]?.id;
+      if (firstMediaId) {
+        const uri = `${Config.APP_REST_BASE_URL}/media/${firstMediaId}`;
+        setCover(uri);
+      }
+    }
+  }, [coverResult, setCover]);
+
   if (!culturalAsset || !childrenAssets || !parentAsset || !tasks) {
     return <LoadingIndicator />;
   }
-
-  const cleanName = culturalAsset.name.replace(' ', '');
-  const coverUri = `https://loremflickr.com/g/350/200/${cleanName}`;
 
   return (
     <Scaffold>
@@ -99,7 +119,8 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
           subtitle={getSubtitle()}
           right={buildMenu}
         />
-        <Card.Cover source={{uri: coverUri}} />
+        <Divider />
+        {cover && <Card.Cover source={{uri: cover}} />}
         <Card.Content style={styles.content}>
           <Paragraph>{culturalAsset.description}</Paragraph>
           <Paragraph style={styles.bold}>
