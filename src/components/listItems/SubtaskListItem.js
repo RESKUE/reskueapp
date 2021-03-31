@@ -39,10 +39,11 @@ export default function SubtaskListItem({data, extraData}) {
 const styles = StyleSheet.create({
   column: {
     flexDirection: 'column',
-    marginVertical: -8,
-    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 48,
   },
-  requiredText: {marginTop: -8},
+  requiredText: {
+    marginTop: -8,
+  },
 });
