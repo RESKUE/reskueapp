@@ -25,7 +25,9 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const [culturalAsset, setCulturalAsset] = React.useState(null);
   const [parentAsset, setParentAsset] = React.useState(null);
   const [childrenAssets, setChildrenAssets] = React.useState(null);
-  const [tasks, setTasks] = React.useState([]);
+  const [tasks, setTasks] = React.useState(null);
+
+  const assetId = route.params.id;
 
   const {colors} = useTheme();
   const {requestAsset, remove, put, result: assetResult} = useAsset();
@@ -41,13 +43,13 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   useFocusEffect(
     React.useCallback(() => {
-      requestAsset(route.params.id);
-      requestAssetChildren(route.params.id);
-      requestAssetTasks(route.params.id);
-    }, [requestAsset, requestAssetChildren, requestAssetTasks, route.params]),
+      requestAsset(assetId);
+      requestAssetChildren(assetId);
+      requestAssetTasks(assetId);
+    }, [requestAsset, requestAssetChildren, requestAssetTasks, assetId]),
   );
 
-  // Set this CulturalAsset from requested id data
+  // Set this CulturalAsset and requests its parent
   React.useEffect(() => {
     if (assetResult) {
       setCulturalAsset(assetResult.data);
@@ -70,23 +72,17 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   // Set tasks of this CulturalAsset
   React.useEffect(() => {
-    if (taskResult?.data && culturalAsset) {
-      setTasks(taskResult?.data.content);
-    } else {
-      setTasks([]);
+    if (taskResult?.data) {
+      setTasks(taskResult?.data.content ?? []);
     }
-  }, [culturalAsset, taskResult]);
+  }, [taskResult]);
 
   // Set children of this CulturalAsset
   React.useEffect(() => {
-    if (assetChildrenResult && culturalAsset) {
-      if (assetChildrenResult.data) {
-        setChildrenAssets(assetChildrenResult.data.content);
-      } else {
-        setChildrenAssets([]);
-      }
+    if (assetChildrenResult?.data) {
+      setChildrenAssets(assetChildrenResult.data.content ?? []);
     }
-  }, [culturalAsset, assetChildrenResult]);
+  }, [assetChildrenResult]);
 
   if (!culturalAsset || !childrenAssets || !parentAsset || !tasks) {
     return <LoadingIndicator />;
@@ -239,7 +235,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
     const putBody = {isEndangered: isEndangeredAsInt};
     const result = await put(culturalAsset.id, putBody);
     if (result?.data) {
-      requestAsset(route.params.id);
+      requestAsset(assetId);
     } else {
       console.log('isEndangered toggle failed:', result, result?.error);
     }
