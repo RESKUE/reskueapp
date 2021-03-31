@@ -20,6 +20,7 @@ import {
   Paragraph,
   Card,
   Menu,
+  Caption,
 } from 'react-native-paper';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
@@ -45,20 +46,20 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   const {requestAssetTasks, result: taskResult} = useAssetTasks();
   const {get: requestCover, result: coverResult} = useMedias();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      requestAsset(assetId);
-      requestAssetChildren(assetId);
-      requestAssetTasks(assetId);
-      requestCover(`culturalAsset/${assetId}/media?filter=mimeType~image`);
-    }, [
-      requestAsset,
-      requestAssetChildren,
-      requestAssetTasks,
-      requestCover,
-      assetId,
-    ]),
-  );
+  const fetchData = React.useCallback(() => {
+    requestAsset(assetId);
+    requestAssetChildren(assetId);
+    requestAssetTasks(assetId);
+    requestCover(`culturalAsset/${assetId}/media?filter=mimeType~image`);
+  }, [
+    requestAsset,
+    requestAssetChildren,
+    requestAssetTasks,
+    requestCover,
+    assetId,
+  ]);
+
+  useFocusEffect(fetchData);
 
   // Set this CulturalAsset and requests its parent
   React.useEffect(() => {
@@ -122,10 +123,18 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
         <Divider />
         {cover && <Card.Cover source={{uri: cover}} />}
         <Card.Content style={styles.content}>
-          <Paragraph>{culturalAsset.description}</Paragraph>
-          <Paragraph style={styles.bold}>
-            Beachte im Umgang: {culturalAsset.label}
-          </Paragraph>
+          <Caption>Beschreibung:</Caption>
+          <Paragraph>{culturalAsset.description || '-'}</Paragraph>
+        </Card.Content>
+        <Divider />
+        <Card.Content style={styles.content}>
+          <Caption>Besonderheit:</Caption>
+          <Paragraph>{culturalAsset.label || '-'}</Paragraph>
+        </Card.Content>
+        <Divider />
+        <Card.Content style={styles.content}>
+          <Caption>Adresse:</Caption>
+          <Paragraph>{culturalAsset.address || '_'}</Paragraph>
         </Card.Content>
         <Divider />
         <Card.Actions>
@@ -136,9 +145,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
             </Button>
           )}
         </Card.Actions>
-        <Card.Content>
-          <Paragraph>{culturalAsset.address}</Paragraph>
-        </Card.Content>
       </Card>
 
       {childrenAssets.length !== 0 && (
