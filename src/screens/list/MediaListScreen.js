@@ -24,7 +24,7 @@ export default function MediaListScreen({navigation, route}) {
   const mediaUrl = `culturalAsset/${assetId}/media`;
   const content = result?.data?.content ?? [];
 
-  const linkMedia = React.useCallback(() => {
+  const linkMedia = React.useCallback(async () => {
     // Unfortunately the backend requires a separate step to link an media
     // upload with a cultural asset. This creates all sorts of issues and
     // should definitely be changed.
@@ -34,7 +34,7 @@ export default function MediaListScreen({navigation, route}) {
     const mediaArray = assetResult?.data?.media ?? [];
     const updatedMediaArray = mediaArray.concat([{id: mediaId}]);
     const data = {media: updatedMediaArray};
-    putAsset(assetId, data);
+    await putAsset(assetId, data);
     get();
   }, [assetResult, mediaId, assetId, putAsset, get]);
 
