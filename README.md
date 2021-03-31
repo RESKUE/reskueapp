@@ -2,12 +2,7 @@
 
 ## Initial setup
 
-### Android environment
-
-1. [Install NodeJS and NPM](https://nodejs.org/en/download/package-manager/)
-2. [Install Android Studio](https://developer.android.com/studio/install)
-3. Install the `Android 10 (Q)` SDK
-4. Configure the `ANDROID_HOME` environemnt variable
+Follow the React Native development environment [setup guide](https://reactnative.dev/docs/environment-setup).
 
 ### NPM registry
 
@@ -30,7 +25,7 @@ One needs to [authenticate with our private Package Registry](https://docs.gitla
 
 ## Tests
 
-### Unit-, Itegration and ComponentTests
+### Unit/Itegration/Component Tests
 
 ...are automatically run by CI.
 You can also manually run these test with `npm run test`.
@@ -49,3 +44,9 @@ This is due to their non-trivial setup, speed and them being more prone to flaki
 4. Keep `npm run start` running in a terminal
 5. Build a debug test version of the app with `npm run e2e-build-debug`
 6. Run the tests with `npm run e2e-test-debug`
+
+## Configuration
+
+The RESKUE app supports multiple configuration environment via [react-native-config](https://github.com/luggit/react-native-config). Environments are configured using `.env` files. Variables placed in `.env` files are accessable from JavaScript, native Android and native iOS files.
+
+By default the `.env` environment for local development with a locally running backend is used. Other environemnts such as the staging environment (`.env.staging`) can be used by setting a `ENVFILE` environment variable. For instance use the following command to run the Android app using the staging environment: `ENVFILE=.env.staging npx react-native run-android` (Linux).
