@@ -17,6 +17,8 @@ export default function UsergroupCreationScreen({navigation, route}) {
   const {getUsergroup, putUsergroup, postUsergroup} = useUsergroup();
   const {requestUsers, result: userResult} = useUsers();
   const {getUsergroupUsers} = useUsers();
+
+  const [submitting, setSubmitting] = React.useState(false);
   const [usergroup, setUsergroup] = React.useState();
 
   const fetchExistingData = React.useCallback(async () => {
@@ -48,7 +50,6 @@ export default function UsergroupCreationScreen({navigation, route}) {
     }
   }, [addUser, selectedUserId]);
 
-  // TODO: move into effect?
   const addUser = React.useCallback(
     (userId) => {
       const addedUser = userResult.data.content.find(
@@ -70,12 +71,14 @@ export default function UsergroupCreationScreen({navigation, route}) {
         label="Name"
         value={usergroup?.name}
         onChangeText={onNameChange}
+        disabled={submitting}
       />
       <ListActions>
         <IconButton
           color={colors.primary}
           icon="account-plus-outline"
           onPress={openUserSelection}
+          disabled={submitting}
         />
       </ListActions>
       <FancyList
@@ -89,6 +92,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         icon="check"
         mode="contained"
         onPress={submit}
+        loading={submitting}
         style={styles.buttonSpacing}>
         Fertig
       </Button>
@@ -125,12 +129,14 @@ export default function UsergroupCreationScreen({navigation, route}) {
     const formattedUsergroup = {name: usergroup?.name, users: userIds};
 
     // Send data
+    setSubmitting(true);
     if (updatingExistingUsergroup) {
       const result = await putUsergroup(usergroupId, formattedUsergroup);
       if (result?.data) {
         navigation.goBack();
       } else {
         console.log('Usergroup update failed:', result?.error);
+        setSubmitting(false);
       }
     } else {
       const result = await postUsergroup(formattedUsergroup);
@@ -138,6 +144,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Usergroup creation failed:', result?.error);
+        setSubmitting(false);
       }
     }
   }
