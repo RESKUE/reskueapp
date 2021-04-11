@@ -15,6 +15,7 @@ export default function TaskCreationScreen({navigation, route}) {
   const taskId = route.params?.id ?? null;
   const updatingExistingTask = taskId !== null;
 
+  const [submitting, setSubmitting] = React.useState(false);
   const [task, setTask] = React.useState();
   const [asset, setAsset] = React.useState(null);
   const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
@@ -87,23 +88,31 @@ export default function TaskCreationScreen({navigation, route}) {
 
   return (
     <Scaffold>
-      <TextInput label="Name" value={task?.name} onChangeText={onNameChange} />
+      <TextInput
+        label="Name"
+        value={task?.name}
+        onChangeText={onNameChange}
+        disabled={submitting}
+      />
       <TextInput
         label="Beschreibung"
         value={task?.description}
         onChangeText={onDescriptionChange}
+        disabled={submitting}
       />
       <TextInput
         label="Empfohlene Helferanzahl"
         keyboardType="number-pad"
         value={task?.recommendedHelperUsers?.toString()}
         onChangeText={onRecommendedHelperUsersChange}
+        disabled={submitting}
       />
       <ListActions>
         <IconButton
           color={colors.primary}
           icon="plus-circle-outline"
           onPress={openAssetSelection}
+          disabled={submitting}
         />
       </ListActions>
       <FancyList
@@ -118,6 +127,7 @@ export default function TaskCreationScreen({navigation, route}) {
           color={colors.primary}
           icon="plus-circle-outline"
           onPress={addSubtask}
+          disabled={submitting}
         />
       </ListActions>
       <FancyList
@@ -135,6 +145,7 @@ export default function TaskCreationScreen({navigation, route}) {
         icon="check"
         mode="contained"
         onPress={submit}
+        loading={submitting}
         style={styles.buttonSpacing}>
         Fertig
       </Button>
@@ -228,21 +239,27 @@ export default function TaskCreationScreen({navigation, route}) {
     });
 
     // Send data
+    setSubmitting(true);
+
     if (updatingExistingTask) {
       console.log('Updating task:', task);
       const taskResult = await putTask(task.id, task);
+
       if (taskResult?.data) {
         navigation.goBack();
       } else {
         console.log('Task update failed:', taskResult?.error);
+        setSubmitting(false);
       }
     } else {
       console.log('Creating task:', task);
       const taskResult = await postTask(task);
+
       if (taskResult?.data) {
         navigation.goBack();
       } else {
         console.log('Task creation failed:', taskResult?.error);
+        setSubmitting(false);
       }
     }
   }
