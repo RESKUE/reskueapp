@@ -23,7 +23,7 @@ import useTask from '../../handlers/TaskHook';
 import useTaskHelpers from '../../handlers/TaskHelpersHook';
 import useUserMe from '../../handlers/UserMeHook';
 import useSubtask from '../../handlers/SubtaskHook';
-import useSubtasks from '../../handlers/SubtaksHook';
+import useSubtasks from '../../handlers/SubtasksHook';
 import TaskStates from '../../models/TaskStates';
 
 export default function TaskDetailScreen({navigation, route}) {
@@ -47,7 +47,7 @@ export default function TaskDetailScreen({navigation, route}) {
     removeTaskHelper,
     getResult: helpersResult,
   } = useTaskHelpers();
-  const {requestSubtasks, result: subtaskResult} = useSubtasks();
+  const {result: subtaskResult, get: getSubtasks} = useSubtasks();
   const {putSubtask} = useSubtask();
   const {requestUserMe, result: userResult} = useUserMe();
 
@@ -59,8 +59,8 @@ export default function TaskDetailScreen({navigation, route}) {
     React.useCallback(() => {
       getTask(route.params.id);
       requestTaskHelpers(route.params.id);
-      requestSubtasks(route.params.id);
-    }, [getTask, requestTaskHelpers, requestSubtasks, route.params]),
+      getSubtasks(route.params.id);
+    }, [getTask, requestTaskHelpers, getSubtasks, route.params]),
   );
 
   React.useEffect(() => {
@@ -336,7 +336,7 @@ export default function TaskDetailScreen({navigation, route}) {
     const putBody = {state: stateAsInt};
     const result = await putSubtask(subtaskId, putBody);
     if (result.data) {
-      requestSubtasks(route.params.id);
+      getSubtasks(route.params.id);
     } else {
       console.log('Changing subtask-state failed:', result, result?.error);
     }

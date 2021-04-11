@@ -5,15 +5,15 @@ import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
 export default function useSubtasks() {
   const {client, result} = useClient({authenticated: true});
 
-  const requestSubtasks = React.useCallback(
+  const get = React.useCallback(
     async (taskId) => {
       const url = `${Config.APP_REST_BASE_URL}/task/${taskId}/subtasks`;
       const options = {method: 'GET'};
       const policy = FetchPolicy.cacheAndNetwork;
-      await client.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
     [client],
   );
 
-  return {result, requestSubtasks};
+  return {result, get};
 }

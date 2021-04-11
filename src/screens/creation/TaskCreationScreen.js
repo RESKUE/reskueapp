@@ -7,7 +7,7 @@ import SubtaskCreationListItem from '../../components/listItems/SubtaskCreationL
 import CulturalAssetCreationListItem from '../../components/listItems/CulturalAssetCreationListItem';
 import ListActions from '../../components/ListActions';
 import useAsset from '../../handlers/AssetHook';
-import useSubtasks from '../../handlers/SubtaksHook';
+import useSubtasks from '../../handlers/SubtasksHook';
 import useTask from '../../handlers/TaskHook';
 
 export default function TaskCreationScreen({navigation, route}) {
@@ -22,7 +22,7 @@ export default function TaskCreationScreen({navigation, route}) {
 
   const {colors} = useTheme();
   const {requestAsset} = useAsset();
-  const {requestSubtasks} = useSubtasks();
+  const {get: getSubtasks} = useSubtasks();
   const {get: getTask, put: putTask, post: postTask} = useTask();
 
   const fetchExistingData = React.useCallback(async () => {
@@ -36,7 +36,7 @@ export default function TaskCreationScreen({navigation, route}) {
     }
 
     if (baseTaskResult.data.subtasks.length > 0) {
-      const subtasksResult = await requestSubtasks(baseTaskResult.data.id);
+      const subtasksResult = await getSubtasks(baseTaskResult.data.id);
       setSubtasks(subtasksResult.data.content);
     }
   }, [
@@ -45,7 +45,7 @@ export default function TaskCreationScreen({navigation, route}) {
     setTask,
     requestAsset,
     onAssetChange,
-    requestSubtasks,
+    getSubtasks,
     setSubtasks,
   ]);
 
