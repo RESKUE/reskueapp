@@ -16,6 +16,7 @@ export default function LoginScreen() {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [snackbar, setSnackbar] = React.useState(false);
+  const [passwordVisible, setPasswordVisible] = React.useState(false);
 
   function showSnackbar() {
     setSnackbar(true);
@@ -61,10 +62,16 @@ export default function LoginScreen() {
             dense={true}
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={true}
+            secureTextEntry={!passwordVisible}
             textContentType="password"
             label="Passwort"
             testID="loginScreenPasswordInput"
+            right={
+              <TextInput.Icon
+                name={passwordVisible ? 'eye-off' : 'eye'}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              />
+            }
           />
           <Button
             style={styles.element}
