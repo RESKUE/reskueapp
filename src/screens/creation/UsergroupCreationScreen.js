@@ -136,6 +136,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Usergroup update failed:', result?.error);
+        ToastAndroid.show('Update fehlgeschlagen!', ToastAndroid.SHORT);
         setSubmitting(false);
       }
     } else {
@@ -144,6 +145,7 @@ export default function UsergroupCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Usergroup creation failed:', result?.error);
+        ToastAndroid.show('Erstellung fehlgeschlagen!', ToastAndroid.SHORT);
         setSubmitting(false);
       }
     }

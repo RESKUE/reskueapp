@@ -249,6 +249,7 @@ export default function TaskCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Task update failed:', taskResult?.error);
+        ToastAndroid.show('Update fehlgeschlagen!', ToastAndroid.SHORT);
         setSubmitting(false);
       }
     } else {
@@ -259,6 +260,7 @@ export default function TaskCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Task creation failed:', taskResult?.error);
+        ToastAndroid.show('Erstellung fehlgeschlagen!', ToastAndroid.SHORT);
         setSubmitting(false);
       }
     }

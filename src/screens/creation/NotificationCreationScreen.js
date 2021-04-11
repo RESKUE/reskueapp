@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ToastAndroid} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import {FancyToggle} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
@@ -122,6 +122,7 @@ export default function NotificationCreationScreen({navigation, route}) {
     if (result?.data) {
       navigation.goBack();
     } else {
+      ToastAndroid.show('Erstellung fehlgeschlagen!', ToastAndroid.SHORT);
       setSubmitting(false);
     }
   }

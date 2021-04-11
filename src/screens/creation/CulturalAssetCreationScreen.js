@@ -231,6 +231,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Update failed:', updateResult?.error);
+        ToastAndroid.show('Update fehlgeschlagen!', ToastAndroid.SHORT);
         setSubmitting(false);
       }
     } else {
@@ -239,6 +240,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Creation failed:', creationResult?.error);
+        ToastAndroid.show('Erstellung fehlgeschlagen!', ToastAndroid.SHORT);
         setSubmitting(false);
       }
     }

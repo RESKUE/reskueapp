@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ToastAndroid} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
 import Scaffold from '../../components/baseComponents/Scaffold';
@@ -74,6 +74,7 @@ export default function MediaCreationScreen({navigation, route}) {
         mediaId: result.data,
       });
     } else {
+      ToastAndroid.show('Erstellung fehlgeschlagen!', ToastAndroid.SHORT);
       setSubmitting(false);
     }
   }
