@@ -6,24 +6,20 @@ import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import useUsergroup from '../../handlers/UsergroupHook';
+import useUsers from '../../handlers/UsersHook';
 
 export default function UsergroupDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [usergroup, setUserGroup] = React.useState(null);
   const [users, setUsers] = React.useState(null);
-  const {
-    requestUsergroup,
-    requestUsergroupUsers,
-    requestUsergroupDeletion,
-    usergroupResult,
-    usersResult,
-  } = useUsergroup();
+  const {result: usersResult, getUsergroupUsers} = useUsers();
+  const {usergroupResult, getUsergroup, deleteUsergroup} = useUsergroup();
 
   useFocusEffect(
     React.useCallback(() => {
-      requestUsergroup(route.params.id);
-      requestUsergroupUsers(route.params.id);
-    }, [requestUsergroup, requestUsergroupUsers, route.params]),
+      getUsergroup(route.params.id);
+      getUsergroupUsers(route.params.id);
+    }, [getUsergroup, getUsergroupUsers, route.params]),
   );
 
   React.useEffect(() => {
@@ -64,7 +60,7 @@ export default function UsergroupDetailScreen({navigation, route}) {
           <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
         }>
         <Menu.Item onPress={goUpdate} title="Bearbeiten" />
-        <Menu.Item onPress={deleteUsergroup} title="Löschen" />
+        <Menu.Item onPress={onDeleteUsergroup} title="Löschen" />
       </Menu>
     );
   }
@@ -80,14 +76,13 @@ export default function UsergroupDetailScreen({navigation, route}) {
   function goUpdate() {
     hideMenu();
     navigation.push('UsergroupCreationScreen', {
-      screenType: 'update',
       id: usergroup.id,
     });
   }
 
-  async function deleteUsergroup() {
+  async function onDeleteUsergroup() {
     hideMenu();
-    const result = await requestUsergroupDeletion(usergroup.id);
+    const result = await deleteUsergroup(usergroup.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {

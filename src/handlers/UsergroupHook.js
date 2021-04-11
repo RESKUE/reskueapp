@@ -3,51 +3,65 @@ import Config from 'react-native-config';
 import {useClient, FetchPolicy} from '@ilt-pse/react-native-kueres';
 
 export default function useUsergroup() {
-  const {client: usergroupClient, result: usergroupResult} = useClient({
-    authenticated: true,
-  });
-  const {client: usersClient, result: usersResult} = useClient({
-    authenticated: true,
-  });
-  const {client: deletionClient} = useClient({
-    authenticated: true,
-  });
+  const {client, result: usergroupResult} = useClient({authenticated: true});
 
-  const requestUsergroup = React.useCallback(
+  const getUsergroup = React.useCallback(
     async (id) => {
       const url = `${Config.APP_REST_BASE_URL}/userGroup/${id}`;
       const options = {method: 'GET'};
       const policy = FetchPolicy.cacheAndNetwork;
-      await usergroupClient.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
-    [usergroupClient],
+    [client],
   );
 
-  const requestUsergroupUsers = React.useCallback(
-    async (id) => {
-      const url = `${Config.APP_REST_BASE_URL}/userGroup/${id}/users`;
-      const options = {method: 'GET'};
+  const postUsergroup = React.useCallback(
+    async (usergroup) => {
+      const url = `${Config.APP_REST_BASE_URL}/userGroup`;
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usergroup),
+      };
       const policy = FetchPolicy.cacheAndNetwork;
-      await usersClient.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
-    [usersClient],
+    [client],
   );
 
-  const requestUsergroupDeletion = React.useCallback(
+  const putUsergroup = React.useCallback(
+    async (id, usergroup) => {
+      const url = `${Config.APP_REST_BASE_URL}/userGroup/${id}`;
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usergroup),
+      };
+      const policy = FetchPolicy.cacheAndNetwork;
+      return await client.request(url, options, policy);
+    },
+    [client],
+  );
+
+  const deleteUsergroup = React.useCallback(
     async (id) => {
       const url = `${Config.APP_REST_BASE_URL}/userGroup/${id}`;
       const options = {method: 'DELETE'};
       const policy = FetchPolicy.cacheAndNetwork;
-      return await deletionClient.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
-    [deletionClient],
+    [client],
   );
 
   return {
     usergroupResult,
-    usersResult,
-    requestUsergroup,
-    requestUsergroupUsers,
-    requestUsergroupDeletion,
+    getUsergroup,
+    postUsergroup,
+    putUsergroup,
+    deleteUsergroup,
   };
 }

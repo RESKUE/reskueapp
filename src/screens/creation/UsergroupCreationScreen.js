@@ -1,153 +1,64 @@
 import React from 'react';
 import {StyleSheet, ToastAndroid} from 'react-native';
-import {
-  useTheme,
-  IconButton,
-  Button,
-  Divider,
-  TextInput,
-} from 'react-native-paper';
+import {useTheme, IconButton, Button, TextInput} from 'react-native-paper';
 import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserCreationListItem from '../../components/listItems/UserCreationListItem';
 import ListActions from '../../components/ListActions';
 import useUsers from '../../handlers/UsersHook';
 import useUsergroup from '../../handlers/UsergroupHook';
-import useUsergroupCreation from '../../handlers/UsergroupCreationHook';
 
 export default function UsergroupCreationScreen({navigation, route}) {
+  const selectedUserId = route.params?.userId ?? null;
+  const usergroupId = route.params?.id ?? null;
+  const updatingExistingUsergroup = usergroupId !== null;
+
   const {colors} = useTheme();
-
-  const {
-    requestUsergroup,
-    requestUsergroupUsers,
-    usergroupResult,
-    usersResult,
-  } = useUsergroup();
-
-  const screenType = route.params?.screenType;
-
-  const [usergroup, setUserGroup] = React.useState({
-    name: '',
-    users: [],
-  });
-  const [usersLoaded, setUsersLoaded] = React.useState(false);
-
-  const {
-    postUsergroup,
-    putUsergroup,
-    result: creationResult,
-  } = useUsergroupCreation();
+  const {getUsergroup, putUsergroup, postUsergroup} = useUsergroup();
   const {requestUsers, result: userResult} = useUsers();
+  const {getUsergroupUsers} = useUsers();
+  const [usergroup, setUsergroup] = React.useState();
+
+  const fetchExistingData = React.useCallback(async () => {
+    console.log('Request usergroup with id:', usergroupId);
+
+    const usergroupResult = await getUsergroup(usergroupId);
+    const usergroupUsersResult = await getUsergroupUsers(usergroupId);
+
+    setUsergroup({
+      ...(usergroupResult?.data ?? {}),
+      users: usergroupUsersResult?.data?.content ?? [],
+    });
+  }, [usergroupId, getUsergroup, setUsergroup, getUsergroupUsers]);
 
   React.useEffect(() => {
-    if (screenType === 'update') {
-      console.log('Request usergroup with id: ' + route.params.id);
-      requestUsergroup(route.params.id);
-      requestUsergroupUsers(route.params.id);
+    if (updatingExistingUsergroup) {
+      fetchExistingData();
     }
-  }, [requestUsergroup, requestUsergroupUsers, screenType, route.params]);
+  }, [updatingExistingUsergroup, fetchExistingData]);
 
   React.useEffect(() => {
     requestUsers();
   }, [requestUsers]);
 
+  // A new user has been selected via the user selection screen
   React.useEffect(() => {
-    if (usergroupResult?.data && !usersLoaded) {
-      setUserGroup(usergroupResult.data);
+    if (selectedUserId !== null) {
+      addUser(selectedUserId);
     }
-  }, [usergroupResult, usersLoaded]);
+  }, [addUser, selectedUserId]);
 
-  React.useEffect(() => {
-    if (usersResult?.data && !usersLoaded) {
-      setUsers(usersResult.data.content);
-    }
-  }, [setUsers, usersResult, usersLoaded]);
-
-  const routeUserId = route.params?.userId;
-  React.useEffect(() => {
-    if (routeUserId != null) {
-      addUser(routeUserId);
-    }
-  }, [addUser, routeUserId]);
-
-  React.useEffect(() => {
-    if (creationResult?.data) {
-      navigation.goBack();
-    } else {
-      console.log(creationResult);
-    }
-  }, [creationResult, navigation]);
-
-  const onChangeName = (name) => {
-    const updatedUsergroup = {
-      id: usergroup.id,
-      name: name,
-      users: usergroup.users,
-    };
-    setUserGroup(updatedUsergroup);
-  };
-
-  const setUsers = React.useCallback(
-    (userList) => {
-      const updatedUsergroup = {
-        id: usergroup.id,
-        name: usergroup.name,
-        users: userList,
-      };
-      setUserGroup(updatedUsergroup);
-      setUsersLoaded(true);
-    },
-    [usergroup],
-  );
-
+  // TODO: move into effect?
   const addUser = React.useCallback(
     (userId) => {
       const addedUser = userResult.data.content.find(
         (user) => user.id === userId,
       );
-      const updatedUserList = [...usergroup.users, addedUser];
-      const updatedUsergroup = {
-        id: usergroup.id,
-        name: usergroup.name,
-        users: updatedUserList,
-      };
-      setUserGroup(updatedUsergroup);
+      const updatedUserList = [...(usergroup?.users ?? []), addedUser];
+      setUsergroup({...usergroup, users: updatedUserList});
     },
     [userResult, usergroup],
   );
-
-  function removeUser(userId) {
-    const updatedUserList = usergroup.users.filter(
-      (user) => user.id !== userId,
-    );
-    const updatedUsergroup = {
-      id: usergroup.id,
-      name: usergroup.name,
-      users: updatedUserList,
-    };
-    setUserGroup(updatedUsergroup);
-  }
-
-  const goUserSelection = () => {
-    navigation.push('UserSelectionListScreen');
-  };
-  const finishCreation = () => {
-    if (usergroup.name === '') {
-      ToastAndroid.show('Es muss ein Name gewählt werden!', ToastAndroid.SHORT);
-      return;
-    }
-    const userIds = [];
-    usergroup.users.forEach((user) => {
-      userIds.push({id: user.id});
-    });
-    const formattedUsergroup = {name: usergroup.name, users: userIds};
-    if (screenType === 'update') {
-      putUsergroup(usergroup.id, formattedUsergroup);
-    } else {
-      postUsergroup(formattedUsergroup);
-    }
-  };
 
   if (userResult === null) {
     return <LoadingIndicator />;
@@ -157,36 +68,81 @@ export default function UsergroupCreationScreen({navigation, route}) {
     <Scaffold>
       <TextInput
         label="Name"
-        value={usergroup.name}
-        onChangeText={onChangeName}
+        value={usergroup?.name}
+        onChangeText={onNameChange}
       />
       <ListActions>
         <IconButton
           color={colors.primary}
           icon="account-plus-outline"
-          onPress={goUserSelection}
+          onPress={openUserSelection}
         />
       </ListActions>
-      <Divider style={styles.dividerStyle} />
       <FancyList
         title="Mitglieder"
         placeholder="Keine Mitglieder ausgewählt"
-        data={usergroup.users}
+        data={usergroup?.users ?? []}
         extraData={{removeCallback: removeUser}}
         component={UserCreationListItem}
       />
       <Button
         icon="check"
         mode="contained"
-        onPress={finishCreation}
+        onPress={submit}
         style={styles.buttonSpacing}>
         Fertig
       </Button>
     </Scaffold>
   );
+
+  function onNameChange(name) {
+    setUsergroup({...usergroup, name});
+  }
+
+  function removeUser(userId) {
+    const updatedUserList = usergroup.users.filter(
+      (user) => user.id !== userId,
+    );
+    setUsergroup({...usergroup, users: updatedUserList});
+  }
+
+  function openUserSelection() {
+    navigation.push('UserSelectionListScreen');
+  }
+
+  async function submit() {
+    // Validate date
+    if (!usergroup?.name) {
+      ToastAndroid.show('Es muss ein Name gewählt werden!', ToastAndroid.SHORT);
+      return;
+    }
+
+    // Prepare data for the backend
+    const userIds = [];
+    usergroup.users.forEach((user) => {
+      userIds.push({id: user.id});
+    });
+    const formattedUsergroup = {name: usergroup?.name, users: userIds};
+
+    // Send data
+    if (updatingExistingUsergroup) {
+      const result = await putUsergroup(usergroupId, formattedUsergroup);
+      if (result?.data) {
+        navigation.goBack();
+      } else {
+        console.log('Usergroup update failed:', result?.error);
+      }
+    } else {
+      const result = await postUsergroup(formattedUsergroup);
+      if (result?.data) {
+        navigation.goBack();
+      } else {
+        console.log('Usergroup creation failed:', result?.error);
+      }
+    }
+  }
 }
 
 const styles = StyleSheet.create({
-  dividerStyle: {marginBottom: 24, backgroundColor: 'black'},
   buttonSpacing: {marginTop: 16},
 });

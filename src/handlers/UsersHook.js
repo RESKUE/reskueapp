@@ -10,8 +10,18 @@ export default function useUsers() {
     const url = `${Config.APP_REST_BASE_URL}/user?${query}`;
     const options = {method: 'GET'};
     const policy = FetchPolicy.cacheAndNetwork;
-    await client.request(url, options, policy);
+    return await client.request(url, options, policy);
   }, [query, client]);
 
-  return {result, setQuery, requestUsers};
+  const getUsergroupUsers = React.useCallback(
+    async (id) => {
+      const url = `${Config.APP_REST_BASE_URL}/userGroup/${id}/users`;
+      const options = {method: 'GET'};
+      const policy = FetchPolicy.cacheAndNetwork;
+      return await client.request(url, options, policy);
+    },
+    [client],
+  );
+
+  return {result, setQuery, requestUsers, getUsergroupUsers};
 }

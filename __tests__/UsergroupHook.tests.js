@@ -8,25 +8,11 @@ test('request usergroup works correctly', async () => {
   const {result, waitForNextUpdate} = renderHook(() => useUsergroup());
 
   await act(async () => {
-    result.current.requestUsergroup(1);
+    result.current.getUsergroup(1);
     await waitForNextUpdate();
   });
 
   expect(result.current.usergroupResult.data).toMatchObject(networkData);
-});
-
-test('request usergroup users works correctly', async () => {
-  const networkData = [{name: 'user'}];
-  fetch.mockOnce(JSON.stringify(networkData));
-
-  const {result, waitForNextUpdate} = renderHook(() => useUsergroup());
-
-  await act(async () => {
-    result.current.requestUsergroupUsers(1);
-    await waitForNextUpdate();
-  });
-
-  expect(result.current.usersResult.data).toMatchObject(networkData);
 });
 
 test('delete usergroup works correctly', async () => {
@@ -35,7 +21,35 @@ test('delete usergroup works correctly', async () => {
 
   const {result} = renderHook(() => useUsergroup());
 
-  const response = await result.current.requestUsergroupDeletion(1);
+  const response = await result.current.deleteUsergroup(1);
 
   expect(response.data).toMatchObject(networkData);
+});
+
+test('post usergroup works correctly', async () => {
+  const networkData = {name: 'usergroup'};
+  fetch.mockOnce(JSON.stringify(networkData));
+
+  const {result, waitForNextUpdate} = renderHook(() => useUsergroup());
+
+  await act(async () => {
+    result.current.postUsergroup(networkData);
+    await waitForNextUpdate();
+  });
+
+  expect(result.current.usergroupResult.data).toMatchObject(networkData);
+});
+
+test('put usergroup works correctly', async () => {
+  const networkData = {name: 'usergroup'};
+  fetch.mockOnce(JSON.stringify(networkData));
+
+  const {result, waitForNextUpdate} = renderHook(() => useUsergroup());
+
+  await act(async () => {
+    result.current.putUsergroup(networkData);
+    await waitForNextUpdate();
+  });
+
+  expect(result.current.usergroupResult.data).toMatchObject(networkData);
 });
