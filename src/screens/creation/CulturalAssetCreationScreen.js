@@ -20,6 +20,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   const {requestAsset, post, put} = useAsset();
   const {requestAsset: requestParent} = useAsset();
 
+  const [submitting, setSubmitting] = React.useState(false);
   const [parentAsset, setParentAsset] = React.useState(null);
   const [culturalAsset, setCulturalAsset] = React.useState({});
 
@@ -87,18 +88,21 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         label="Name"
         value={culturalAsset.name}
         onChangeText={onNameChange}
+        disabled={submitting}
         testID="assetCreationScreenNameInput"
       />
       <TextInput
         label="Beschreibung"
         value={culturalAsset.description}
         onChangeText={onDescriptionChange}
+        disabled={submitting}
         testID="assetCreationScreenDescriptionInput"
       />
       <Button
         icon="map-marker"
         mode="contained"
         onPress={openLocationSelection}
+        disabled={submitting}
         style={styles.buttonSpacing}>
         Wähle Location
       </Button>
@@ -112,6 +116,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         label="Adresse"
         value={culturalAsset.address}
         onChangeText={onAddressChange}
+        disabled={submitting}
         style={styles.buttonSpacing}
         testID="assetCreationScreenAddressInput"
       />
@@ -119,6 +124,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         label="Besonderheiten bei Handhabung"
         value={culturalAsset.label}
         onChangeText={onLabelChange}
+        disabled={submitting}
         style={styles.inputSpacing}
       />
       <ListActions>
@@ -126,6 +132,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
           color={colors.primary}
           icon="plus-circle-outline"
           onPress={openParentSelection}
+          disabled={submitting}
         />
       </ListActions>
       <FancyList
@@ -156,6 +163,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         mode="contained"
         onPress={submit}
         style={styles.buttonSpacing}
+        loading={submitting}
         testID="assetCreationScreenSubmitButton">
         Fertig
       </Button>
@@ -195,11 +203,11 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }
 
   async function submit() {
+    // Validate user input
     if (!culturalAsset.name) {
       ToastAndroid.show('Bitte wähle einen Namen!', ToastAndroid.SHORT);
       return;
     }
-
     if (!culturalAsset.longitude && !culturalAsset.address) {
       ToastAndroid.show(
         'Bitte wähle Koordinaten oder eine Adresse aus!',
@@ -208,18 +216,22 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
       return;
     }
 
+    // Adjust data format
     if (parentAsset) {
       culturalAsset.culturalAssetParent = {id: parentAsset.id};
     } else {
       culturalAsset.culturalAssetParent = null;
     }
 
+    // Submit data
+    setSubmitting(true);
     if (updatingExistingAsset) {
       const updateResult = await put(culturalAsset.id, culturalAsset);
       if (updateResult?.data) {
         navigation.goBack();
       } else {
         console.log('Update failed:', updateResult?.error);
+        setSubmitting(false);
       }
     } else {
       const creationResult = await post(culturalAsset);
@@ -227,6 +239,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
         navigation.goBack();
       } else {
         console.log('Creation failed:', creationResult?.error);
+        setSubmitting(false);
       }
     }
   }
