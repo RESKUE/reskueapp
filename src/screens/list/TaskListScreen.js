@@ -18,10 +18,7 @@ import useRoles from '../../handlers/RolesHook';
 
 export default function TaskListScreen({navigation}) {
   function goTaskCreation() {
-    navigation.push('TaskCreationScreen', {
-      screenType: 'creation',
-      id: -1,
-    });
+    navigation.push('TaskCreationScreen');
   }
   const {colors} = useTheme();
   const {isAdmin} = useRoles();

@@ -20,7 +20,6 @@ import SubtaskListItem from '../../components/listItems/SubtaskListItem';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import FloatingWhiteButton from '../../components/FloatingWhiteButton';
 import useTask from '../../handlers/TaskHook';
-import useTaskCreation from '../../handlers/TaskCreationHook';
 import useTaskHelpers from '../../handlers/TaskHelpersHook';
 import useUserMe from '../../handlers/UserMeHook';
 import useSubtask from '../../handlers/SubtaskHook';
@@ -28,24 +27,26 @@ import useSubtasks from '../../handlers/SubtaksHook';
 import TaskStates from '../../models/TaskStates';
 
 export default function TaskDetailScreen({navigation, route}) {
-  const {clientRoles} = React.useContext(AuthContext);
-
   const [menuVisible, setMenuVisible] = React.useState(false);
-
   const [task, setTask] = React.useState(null);
   const [subtasks, setSubtasks] = React.useState(null);
   const [helpers, setHelpers] = React.useState(null);
   const [user, setUser] = React.useState(null);
 
+  const {clientRoles} = React.useContext(AuthContext);
   const {colors} = useTheme();
-  const {requestTask, requestTaskDeletion, getResult: taskResult} = useTask();
+  const {
+    result: taskResult,
+    get: getTask,
+    put: putTask,
+    del: delTask,
+  } = useTask();
   const {
     requestTaskHelpers,
     assignTaskHelper,
     removeTaskHelper,
     getResult: helpersResult,
   } = useTaskHelpers();
-  const {putTask} = useTaskCreation();
   const {requestSubtasks, result: subtaskResult} = useSubtasks();
   const {putSubtask} = useSubtask();
   const {requestUserMe, result: userResult} = useUserMe();
@@ -56,10 +57,10 @@ export default function TaskDetailScreen({navigation, route}) {
 
   useFocusEffect(
     React.useCallback(() => {
-      requestTask(route.params.id);
+      getTask(route.params.id);
       requestTaskHelpers(route.params.id);
       requestSubtasks(route.params.id);
-    }, [requestTask, requestTaskHelpers, requestSubtasks, route.params]),
+    }, [getTask, requestTaskHelpers, requestSubtasks, route.params]),
   );
 
   React.useEffect(() => {
@@ -239,15 +240,12 @@ export default function TaskDetailScreen({navigation, route}) {
 
   function goUpdate() {
     hideMenu();
-    navigation.push('TaskCreationScreen', {
-      screenType: 'update',
-      id: task.id,
-    });
+    navigation.push('TaskCreationScreen', {id: task.id});
   }
 
   async function deleteTask() {
     hideMenu();
-    const result = await requestTaskDeletion(task.id);
+    const result = await delTask(task.id);
     if (result.data?.deleted) {
       navigation.goBack();
     } else {
