@@ -1,14 +1,15 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import MapView, {PROVIDER_OSMDROID} from 'react-native-maps-osmdroid';
 import MapContainer from '../../components/MapContainer';
 import PinMarker from '../../components/PinMarker';
 import MarkerInfo from '../../components/MarkerInfo';
+import useRegion from '../../handlers/RegionHook';
 
 export default function LocationSelectionScreen({navigation, route}) {
-  const [location, setLocation] = React.useState(INITIAL_COORDINATE);
-  const lat = formatLatLng(location?.latitude ?? null);
-  const lng = formatLatLng(location?.longitude ?? null);
+  const {region: initialRegion} = useRegion();
+  const [location, setLocation] = React.useState(null);
 
   function onDrag(coordinate) {
     setLocation(coordinate);
@@ -18,13 +19,25 @@ export default function LocationSelectionScreen({navigation, route}) {
     navigation.navigate(route.params.parent, {location: location});
   }
 
+  if (!initialRegion) {
+    return <LoadingIndicator />;
+  }
+
+  const initialLocation = {
+    latitude: initialRegion.latitude,
+    longitude: initialRegion.longitude,
+  };
+
+  const lat = formatLatLng(location?.latitude ?? initialLocation.latitude);
+  const lng = formatLatLng(location?.longitude ?? initialLocation.longitude);
+
   return (
     <MapContainer>
       <MapView
         style={styles.map}
         provider={PROVIDER_OSMDROID}
-        initialRegion={INITIAL_REGION}>
-        <PinMarker coordinate={INITIAL_COORDINATE} onDrag={onDrag} />
+        initialRegion={initialRegion}>
+        <PinMarker coordinate={initialLocation} onDrag={onDrag} />
       </MapView>
       <MarkerInfo
         title="Koordinaten"
@@ -48,12 +61,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-const INITIAL_REGION = {
-  latitude: 48.99897,
-  longitude: 8.39991,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
-
-const INITIAL_COORDINATE = {latitude: 48.99897, longitude: 8.39991};

@@ -7,15 +7,18 @@ import {
   FilteringButton,
   RadioFilteringOption,
   SearchProvider,
+  LoadingIndicator,
 } from '@ilt-pse/react-native-kueres';
 import Priorities from '../../models/AssetPriorities';
 import useAssets from '../../handlers/AssetsHook';
 import MapContainer from '../../components/MapContainer';
 import AssetMarker from '../../components/AssetMarker';
 import MarkerInfo from '../../components/MarkerInfo';
+import useRegion from '../../handlers/RegionHook';
 
 export default function OverviewMapScreen() {
   const navigation = useNavigation();
+  const {region: initialRegion} = useRegion();
   const {result, setQuery, requestAssets} = useAssets();
   const [info, setInfo] = React.useState(null);
   const markers = generateMarkers(result?.data?.content || [], onMarkerPress);
@@ -48,13 +51,18 @@ export default function OverviewMapScreen() {
     });
   }
 
+  if (!initialRegion) {
+    <LoadingIndicator />;
+  }
+
   return (
     <>
       <MapContainer>
         <MapView
           style={styles.map}
           provider={PROVIDER_OSMDROID}
-          initialRegion={INITIAL_REGION}
+          initialRegion={initialRegion}
+          followsUserLocation={true}
           onPress={onMapPress}>
           {markers}
         </MapView>
@@ -134,10 +142,3 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
-
-const INITIAL_REGION = {
-  latitude: 48.99897,
-  longitude: 8.39991,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
