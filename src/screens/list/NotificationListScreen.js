@@ -57,6 +57,10 @@ export default function NotificationListScreen({navigation}) {
   );
 
   function onPress(id) {
-    navigation.push('NotificationDetailScreen', {id: id});
+    navigation.navigate({
+      name: 'NotificationDetailScreen',
+      key: id,
+      params: {id: id},
+    });
   }
 }

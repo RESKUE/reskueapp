@@ -44,7 +44,11 @@ export default function NotificationDetailScreen({navigation, route}) {
   );
 
   function onPress() {
-    navigation.push('CulturalAssetDetailScreen', {id: content.entity});
+    navigation.navigate({
+      name: 'CulturalAssetDetailScreen',
+      key: content.entity,
+      params: {id: content.entity},
+    });
   }
 }
 

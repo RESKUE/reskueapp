@@ -41,7 +41,11 @@ export default function OverviewMapScreen() {
   }
 
   function onMore() {
-    navigation.push('CulturalAssetDetailScreen', {id: info.identifier});
+    navigation.navigate({
+      name: 'CulturalAssetDetailScreen',
+      key: info.identifier,
+      params: {id: info.identifier},
+    });
   }
 
   return (

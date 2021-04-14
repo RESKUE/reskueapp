@@ -17,7 +17,7 @@ import useUsergroups from '../../handlers/UsergroupsHook';
 import useRoles from '../../handlers/RolesHook';
 
 export default function UsergroupListScreen({navigation}) {
-  const goGroupCreation = () => navigation.push('UsergroupCreationScreen');
+  const goGroupCreation = () => navigation.navigate('UsergroupCreationScreen');
   const {colors} = useTheme();
   const {requestUserMe, result: userResult} = useUserMe();
   const {isAdmin} = useRoles();

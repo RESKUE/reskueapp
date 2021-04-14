@@ -18,7 +18,8 @@ import {
 } from '@ilt-pse/react-native-kueres';
 
 export default function CulturalAssetListScreen({navigation}) {
-  const goAssetCreation = () => navigation.push('CulturalAssetCreationScreen');
+  const goAssetCreation = () =>
+    navigation.navigate('CulturalAssetCreationScreen');
   const {colors} = useTheme();
   const {result, setQuery, requestAssets} = useAssets();
   const {isAdmin} = useRoles();

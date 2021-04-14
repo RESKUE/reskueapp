@@ -207,7 +207,7 @@ export default function TaskCreationScreen({navigation, route}) {
   }
 
   function openAssetSelection() {
-    navigation.push('AssetSelectionScreen', {
+    navigation.navigate('AssetSelectionScreen', {
       previousRouteName: 'TaskCreationScreen',
     });
   }

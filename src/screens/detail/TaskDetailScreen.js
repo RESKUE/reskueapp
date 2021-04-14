@@ -89,12 +89,14 @@ export default function TaskDetailScreen({navigation, route}) {
   }, [helpersResult]);
 
   const goMap = () =>
-    navigation.push('CulturalAssetMapScreen', {
+    navigation.navigate('CulturalAssetMapScreen', {
       id: taskResult.data.culturalAsset,
     });
   const goAsset = () =>
-    navigation.push('CulturalAssetDetailScreen', {
-      id: taskResult.data.culturalAsset,
+    navigation.navigate({
+      name: 'CulturalAssetDetailScreen',
+      key: taskResult.data.culturalAsset,
+      params: {id: taskResult.data.culturalAsset},
     });
 
   if (!task || !subtasks) {
@@ -240,7 +242,7 @@ export default function TaskDetailScreen({navigation, route}) {
 
   function goUpdate() {
     hideMenu();
-    navigation.push('TaskCreationScreen', {id: task.id});
+    navigation.navigate('TaskCreationScreen', {id: task.id});
   }
 
   async function deleteTask() {
@@ -356,7 +358,7 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   function openComments() {
-    navigation.push('CommentListScreen', {taskId: task.id});
+    navigation.navigate('CommentListScreen', {taskId: task.id});
   }
 }
 

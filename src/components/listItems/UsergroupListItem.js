@@ -16,6 +16,10 @@ export default function UsergroupListItem({testID, data}) {
   );
 
   function onPress() {
-    navigation.push('UsergroupDetailScreen', {id: data.id});
+    navigation.navigate({
+      name: 'UsergroupDetailScreen',
+      key: data.id,
+      params: {id: data.id},
+    });
   }
 }

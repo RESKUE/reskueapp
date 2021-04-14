@@ -19,6 +19,10 @@ export default function TaskListItem({testID, data}) {
   );
 
   function onPress() {
-    navigation.push('TaskDetailScreen', {id: data.id});
+    navigation.navigate({
+      name: 'TaskDetailScreen',
+      key: data.id,
+      params: {id: data.id},
+    });
   }
 }

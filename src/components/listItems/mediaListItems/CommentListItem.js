@@ -44,9 +44,10 @@ export default function CommentListItem({data, extraData}) {
   );
 
   function openMedia(mediaId, mimeType) {
-    navigation.push('MediaDetailScreen', {
-      mediaId: mediaId,
-      mimeType: mimeType,
+    navigation.navigate({
+      name: 'MediaDetailScreen',
+      key: mediaId,
+      params: {mediaId: mediaId, mimeType: mimeType},
     });
   }
 

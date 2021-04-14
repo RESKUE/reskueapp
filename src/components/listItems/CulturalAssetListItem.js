@@ -29,6 +29,10 @@ export default function CulturalAssetListItem({testID, data}) {
   }
 
   function onPress() {
-    navigation.push('CulturalAssetDetailScreen', {id: data.id});
+    navigation.navigate({
+      name: 'CulturalAssetDetailScreen',
+      key: data.id,
+      params: {id: data.id},
+    });
   }
 }

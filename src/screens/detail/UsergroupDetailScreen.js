@@ -75,7 +75,7 @@ export default function UsergroupDetailScreen({navigation, route}) {
 
   function goUpdate() {
     hideMenu();
-    navigation.push('UsergroupCreationScreen', {
+    navigation.navigate('UsergroupCreationScreen', {
       id: usergroup.id,
     });
   }

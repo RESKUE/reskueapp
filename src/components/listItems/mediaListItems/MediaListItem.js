@@ -31,9 +31,10 @@ export default function MediaListItem({testID, data}) {
   );
 
   function onPress() {
-    navigation.push('MediaDetailScreen', {
-      mediaId: data.id,
-      mimeType: data.mimeType,
+    navigation.navigate({
+      name: 'MediaDetailScreen',
+      key: data.id,
+      params: {mediaId: data.id, mimeType: data.mimeType},
     });
   }
 }

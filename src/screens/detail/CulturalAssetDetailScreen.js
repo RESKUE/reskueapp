@@ -234,16 +234,20 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function goMap() {
-    navigation.push('CulturalAssetMapScreen', {id: culturalAsset.id});
+    navigation.navigate('CulturalAssetMapScreen', {id: culturalAsset.id});
   }
 
   function goAssetGroup() {
-    navigation.push('CulturalAssetDetailScreen', {id: parentAsset.id});
+    navigation.navigate({
+      name: 'CulturalAssetDetailScreen',
+      key: parentAsset.id,
+      params: {id: parentAsset.id},
+    });
   }
 
   function goUpdate() {
     hideMenu();
-    navigation.push('CulturalAssetCreationScreen', {
+    navigation.navigate('CulturalAssetCreationScreen', {
       screenType: 'update',
       id: culturalAsset.id,
     });
@@ -272,17 +276,17 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   }
 
   function goTaskCreation() {
-    navigation.push('TaskCreationScreen', {
+    navigation.navigate('TaskCreationScreen', {
       selectedAsset: culturalAsset,
     });
   }
 
   function goMedia() {
-    navigation.push('MediaListScreen', {assetId: culturalAsset.id});
+    navigation.navigate('MediaListScreen', {assetId: culturalAsset.id});
   }
 
   function goComments() {
-    navigation.push('CommentListScreen', {assetId: culturalAsset.id});
+    navigation.navigate('CommentListScreen', {assetId: culturalAsset.id});
   }
 }
 

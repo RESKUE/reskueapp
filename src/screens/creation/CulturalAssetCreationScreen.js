@@ -191,13 +191,13 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }
 
   function openLocationSelection() {
-    navigation.push('LocationSelectionScreen', {
+    navigation.navigate('LocationSelectionScreen', {
       parent: 'CulturalAssetCreationScreen',
     });
   }
 
   function openParentSelection() {
-    navigation.push('AssetSelectionScreen', {
+    navigation.navigate('AssetSelectionScreen', {
       previousRouteName: 'CulturalAssetCreationScreen',
     });
   }

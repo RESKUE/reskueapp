@@ -89,13 +89,13 @@ export default function NotificationCreationScreen({navigation, route}) {
   }
 
   function openAssetSelection() {
-    navigation.push('AssetSelectionScreen', {
+    navigation.navigate('AssetSelectionScreen', {
       previousRouteName: 'NotificationCreationScreen',
     });
   }
 
   function openGroupSelection() {
-    navigation.push('GroupSelectionScreen', {
+    navigation.navigate('GroupSelectionScreen', {
       previousRouteName: 'NotificationCreationScreen',
     });
   }
