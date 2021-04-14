@@ -43,20 +43,13 @@ export default function TaskCreationScreen({navigation, route}) {
     }
 
     setLoading(false);
-  }, [
-    taskId,
-    getTask,
-    requestAsset,
-    getSubtasks,
-  ]);
+  }, [taskId, getTask, requestAsset, getSubtasks]);
 
   // Load existing task data if an existing task is updated
   React.useEffect(() => {
     if (updatingExistingTask) {
       fetchExistingData();
-    }
-    else
-    {
+    } else {
       setLoading(false);
     }
   }, [updatingExistingTask, fetchExistingData]);
@@ -96,7 +89,7 @@ export default function TaskCreationScreen({navigation, route}) {
       <ListActions>
         <IconButton
           color={colors.primary}
-          icon="plus-circle-outline"
+          icon={getIconName()}
           onPress={openAssetSelection}
           disabled={submitting}
         />
@@ -138,6 +131,14 @@ export default function TaskCreationScreen({navigation, route}) {
     </Scaffold>
   );
 
+  function getIconName() {
+    if (asset?.length) {
+      return 'circle-edit-outline';
+    } else {
+      return 'plus-circle-outline';
+    }
+  }
+
   function onNameChange(name) {
     setTask({...task, name});
   }
@@ -164,9 +165,7 @@ export default function TaskCreationScreen({navigation, route}) {
   function removeSubtask(subtaskId) {
     const updatedSubtasks = [...subtasks];
     updatedSubtasks.splice(
-      updatedSubtasks.findIndex(
-        (subtask) => subtask.id === subtaskId,
-      ),
+      updatedSubtasks.findIndex((subtask) => subtask.id === subtaskId),
       1,
     );
     setSubtasks(updatedSubtasks);
@@ -174,18 +173,14 @@ export default function TaskCreationScreen({navigation, route}) {
 
   function onSubtaskTextChange(subtaskId, text) {
     const updatedSubtasks = [...subtasks];
-    const index = subtasks.findIndex(
-      (subtask) => subtask.id === subtaskId,
-    );
+    const index = subtasks.findIndex((subtask) => subtask.id === subtaskId);
     updatedSubtasks[index].text = text;
     setSubtasks(updatedSubtasks);
   }
 
   function onSubtaskIsRequiredChange(subtaskId, isRequired) {
     const updatedSubtasks = [...subtasks];
-    const index = subtasks.findIndex(
-      (subtask) => subtask.id === subtaskId,
-    );
+    const index = subtasks.findIndex((subtask) => subtask.id === subtaskId);
     updatedSubtasks[index].isRequired = isRequired;
     setSubtasks(updatedSubtasks);
   }
@@ -218,8 +213,7 @@ export default function TaskCreationScreen({navigation, route}) {
     if (subtasks.length) {
       subtasks.forEach((subtask) => {
         //Remove local ids
-        if(subtask.id < 0)
-        {
+        if (subtask.id < 0) {
           delete subtask.id;
         }
         delete subtask.task;
