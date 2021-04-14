@@ -142,29 +142,6 @@ export default function TaskDetailScreen({navigation, route}) {
         );
       }
     }
-
-    //If the user is a helper he can finish the task
-    if (isUserHelper()) {
-      return (
-        <Card.Actions>
-          <Button color={colors.primary} onPress={onCompleteTask}>
-            Beenden
-          </Button>
-          <Button color={colors.redish} onPress={onCancelTask}>
-            Abbrechen
-          </Button>
-        </Card.Actions>
-      );
-    }
-
-    //If the user isn't a helper he start working on the task
-    return (
-      <Card.Actions>
-        <Button color={colors.primary} onPress={onBeginTask}>
-          Aufgabe annehmen
-        </Button>
-      </Card.Actions>
-    );
   };
 
   return (

@@ -128,7 +128,7 @@ export default function TaskCreationScreen({navigation, route}) {
         mode="contained"
         onPress={submit}
         loading={submitting}
-        style={styles.buttonSpacing}>
+        style={styles.buttonSpacing}
         testID="creationDoneButton">
         Fertig
       </Button>

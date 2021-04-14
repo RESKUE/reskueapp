@@ -49,6 +49,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   } = useAssetChildren();
   const {requestAssetTasks, result: taskResult} = useAssetTasks();
   const {get: requestCover, result: coverResult} = useMedias();
+  const {isAdmin} = useRoles();
 
   const fetchData = React.useCallback(() => {
     requestAsset(assetId);
