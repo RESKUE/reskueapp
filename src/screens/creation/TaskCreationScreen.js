@@ -221,7 +221,7 @@ export default function TaskCreationScreen({navigation, route}) {
 
   async function submit() {
     // Validate data
-    if (!task?.name || !task?.culturalAsset) {
+    if (!task?.name || !asset?.length) {
       ToastAndroid.show(
         'Es muss ein Name und ein zugehöriges Kulturgut gewählt werden!',
         ToastAndroid.SHORT,
@@ -230,20 +230,23 @@ export default function TaskCreationScreen({navigation, route}) {
     }
 
     // Adjust data format for backend
-    task.culturalAsset = {id: task?.culturalAsset?.id};
-    task.subtasks.forEach((subtask) => {
-      delete subtask.localId;
-    });
-    task.subtasks.forEach((subtask) => {
-      delete subtask.task;
-    });
+    task.culturalAsset = {id: asset[0].id};
+    if(task.subtasks)
+    {
+      task.subtasks.forEach((subtask) => {
+        delete subtask.localId;
+      });
+      task.subtasks.forEach((subtask) => {
+        delete subtask.task;
+      });
+    }
 
     // Send data
     setSubmitting(true);
 
     if (updatingExistingTask) {
       console.log('Updating task:', task);
-      const taskResult = await putTask(task.id, task);
+      const taskResult = await putTask(taskId, task);
 
       if (taskResult?.data) {
         navigation.goBack();

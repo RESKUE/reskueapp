@@ -148,7 +148,7 @@ export default function TaskDetailScreen({navigation, route}) {
           </View>
         )}
         <Divider />
-        {!!taskResult.culturalAsset && (
+        {!!taskResult.data.culturalAsset && (
           <Card.Actions>
             <Button
               color={colors.primary}
