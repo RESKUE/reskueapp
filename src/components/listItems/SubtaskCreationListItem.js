@@ -12,13 +12,13 @@ export default function SubtaskCreationListItem({data, extraData}) {
   const {colors} = useTheme();
 
   function setIsRequired(isRequired) {
-    extraData.changeIsRequiredCallback(data.localId, isRequired);
+    extraData.changeIsRequiredCallback(data.id, isRequired);
   }
   function onChangeText(updatedText) {
-    extraData.changeTextCallback(data.localId, updatedText);
+    extraData.changeTextCallback(data.id, updatedText);
   }
   function deleteSubtask() {
-    extraData.removeCallback(data.localId);
+    extraData.removeCallback(data.id);
   }
 
   return (

@@ -15,10 +15,12 @@ export default function TaskCreationScreen({navigation, route}) {
   const taskId = route.params?.id ?? null;
   const updatingExistingTask = taskId !== null;
 
+  const [loading, setLoading] = React.useState(true);
   const [submitting, setSubmitting] = React.useState(false);
   const [task, setTask] = React.useState();
   const [asset, setAsset] = React.useState(null);
-  const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(0);
+  const [subtasks, setSubtasks] = React.useState([]);
+  const [subtaskIdCounter, setSubtaskIdCounter] = React.useState(-1);
 
   const {colors} = useTheme();
   const {requestAsset} = useAsset();
@@ -32,21 +34,20 @@ export default function TaskCreationScreen({navigation, route}) {
 
     if (baseTaskResult.data.culturalAsset) {
       const assetResult = await requestAsset(baseTaskResult.data.culturalAsset);
-      onAssetChange(assetResult.data);
+      setAsset([assetResult.data]);
     }
 
     if (baseTaskResult.data.subtasks.length > 0) {
       const subtasksResult = await getSubtasks(baseTaskResult.data.id);
       setSubtasks(subtasksResult.data.content);
     }
+
+    setLoading(false);
   }, [
     taskId,
     getTask,
-    setTask,
     requestAsset,
-    onAssetChange,
     getSubtasks,
-    setSubtasks,
   ]);
 
   // Load existing task data if an existing task is updated
@@ -54,35 +55,20 @@ export default function TaskCreationScreen({navigation, route}) {
     if (updatingExistingTask) {
       fetchExistingData();
     }
+    else
+    {
+      setLoading(false);
+    }
   }, [updatingExistingTask, fetchExistingData]);
 
   // A cultural asset has been selected by the user or pre submitted to the screen.
   React.useEffect(() => {
     if (selectedAsset) {
-      onAssetChange(selectedAsset);
+      setAsset([selectedAsset]);
     }
-  }, [onAssetChange, selectedAsset]);
+  }, [selectedAsset]);
 
-  const onAssetChange = React.useCallback(
-    (updatedAsset) => {
-      const updatedTask = {...task};
-      if (updatedAsset) {
-        updatedTask.culturalAsset = updatedAsset;
-        setAsset([updatedAsset]);
-      }
-      setTask(updatedTask);
-    },
-    [task],
-  );
-
-  const setSubtasks = React.useCallback(
-    (subtasks) => {
-      setTask({...task, subtasks});
-    },
-    [task],
-  );
-
-  if (selectedAsset && !asset) {
+  if (loading) {
     return <LoadingIndicator />;
   }
 
@@ -133,7 +119,7 @@ export default function TaskCreationScreen({navigation, route}) {
       <FancyList
         title="Teilaufgaben"
         placeholder="Keine Teilaufgaben vorhanden"
-        data={task?.subtasks ?? []}
+        data={subtasks ?? []}
         extraData={{
           removeCallback: removeSubtask,
           changeTextCallback: onSubtaskTextChange,
@@ -166,44 +152,42 @@ export default function TaskCreationScreen({navigation, route}) {
 
   function addSubtask() {
     const emptySubtask = {
-      localId: subtaskIdCounter,
+      id: subtaskIdCounter,
       state: 0,
       text: '',
       isRequired: false,
     };
-    const oldSubtasks = task?.subtasks ?? [];
-    const updatedTask = {...task, subtasks: oldSubtasks.concat([emptySubtask])};
-    setSubtaskIdCounter(subtaskIdCounter + 1);
-    setTask(updatedTask);
+    setSubtaskIdCounter(subtaskIdCounter - 1);
+    setSubtasks(subtasks.concat([emptySubtask]));
   }
 
   function removeSubtask(subtaskId) {
-    const updatedTask = {...task};
-    updatedTask.subtasks.splice(
-      updatedTask.subtasks.findIndex(
-        (subtask) => subtask.localId === subtaskId,
+    const updatedSubtasks = [...subtasks];
+    updatedSubtasks.splice(
+      updatedSubtasks.findIndex(
+        (subtask) => subtask.id === subtaskId,
       ),
       1,
     );
-    setTask(updatedTask);
+    setSubtasks(updatedSubtasks);
   }
 
   function onSubtaskTextChange(subtaskId, text) {
-    const updatedTask = {...task};
-    const index = updatedTask.subtasks.findIndex(
-      (subtask) => subtask.localId === subtaskId,
+    const updatedSubtasks = [...subtasks];
+    const index = subtasks.findIndex(
+      (subtask) => subtask.id === subtaskId,
     );
-    updatedTask.subtasks[index].text = text;
-    setTask(updatedTask);
+    updatedSubtasks[index].text = text;
+    setSubtasks(updatedSubtasks);
   }
 
   function onSubtaskIsRequiredChange(subtaskId, isRequired) {
-    const updatedTask = {...task};
-    const index = updatedTask.subtasks.findIndex(
-      (subtask) => subtask.localId === subtaskId,
+    const updatedSubtasks = [...subtasks];
+    const index = subtasks.findIndex(
+      (subtask) => subtask.id === subtaskId,
     );
-    updatedTask.subtasks[index].isRequired = isRequired;
-    setTask(updatedTask);
+    updatedSubtasks[index].isRequired = isRequired;
+    setSubtasks(updatedSubtasks);
   }
 
   function openAssetSelection() {
@@ -231,13 +215,16 @@ export default function TaskCreationScreen({navigation, route}) {
 
     // Adjust data format for backend
     task.culturalAsset = {id: asset[0].id};
-    if (task.subtasks) {
-      task.subtasks.forEach((subtask) => {
-        delete subtask.localId;
-      });
-      task.subtasks.forEach((subtask) => {
+    if (subtasks.length) {
+      subtasks.forEach((subtask) => {
+        //Remove local ids
+        if(subtask.id < 0)
+        {
+          delete subtask.id;
+        }
         delete subtask.task;
       });
+      task.subtasks = subtasks;
     }
 
     // Send data
