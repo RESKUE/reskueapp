@@ -71,7 +71,11 @@ export default function TaskDetailScreen({navigation, route}) {
 
   React.useEffect(() => {
     if (subtaskResult?.data) {
-      setSubtasks(subtaskResult.data.content);
+      const subtaskData = subtaskResult.data.content;
+      subtaskData.sort((subtask1, subtask2) =>
+        subtask1.id < subtask2.id ? -1 : 1,
+      );
+      setSubtasks(subtaskData);
     }
   }, [subtaskResult]);
 
@@ -307,7 +311,7 @@ export default function TaskDetailScreen({navigation, route}) {
   async function onCancelTask() {
     const updatedState = Math.max(2, task.state);
     const putBody = {state: updatedState};
-    const result = await putTask(task.data.id, putBody);
+    const result = await putTask(task.id, putBody);
     if (result.data) {
       setTask(result.data);
     } else {
@@ -317,7 +321,7 @@ export default function TaskDetailScreen({navigation, route}) {
 
     const updateResult = await removeTaskHelper(task.id, user.id);
     if (updateResult?.data) {
-      requestTaskHelpers(updateResult.id);
+      requestTaskHelpers(updateResult.data.id);
     } else {
       console.log('Remove helper failed:', updateResult, updateResult?.error);
     }
@@ -349,12 +353,13 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   function canComplete() {
-    task.subtasks.forEach((subtask) => {
+    var completable = true;
+    subtasks.forEach((subtask) => {
       if (subtask.state === 0 && subtask.isRequired) {
-        return false;
+        completable = false;
       }
     });
-    return true;
+    return completable;
   }
 
   function openComments() {
