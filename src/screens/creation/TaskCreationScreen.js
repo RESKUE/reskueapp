@@ -231,8 +231,7 @@ export default function TaskCreationScreen({navigation, route}) {
 
     // Adjust data format for backend
     task.culturalAsset = {id: asset[0].id};
-    if(task.subtasks)
-    {
+    if (task.subtasks) {
       task.subtasks.forEach((subtask) => {
         delete subtask.localId;
       });
