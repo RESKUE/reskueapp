@@ -2,11 +2,7 @@ import React from 'react';
 import Config from 'react-native-config';
 import {StyleSheet, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {
-  AuthContext,
-  FancyList,
-  LoadingIndicator,
-} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 import TaskListItem from '../../components/listItems/TaskListItem';
@@ -17,6 +13,7 @@ import useAsset from '../../handlers/AssetHook';
 import useAssetChildren from '../../handlers/AssetChildrenHook';
 import useAssetTasks from '../../handlers/AssetTasksHook';
 import useMedias from '../../handlers/MediasHook';
+import useRoles from '../../handlers/RolesHook';
 import {
   useTheme,
   Button,
@@ -38,7 +35,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   const assetId = route.params.id;
 
-  const {clientRoles} = React.useContext(AuthContext);
+  const {isAdmin} = useRoles();
   const {colors} = useTheme();
   const {requestAsset, remove, put, result: assetResult} = useAsset();
   const {
@@ -186,7 +183,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   );
 
   function buildMenu(props) {
-    if (clientRoles.includes('administrator')) {
+    if (isAdmin) {
       return (
         <Menu
           visible={menuVisible}

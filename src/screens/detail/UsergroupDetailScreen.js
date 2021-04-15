@@ -2,15 +2,12 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {Card, IconButton, Menu} from 'react-native-paper';
-import {
-  AuthContext,
-  FancyList,
-  LoadingIndicator,
-} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import useUsergroup from '../../handlers/UsergroupHook';
 import useUsers from '../../handlers/UsersHook';
+import useRoles from '../../handlers/RolesHook';
 
 export default function UsergroupDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
@@ -19,7 +16,7 @@ export default function UsergroupDetailScreen({navigation, route}) {
   const {result: usersResult, getUsergroupUsers} = useUsers();
   const {usergroupResult, getUsergroup, deleteUsergroup} = useUsergroup();
 
-  const {clientRoles} = React.useContext(AuthContext);
+  const {isAdmin} = useRoles();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -58,7 +55,7 @@ export default function UsergroupDetailScreen({navigation, route}) {
     </Scaffold>
   );
   function buildMenu(props) {
-    if (clientRoles.includes('administrator')) {
+    if (isAdmin) {
       return (
         <Menu
           visible={menuVisible}

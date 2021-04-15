@@ -10,11 +10,7 @@ import {
   Menu,
   Paragraph,
 } from 'react-native-paper';
-import {
-  AuthContext,
-  FancyList,
-  LoadingIndicator,
-} from '@ilt-pse/react-native-kueres';
+import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import SubtaskListItem from '../../components/listItems/SubtaskListItem';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
@@ -25,6 +21,7 @@ import useUserMe from '../../handlers/UserMeHook';
 import useSubtask from '../../handlers/SubtaskHook';
 import useSubtasks from '../../handlers/SubtasksHook';
 import TaskStates from '../../models/TaskStates';
+import useRoles from '../../handlers/RolesHook';
 
 export default function TaskDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
@@ -33,7 +30,7 @@ export default function TaskDetailScreen({navigation, route}) {
   const [helpers, setHelpers] = React.useState(null);
   const [user, setUser] = React.useState(null);
 
-  const {clientRoles} = React.useContext(AuthContext);
+  const {isAdmin} = useRoles();
   const {colors} = useTheme();
   const {
     result: taskResult,
@@ -203,7 +200,7 @@ export default function TaskDetailScreen({navigation, route}) {
   );
 
   function buildMenu(props) {
-    if (clientRoles.includes('administrator')) {
+    if (isAdmin) {
       return (
         <Menu
           visible={menuVisible}
