@@ -70,10 +70,10 @@ const styles = StyleSheet.create({
 
 function reprType(type) {
   if (type === 1) {
-    return 'Alarm';
+    return 'Info';
   }
   if (type === 2) {
-    return 'Info';
+    return 'Alarm';
   }
   return 'Sonstiges';
 }

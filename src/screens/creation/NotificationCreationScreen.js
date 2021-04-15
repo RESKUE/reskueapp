@@ -31,8 +31,8 @@ export default function NotificationCreationScreen({navigation, route}) {
         style={styles.spacing}
         initialValue={1}
         onSelectionChanged={setType}>
-        <FancyToggle label="Alarm" value={1} />
-        <FancyToggle label="Info" value={2} />
+        <FancyToggle label="Alarm" value={2} />
+        <FancyToggle label="Info" value={1} />
       </FancyToggle.Row>
       <TextInput
         label="Titel*"
