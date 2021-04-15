@@ -37,9 +37,11 @@ export default function CommentListItem({data, extraData}) {
           })}
         </Card.Actions>
       </Card>
-      <Menu visible={!!anchor} onDismiss={hideMenu} anchor={anchor}>
-        <Menu.Item disabled={!canDelete} onPress={del} title="Delete" />
-      </Menu>
+      {canDelete && (
+        <Menu visible={!!anchor} onDismiss={hideMenu} anchor={anchor}>
+          <Menu.Item onPress={del} title="Delete" />
+        </Menu>
+      )}
     </>
   );
 
