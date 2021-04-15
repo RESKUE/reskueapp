@@ -1,6 +1,6 @@
 import {PermissionsAndroid} from 'react-native';
 import React from 'react';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import usePermission from './PermissionHook';
 
 export default function useRegion(delta, fallback) {
@@ -17,12 +17,29 @@ export default function useRegion(delta, fallback) {
 
   React.useEffect(() => {
     if (granted === true) {
-      Geolocation.getCurrentPosition((info) =>
-        setRegion({
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-          ...(delta ?? DEFAULT_DELTA),
-        }),
+      Geolocation.getCurrentPosition(
+        (info) => {
+          console.log('Current position:', info);
+          setRegion({
+            latitude: info.coords.latitude,
+            longitude: info.coords.longitude,
+            ...(delta ?? DEFAULT_DELTA),
+          });
+        },
+        (error) => {
+          console.log(
+            'Failed to get current position:',
+            error.code,
+            error.message,
+          );
+          setRegion(fallback ?? DEFAULT_COORDS);
+        },
+        {
+          // Do not cache the previous location
+          maximumAge: 0,
+          // Timeout location fetching after 30 seconds
+          timeout: 30000,
+        },
       );
     } else if (granted === false) {
       setRegion(fallback ?? DEFAULT_COORDS);
