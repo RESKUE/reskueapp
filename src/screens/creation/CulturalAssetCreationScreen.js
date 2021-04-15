@@ -204,6 +204,13 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
 
   async function submit() {
     // Validate user input
+    if (parentAsset && parentAsset.level >= 3) {
+      ToastAndroid.show(
+        'Für diese Obergruppe wurde bereits die maximale Tiefe erreicht. Wähle ein anderes Kulturgut!',
+        ToastAndroid.LONG,
+      );
+      return;
+    }
     if (!culturalAsset.name) {
       ToastAndroid.show('Bitte wähle einen Namen!', ToastAndroid.SHORT);
       return;
