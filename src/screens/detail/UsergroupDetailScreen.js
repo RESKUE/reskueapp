@@ -2,7 +2,11 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {Card, IconButton, Menu} from 'react-native-paper';
-import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  AuthContext,
+  FancyList,
+  LoadingIndicator,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import UserUnpressableListItem from '../../components/listItems/UserUnpressableListItem';
 import useUsergroup from '../../handlers/UsergroupHook';
@@ -14,6 +18,8 @@ export default function UsergroupDetailScreen({navigation, route}) {
   const [users, setUsers] = React.useState(null);
   const {result: usersResult, getUsergroupUsers} = useUsers();
   const {usergroupResult, getUsergroup, deleteUsergroup} = useUsergroup();
+
+  const {clientRoles} = React.useContext(AuthContext);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -52,17 +58,21 @@ export default function UsergroupDetailScreen({navigation, route}) {
     </Scaffold>
   );
   function buildMenu(props) {
-    return (
-      <Menu
-        visible={menuVisible}
-        onDismiss={hideMenu}
-        anchor={
-          <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
-        }>
-        <Menu.Item onPress={goUpdate} title="Bearbeiten" />
-        <Menu.Item onPress={onDeleteUsergroup} title="Löschen" />
-      </Menu>
-    );
+    if (clientRoles.includes('administrator')) {
+      return (
+        <Menu
+          visible={menuVisible}
+          onDismiss={hideMenu}
+          anchor={
+            <IconButton {...props} icon="dots-vertical" onPress={showMenu} />
+          }>
+          <Menu.Item onPress={goUpdate} title="Bearbeiten" />
+          <Menu.Item onPress={onDeleteUsergroup} title="Löschen" />
+        </Menu>
+      );
+    } else {
+      return null;
+    }
   }
 
   function showMenu() {

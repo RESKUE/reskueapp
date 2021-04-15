@@ -2,7 +2,11 @@ import React from 'react';
 import Config from 'react-native-config';
 import {StyleSheet, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {FancyList, LoadingIndicator} from '@ilt-pse/react-native-kueres';
+import {
+  AuthContext,
+  FancyList,
+  LoadingIndicator,
+} from '@ilt-pse/react-native-kueres';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import CulturalAssetListItem from '../../components/listItems/CulturalAssetListItem';
 import TaskListItem from '../../components/listItems/TaskListItem';
@@ -34,6 +38,7 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
 
   const assetId = route.params.id;
 
+  const {clientRoles} = React.useContext(AuthContext);
   const {colors} = useTheme();
   const {requestAsset, remove, put, result: assetResult} = useAsset();
   const {
@@ -181,38 +186,42 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   );
 
   function buildMenu(props) {
-    return (
-      <Menu
-        visible={menuVisible}
-        onDismiss={hideMenu}
-        anchor={
-          <IconButton
-            {...props}
-            icon="dots-vertical"
-            onPress={showMenu}
-            testID="assetDetailScreenMenuButton"
+    if (clientRoles.includes('administrator')) {
+      return (
+        <Menu
+          visible={menuVisible}
+          onDismiss={hideMenu}
+          anchor={
+            <IconButton
+              {...props}
+              icon="dots-vertical"
+              onPress={showMenu}
+              testID="assetDetailScreenMenuButton"
+            />
+          }>
+          <Menu.Item
+            onPress={toggleIsEndangered}
+            title={
+              culturalAsset.isEndangered
+                ? 'Entferne in Gefahr'
+                : 'Markiere in Gefahr'
+            }
           />
-        }>
-        <Menu.Item
-          onPress={toggleIsEndangered}
-          title={
-            culturalAsset.isEndangered
-              ? 'Entferne in Gefahr'
-              : 'Markiere in Gefahr'
-          }
-        />
-        <Menu.Item
-          onPress={goUpdate}
-          title="Bearbeiten"
-          testID="assetDetailScreenEditButton"
-        />
-        <Menu.Item
-          onPress={deleteAsset}
-          title="Löschen"
-          testID="assetDetailScreenDeleteButton"
-        />
-      </Menu>
-    );
+          <Menu.Item
+            onPress={goUpdate}
+            title="Bearbeiten"
+            testID="assetDetailScreenEditButton"
+          />
+          <Menu.Item
+            onPress={deleteAsset}
+            title="Löschen"
+            testID="assetDetailScreenDeleteButton"
+          />
+        </Menu>
+      );
+    } else {
+      return null;
+    }
   }
 
   function getSubtitle() {
