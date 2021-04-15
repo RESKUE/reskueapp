@@ -8,6 +8,9 @@ buildscript {
         targetSdkVersion = 29
         supportLibVersion = "29.0.0"
         kotlinVersion = "1.4.31"
+
+        // Optional, used for better location detection
+        googlePlayServicesVersion = "17.0.0"
     }
     repositories {
         google()
