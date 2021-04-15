@@ -207,6 +207,13 @@ export default function TaskCreationScreen({navigation, route}) {
       );
       return;
     }
+    if (!subtasksHaveText()) {
+      ToastAndroid.show(
+        'Es muss ein Text für jede Teilaufgabe angegeben werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
 
     // Adjust data format for backend
     task.culturalAsset = {id: asset[0].id};
@@ -247,6 +254,18 @@ export default function TaskCreationScreen({navigation, route}) {
         setSubmitting(false);
       }
     }
+  }
+
+  function subtasksHaveText() {
+    var noEmptyText = true;
+    if (subtasks.length) {
+      subtasks.forEach((subtask) => {
+        if (subtask.text === '') {
+          noEmptyText = false;
+        }
+      });
+    }
+    return noEmptyText;
   }
 }
 
