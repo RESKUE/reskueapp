@@ -191,9 +191,19 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   }
 
   function openLocationSelection() {
-    navigation.navigate('LocationSelectionScreen', {
-      parent: 'CulturalAssetCreationScreen',
-    });
+    const latitude = culturalAsset?.latitude ?? null;
+    const longitude = culturalAsset?.longitude ?? null;
+
+    if (latitude !== null && longitude !== null) {
+      navigation.navigate('LocationSelectionScreen', {
+        parent: 'CulturalAssetCreationScreen',
+        location: {latitude, longitude},
+      });
+    } else {
+      navigation.navigate('LocationSelectionScreen', {
+        parent: 'CulturalAssetCreationScreen',
+      });
+    }
   }
 
   function openParentSelection() {

@@ -8,16 +8,22 @@ import MarkerInfo from '../../components/MarkerInfo';
 import useRegion from '../../handlers/RegionHook';
 
 export default function LocationSelectionScreen({navigation, route}) {
-  const {region: initialRegion} = useRegion();
+  const {region: currentRegion} = useRegion();
   const [location, setLocation] = React.useState(null);
+  const [initialRegion, setInitialRegion] = React.useState(null);
+  const preselectedLocation = route.params?.location ?? null;
 
-  // Use the coordinate of the initial region as initially selected location
   React.useEffect(() => {
-    if (initialRegion) {
-      const {latitude, longitude} = initialRegion;
-      setLocation({latitude, longitude});
+    if (preselectedLocation) {
+      setLocation(preselectedLocation);
+      setInitialRegion({...preselectedLocation, ...DELTA});
+    } else if (currentRegion) {
+      const {latitude, longitude} = currentRegion;
+      const coords = {latitude, longitude};
+      setLocation(coords);
+      setInitialRegion(currentRegion);
     }
-  }, [initialRegion, setLocation]);
+  }, [preselectedLocation, currentRegion, setLocation, setInitialRegion]);
 
   function onDrag(coordinate) {
     setLocation(coordinate);
@@ -31,30 +37,28 @@ export default function LocationSelectionScreen({navigation, route}) {
     return <LoadingIndicator />;
   }
 
-  const initialLocation = {
-    latitude: initialRegion.latitude,
-    longitude: initialRegion.longitude,
-  };
-
-  const lat = formatLatLng(location?.latitude ?? initialLocation.latitude);
-  const lng = formatLatLng(location?.longitude ?? initialLocation.longitude);
-
   return (
     <MapContainer>
       <MapView
         style={styles.map}
         provider={PROVIDER_OSMDROID}
         initialRegion={initialRegion}>
-        <PinMarker coordinate={initialLocation} onDrag={onDrag} />
+        <PinMarker coordinate={initialRegion} onDrag={onDrag} />
       </MapView>
       <MarkerInfo
         title="Koordinaten"
-        text={`${lat}, ${lng}`}
+        text={formatLocation(location)}
         icon="send"
         onPress={onSubmit}
       />
     </MapContainer>
   );
+}
+
+function formatLocation(location) {
+  const lat = formatLatLng(location?.latitude);
+  const lng = formatLatLng(location?.longitude);
+  return `${lat}, ${lng}`;
 }
 
 function formatLatLng(num) {
@@ -69,3 +73,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const DELTA = {
+  latitudeDelta: 0.1,
+  longitudeDelta: 0.05,
+};
