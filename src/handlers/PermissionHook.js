@@ -14,7 +14,7 @@ export default function usePermission(permission, title, message) {
       });
       setGranted(result === PermissionsAndroid.RESULTS.GRANTED);
     } catch (err) {
-      console.warn(err);
+      console.log("Error requesting permissions:", err);
       setGranted(false);
     }
   }, [permission, title, message, setGranted]);
