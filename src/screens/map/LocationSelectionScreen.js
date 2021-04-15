@@ -11,6 +11,14 @@ export default function LocationSelectionScreen({navigation, route}) {
   const {region: initialRegion} = useRegion();
   const [location, setLocation] = React.useState(null);
 
+  // Use the coordinate of the initial region as initially selected location
+  React.useEffect(() => {
+    if (initialRegion) {
+      const {latitude, longitude} = initialRegion;
+      setLocation({latitude, longitude});
+    }
+  }, [initialRegion, setLocation]);
+
   function onDrag(coordinate) {
     setLocation(coordinate);
   }
