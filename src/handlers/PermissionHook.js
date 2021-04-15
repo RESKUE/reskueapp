@@ -1,7 +1,7 @@
 import React from 'react';
 import {PermissionsAndroid} from 'react-native';
 
-export default function usePermission(permission, title, message) {
+export default function usePermission(permission) {
   const [granted, setGranted] = React.useState(null);
   const [requested, setRequested] = React.useState(false);
 
@@ -13,18 +13,13 @@ export default function usePermission(permission, title, message) {
     setRequested(true);
 
     try {
-      const result = await PermissionsAndroid.request(permission, {
-        title: title,
-        message: message,
-        buttonNegative: 'Abbrechen',
-        buttonPositive: 'Ok',
-      });
+      const result = await PermissionsAndroid.request(permission);
       setGranted(result === PermissionsAndroid.RESULTS.GRANTED);
     } catch (err) {
       console.log('Error requesting permissions:', err);
       setGranted(false);
     }
-  }, [requested, permission, title, message, setGranted]);
+  }, [requested, permission, setGranted]);
 
   return {granted, request};
 }

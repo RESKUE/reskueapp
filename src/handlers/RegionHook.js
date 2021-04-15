@@ -10,8 +10,6 @@ export default function useRegion(
   const [region, setRegion] = React.useState(null);
   const {granted, request} = usePermission(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    'Standort Berechtigung',
-    'Dein Standort wird benötigt, um deine Umgebung auf Karten anzuzeigen.',
   );
 
   React.useEffect(() => {
@@ -45,7 +43,7 @@ export default function useRegion(
         },
       );
     } else if (granted === false) {
-      console.log("No location perms granted, using fallback region");
+      console.log('No location perms granted, using fallback region');
       setRegion({...delta, ...fallbackCoords});
     }
   }, [granted, delta, setRegion, fallbackCoords]);
