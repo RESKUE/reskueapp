@@ -62,7 +62,6 @@ export default function OverviewMapScreen() {
           style={styles.map}
           provider={PROVIDER_OSMDROID}
           initialRegion={initialRegion}
-          followsUserLocation={true}
           onPress={onMapPress}>
           {markers}
         </MapView>
