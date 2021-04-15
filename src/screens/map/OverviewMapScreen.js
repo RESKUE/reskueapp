@@ -14,11 +14,11 @@ import useAssets from '../../handlers/AssetsHook';
 import MapContainer from '../../components/MapContainer';
 import AssetMarker from '../../components/AssetMarker';
 import MarkerInfo from '../../components/MarkerInfo';
-import useRegion from '../../handlers/RegionHook';
+import useLocation from '../../handlers/LocationHook';
 
 export default function OverviewMapScreen() {
   const navigation = useNavigation();
-  const {region: initialRegion} = useRegion();
+  const {location} = useLocation();
   const {result, setQuery, requestAssets} = useAssets();
   const [info, setInfo] = React.useState(null);
   const markers = generateMarkers(result?.data?.content || [], onMarkerPress);
@@ -51,9 +51,11 @@ export default function OverviewMapScreen() {
     });
   }
 
-  if (!initialRegion) {
-    <LoadingIndicator />;
+  if (!location) {
+    return <LoadingIndicator />;
   }
+
+  const initialRegion = {...location, ...REGION_DELTA};
 
   return (
     <>
@@ -141,3 +143,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
+const REGION_DELTA = {
+  latitudeDelta: 0.1,
+  longitudeDelta: 0.05,
+};

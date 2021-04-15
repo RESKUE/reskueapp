@@ -5,25 +5,21 @@ import MapView, {PROVIDER_OSMDROID} from 'react-native-maps-osmdroid';
 import MapContainer from '../../components/MapContainer';
 import PinMarker from '../../components/PinMarker';
 import MarkerInfo from '../../components/MarkerInfo';
-import useRegion from '../../handlers/RegionHook';
+import useLocation from '../../handlers/LocationHook';
 
 export default function LocationSelectionScreen({navigation, route}) {
-  const {region: currentRegion} = useRegion();
+  const {location: currentLocation} = useLocation();
   const [location, setLocation] = React.useState(null);
   const [initialRegion, setInitialRegion] = React.useState(null);
   const preselectedLocation = route.params?.location ?? null;
 
   React.useEffect(() => {
-    if (preselectedLocation) {
-      setLocation(preselectedLocation);
-      setInitialRegion({...preselectedLocation, ...DELTA});
-    } else if (currentRegion) {
-      const {latitude, longitude} = currentRegion;
-      const coords = {latitude, longitude};
+    const coords = preselectedLocation ?? currentLocation ?? null;
+    if (coords) {
       setLocation(coords);
-      setInitialRegion(currentRegion);
+      setInitialRegion({...coords, ...REGION_DELTA});
     }
-  }, [preselectedLocation, currentRegion, setLocation, setInitialRegion]);
+  }, [preselectedLocation, currentLocation, setLocation, setInitialRegion]);
 
   function onDrag(coordinate) {
     setLocation(coordinate);
@@ -74,7 +70,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DELTA = {
+const REGION_DELTA = {
   latitudeDelta: 0.1,
   longitudeDelta: 0.05,
 };

@@ -11,7 +11,7 @@ export default function CulturalAssetMapScreen({route}) {
   const {result, requestAsset} = useAsset();
   const data = result?.data;
   const coordinate = {latitude: data?.latitude, longitude: data?.longitude};
-  const region = {latitudeDelta: 0.09, longitudeDelta: 0.04, ...coordinate};
+  const region = {...REGION_DELTA, ...coordinate};
 
   React.useEffect(() => {
     requestAsset(route.params.id);
@@ -44,3 +44,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const REGION_DELTA = {
+  latitudeDelta: 0.1,
+  longitudeDelta: 0.05,
+};

@@ -3,11 +3,8 @@ import React from 'react';
 import Geolocation from 'react-native-geolocation-service';
 import usePermission from './PermissionHook';
 
-export default function useRegion(
-  delta = DEFAULT_DELTA,
-  fallbackCoords = DEFAULT_COORDS,
-) {
-  const [region, setRegion] = React.useState(null);
+export default function useLocation(fallback = DEFAULT_COORDS) {
+  const [location, setLocation] = React.useState(null);
   const {granted, request} = usePermission(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
   );
@@ -21,11 +18,7 @@ export default function useRegion(
       Geolocation.getCurrentPosition(
         (info) => {
           console.log('Current position:', info);
-          setRegion({
-            latitude: info.coords.latitude,
-            longitude: info.coords.longitude,
-            ...delta,
-          });
+          setLocation(info.coords);
         },
         (error) => {
           console.log(
@@ -33,7 +26,7 @@ export default function useRegion(
             error.code,
             error.message,
           );
-          setRegion({...delta, ...fallbackCoords});
+          setLocation(fallback);
         },
         {
           // Do not cache the previous location
@@ -44,17 +37,12 @@ export default function useRegion(
       );
     } else if (granted === false) {
       console.log('No location perms granted, using fallback region');
-      setRegion({...delta, ...fallbackCoords});
+      setLocation(fallback);
     }
-  }, [granted, delta, setRegion, fallbackCoords]);
+  }, [granted, setLocation, fallback]);
 
-  return {region};
+  return {location};
 }
-
-const DEFAULT_DELTA = {
-  latitudeDelta: 0.1,
-  longitudeDelta: 0.05,
-};
 
 const DEFAULT_COORDS = {
   latitude: 48.99897,
