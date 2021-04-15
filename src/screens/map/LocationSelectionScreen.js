@@ -11,7 +11,7 @@ export default function LocationSelectionScreen({navigation, route}) {
   const {location: currentLocation} = useLocation();
   const [location, setLocation] = React.useState(null);
   const [initialRegion, setInitialRegion] = React.useState(null);
-  const preselectedLocation = route.params?.location ?? null;
+  const preselectedLocation = route?.params?.location ?? null;
 
   React.useEffect(() => {
     const coords = preselectedLocation ?? currentLocation ?? null;
