@@ -95,8 +95,10 @@ export default function UsergroupCreationScreen({navigation, route}) {
         mode="contained"
         onPress={submit}
         loading={submitting}
-        style={styles.buttonSpacing}>
-        testID="userGroupCreationDone"> Fertig
+        style={styles.buttonSpacing}
+        testID="userGroupCreationDone">
+        {' '}
+        Fertig
       </Button>
     </Scaffold>
   );

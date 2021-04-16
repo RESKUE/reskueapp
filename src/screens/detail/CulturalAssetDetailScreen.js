@@ -24,7 +24,6 @@ import {
   Menu,
   Caption,
 } from 'react-native-paper';
-import useRoles from '../../handlers/RolesHook';
 
 export default function CulturalAssetDetailScreen({navigation, route}) {
   const [menuVisible, setMenuVisible] = React.useState(false);
@@ -49,7 +48,6 @@ export default function CulturalAssetDetailScreen({navigation, route}) {
   } = useAssetChildren();
   const {requestAssetTasks, result: taskResult} = useAssetTasks();
   const {get: requestCover, result: coverResult} = useMedias();
-  const {isAdmin} = useRoles();
 
   const fetchData = React.useCallback(() => {
     requestAsset(assetId);
