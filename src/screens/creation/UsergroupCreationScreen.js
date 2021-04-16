@@ -123,9 +123,11 @@ export default function UsergroupCreationScreen({navigation, route}) {
 
     // Prepare data for the backend
     const userIds = [];
-    usergroup.users.forEach((user) => {
-      userIds.push({id: user.id});
-    });
+    if (usergroup.users) {
+      usergroup.users.forEach((user) => {
+        userIds.push({id: user.id});
+      });
+    }
     const formattedUsergroup = {name: usergroup?.name, users: userIds};
 
     // Send data
