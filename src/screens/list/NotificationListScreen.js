@@ -36,6 +36,7 @@ export default function NotificationListScreen({navigation}) {
         <SearchBar field="title" operation="~">
           <SortingButton>
             <SortingOption field="title" label="Titel" />
+            <SortingOption field="id" label="Neuheit" />
           </SortingButton>
         </SearchBar>
       </SearchProvider>

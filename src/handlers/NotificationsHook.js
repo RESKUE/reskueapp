@@ -7,9 +7,13 @@ export default function useNotifications() {
   const [query, setQuery] = React.useState();
 
   const get = React.useCallback(async () => {
-    const url = `${Config.APP_REST_BASE_URL}/notification?${query}`;
+    //const url = `${Config.APP_REST_BASE_URL}/notification?${query}`;
+    const url = `${Config.APP_REST_BASE_URL}/notification${
+      query ? `?${query}` : '?sort=id;desc'
+    }`;
     const policy = FetchPolicy.cacheAndNetwork;
     const options = {method: 'GET'};
+    console.log(url);
     await client.request(url, options, policy);
   }, [query, client]);
 
