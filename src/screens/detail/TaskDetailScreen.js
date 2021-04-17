@@ -52,13 +52,13 @@ export default function TaskDetailScreen({navigation, route}) {
     requestUserMe();
   }, [requestUserMe]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getTask(route.params.id);
-      requestTaskHelpers(route.params.id);
-      getSubtasks(route.params.id);
-    }, [getTask, requestTaskHelpers, getSubtasks, route.params]),
-  );
+  const fetchData = React.useCallback(() => {
+    getTask(route.params.id);
+    requestTaskHelpers(route.params.id);
+    getSubtasks(route.params.id);
+  }, [getTask, requestTaskHelpers, getSubtasks, route.params]);
+
+  useFocusEffect(fetchData);
 
   React.useEffect(() => {
     if (taskResult) {
@@ -325,12 +325,23 @@ export default function TaskDetailScreen({navigation, route}) {
   }
 
   async function resetState() {
-    const putBody = {state: 0};
+    const resetSubtasks = [];
+    if (subtasks.length) {
+      subtasks.forEach((subtask) => {
+        //Remove local ids
+        delete subtask.task;
+        resetSubtasks.push({...subtask, state: 0});
+      });
+    }
+
+    const putBody = {state: 0, subtasks: resetSubtasks};
     const result = await putTask(task.id, putBody);
     if (result.data) {
-      setTask(result.data);
+      fetchData();
+      ToastAndroid.show('Aufgabe wird neu geladen.', ToastAndroid.SHORT);
     } else {
       console.log('Reseting Task failed:', result, result?.error);
+      ToastAndroid.show('Zurücksetzen fehlgeschlagen!', ToastAndroid.SHORT);
     }
   }
 
