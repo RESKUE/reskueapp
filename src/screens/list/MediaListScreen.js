@@ -71,7 +71,7 @@ export default function MediaListScreen({navigation, route}) {
       ) : (
         <InfoIndicator
           icon="folder-multiple-image"
-          text="Keine Media vorhanden"
+          text="Keine Medien vorhanden"
         />
       )}
     </Scaffold>
