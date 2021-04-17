@@ -1,22 +1,30 @@
 import React from 'react';
+import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {List, useTheme} from 'react-native-paper';
+import {List, TouchableRipple, useTheme} from 'react-native-paper';
 
 export default function TaskListItem({testID, data}) {
   const {colors} = useTheme();
   const navigation = useNavigation();
-  const backgroundColor = data.isEndangered ? colors.redish : '#ffffff';
 
   return (
-    <List.Item
-      style={{backgroundColor: backgroundColor}}
-      key={data.id}
-      title={data.name}
-      description={data.description}
-      onPress={onPress}
-      testID={testID}
-    />
+    <TouchableRipple testID={testID} key={data.id} onPress={onPress}>
+      <View>
+        <List.Item
+          title={data.name}
+          description={data.description}
+          right={getIcon}
+        />
+      </View>
+    </TouchableRipple>
   );
+
+  function getIcon(props) {
+    if (!data.isEndangered) {
+      return null;
+    }
+    return <List.Icon {...props} icon="alert" color={colors.redish} />;
+  }
 
   function onPress() {
     navigation.navigate({
