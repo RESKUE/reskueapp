@@ -87,8 +87,8 @@ function reprTime(date) {
 }
 
 function getSubtitle(content) {
-  const date = `Datum: ${reprDate(content?.sendAt)}`;
-  const time = `Uhrzeit: ${reprTime(content?.sendAt)}`;
+  const date = `Datum: ${reprDate(content?.sentAt)}`;
+  const time = `Uhrzeit: ${reprTime(content?.sentAt)}`;
   const type = `Typ: ${reprType(content?.type)}`;
   return `${date}  |  ${time}  |  ${type}`;
 }

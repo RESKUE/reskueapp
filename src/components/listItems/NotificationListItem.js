@@ -14,10 +14,10 @@ export default function NotificationListItem({data, extraData}) {
           description={data.message}
         />
         <View style={styles.chips}>
-          <SmallChip>{`Datum: ${moment(data?.sendAt).format(
+          <SmallChip>{`Datum: ${moment(data?.sentAt).format(
             'MM.DD.YYYY',
           )}`}</SmallChip>
-          <SmallChip>{`Uhrzeit: ${moment(data?.sendAt).format(
+          <SmallChip>{`Uhrzeit: ${moment(data?.sentAt).format(
             'HH:mm',
           )}`}</SmallChip>
         </View>
