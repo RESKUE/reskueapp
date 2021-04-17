@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Chip} from 'react-native-paper';
+import SmallChip from './SmallChip';
 import Priorities from '../models/AssetPriorities';
 
 export default function AssetTags({data}) {
@@ -22,14 +22,6 @@ function getPriorityLabel(priority) {
   }
 }
 
-function SmallChip({style, textStyle, children}) {
-  return (
-    <Chip style={[styles.chip, style]} textStyle={[styles.chipText, textStyle]}>
-      {children}
-    </Chip>
-  );
-}
-
 const styles = StyleSheet.create({
   chips: {
     flexDirection: 'row',
@@ -37,13 +29,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 8,
     marginRight: -4,
-  },
-  chip: {
-    marginRight: 4,
-    marginBottom: 8,
-  },
-  chipText: {
-    fontSize: 12,
-    marginVertical: 0,
   },
 });
