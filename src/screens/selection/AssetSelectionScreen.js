@@ -1,4 +1,5 @@
 import React from 'react';
+import {ToastAndroid} from 'react-native';
 import {List, IconButton, useTheme} from 'react-native-paper';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import useAssets from '../../handlers/AssetsHook';
@@ -62,6 +63,13 @@ export function AssetSelectionItem({data, extraData}) {
   const navigation = useNavigation();
 
   function onPress() {
+    if (extraData.updateId && extraData.updateId === data?.id) {
+      ToastAndroid.show(
+        'Dieses Kulturgut kann nicht als Obergruppe benutzt werden!',
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
     navigation.navigate(extraData.previousRouteName, {
       selectedAsset: data,
     });

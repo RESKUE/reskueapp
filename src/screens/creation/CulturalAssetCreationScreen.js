@@ -209,6 +209,7 @@ export default function CulturalAssetCreationScreen({navigation, route}) {
   function openParentSelection() {
     navigation.navigate('AssetSelectionScreen', {
       previousRouteName: 'CulturalAssetCreationScreen',
+      updateId: assetId,
     });
   }
 
