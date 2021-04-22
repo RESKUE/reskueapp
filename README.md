@@ -25,11 +25,18 @@ One needs to [authenticate with our private Package Registry](https://docs.gitla
 
 ## Tests
 
-### Unit/Itegration/Component Tests
+### Unit/Integration/Component Tests
 
 ...are automatically run by CI.
 You can also manually run these test with `npm run test`.
 The test files are located in the `__tests__` directory.
+
+### Coverage
+
+The test coverage of Unit/Integration/Compontent tests can be obtained
+by running `npm run coverage`.
+A pretty HTML based coverage report will be generated.
+It can be viewed by opening `coverage/lcov-report/index.html` in your favourite webbroweser.
 
 ### End to end tests
 
@@ -45,8 +52,32 @@ This is due to their non-trivial setup, speed and them being more prone to flaki
 5. Build a debug test version of the app with `npm run e2e-build-debug`
 6. Run the tests with `npm run e2e-test-debug`
 
+NOTE: The `.detoxrc.json` file contains platform specific build instructions for testable Android builds. These instructions are executed by `npm run e2e-build-debug` and currently Linux specific. Detox doesn't provide a way to make these instructions multi-platform. One might want to add extra Detox configurations for different Platforms such as Windows or MacOS.
+
 ## Configuration
 
 The RESKUE app supports multiple configuration environment via [react-native-config](https://github.com/luggit/react-native-config). Environments are configured using `.env` files. Variables placed in `.env` files are accessable from JavaScript, native Android and native iOS files.
 
 By default the `.env` environment for local development with a locally running backend is used. Other environemnts such as the staging environment (`.env.staging`) can be used by setting a `ENVFILE` environment variable. For instance use the following command to run the Android app using the staging environment: `ENVFILE=.env.staging npx react-native run-android` (Linux).
+
+## Troubleshooting
+
+##### Notifications don't show up
+
+- Make sure the Apps backeground service is started. This can be done by starting the app once or restarting your device.
+- Try resetting the Apps cache from the Android device settings. The app caches the ID of the last shown notification. If the backends database was reset (eg. for development reasons), the app might think the notification was already shown.
+- Note that notifcations are not pushed to the sending user.
+- Note that expected receivers must be in the adressed group.
+
+##### After updating react-native-kueres dependencies appear to be missing
+
+Perform the following in order:
+
+1. Stop running `npm run start` processes (if any)
+2. Run `npm install`
+3. Run `npx react-native start --reset-cache` (same as `npm run start` but resets cache)
+4. Run `npm run android`
+
+##### Preparing Detox E2E tests fails
+
+Take a look at the "Note" below the Detox setup instructions.
