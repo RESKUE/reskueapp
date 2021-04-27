@@ -38,6 +38,7 @@ export default function SubtaskCreationListItem({data, extraData}) {
         value={data.text}
         onChangeText={(text) => onChangeText(text)}
         style={styles.textInput}
+        dense={true}
         mode="outlined"
         testID="subTaskInput"
       />
@@ -64,12 +65,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  optionalText: {marginTop: -12, color: '#aaaaaa'},
+  optionalText: {
+    marginTop: -12,
+    color: '#aaaaaa',
+  },
   textInput: {
     alignSelf: 'stretch',
     flex: 4,
     marginLeft: 5,
-    height: 45,
     fontSize: 14,
   },
 });
