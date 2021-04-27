@@ -6,5 +6,10 @@ export default function ListActions({children}) {
 }
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'row', justifyContent: 'flex-end'},
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    // Creates a visual placeholder when there are no children.
+    minHeight: 16,
+  },
 });
