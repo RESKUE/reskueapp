@@ -13,7 +13,6 @@ export default function useNotifications() {
     }`;
     const policy = FetchPolicy.cacheAndNetwork;
     const options = {method: 'GET'};
-    console.log(url);
     await client.request(url, options, policy);
   }, [query, client]);
 
