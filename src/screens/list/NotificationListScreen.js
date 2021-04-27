@@ -51,17 +51,8 @@ export default function NotificationListScreen({navigation}) {
         title="Benachrichtigungen"
         placeholder="Keine Benachrichtigungen"
         data={result?.data?.content ?? []}
-        extraData={{onPress: onPress}}
         component={NotificationListItem}
       />
     </Scaffold>
   );
-
-  function onPress(id) {
-    navigation.navigate({
-      name: 'NotificationDetailScreen',
-      key: id,
-      params: {id: id},
-    });
-  }
 }

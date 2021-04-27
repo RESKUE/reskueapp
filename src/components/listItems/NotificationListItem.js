@@ -2,13 +2,15 @@ import React from 'react';
 import moment from 'moment';
 import {StyleSheet, View} from 'react-native';
 import {List, TouchableRipple, useTheme} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import SmallChip from '../SmallChip';
 
-export default function NotificationListItem({data, extraData}) {
+export default function NotificationListItem({data}) {
   const {colors} = useTheme();
+  const navigation = useNavigation();
 
   return (
-    <TouchableRipple key={data.id} onPress={() => extraData.onPress(data.id)}>
+    <TouchableRipple key={data.id} onPress={onPress}>
       <View>
         <List.Item
           key={data.id}
@@ -34,6 +36,14 @@ export default function NotificationListItem({data, extraData}) {
       return <List.Icon {...props} icon="alert" color={colors.redish} />;
     }
     return null;
+  }
+
+  function onPress() {
+    navigation.navigate({
+      name: 'NotificationDetailScreen',
+      key: data.id,
+      params: {id: data.id},
+    });
   }
 }
 
