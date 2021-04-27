@@ -13,16 +13,26 @@ import ListActions from '../../components/ListActions';
 import Scaffold from '../../components/baseComponents/Scaffold';
 import TaskListItem from '../../components/listItems/TaskListItem';
 import useTasks from '../../handlers/TasksHook';
+import useMe from '../../handlers/UserMeHook';
 
 export default function MyTaskListScreen() {
-  const {result, setQuery, requestUserTasks} = useTasks();
-  const content = result?.data?.content;
   const {colors} = useTheme();
+  const {result, setQuery, requestUserTasks} = useTasks();
+  const {requestUserMe} = useMe();
+  const content = result?.data?.content;
+
+  const fetchData = React.useCallback(async () => {
+    const userResult = await requestUserMe();
+    const userId = userResult?.data?.id ?? null;
+    if (userId !== null) {
+      requestUserTasks(userId);
+    }
+  }, [requestUserMe, requestUserTasks]);
 
   useFocusEffect(
     React.useCallback(() => {
-      requestUserTasks();
-    }, [requestUserTasks]),
+      fetchData();
+    }, [fetchData]),
   );
 
   if (!result) {

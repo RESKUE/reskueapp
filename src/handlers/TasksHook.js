@@ -10,7 +10,7 @@ export default function useTasks() {
     const url = `${Config.APP_REST_BASE_URL}/task?${query}`;
     const policy = FetchPolicy.cacheAndNetwork;
     const options = {method: 'GET'};
-    await client.request(url, options, policy);
+    return await client.request(url, options, policy);
   }, [query, client]);
 
   const requestUserTasks = React.useCallback(
@@ -18,7 +18,7 @@ export default function useTasks() {
       const url = `${Config.APP_REST_BASE_URL}/user/${userId}/helperTasks?${query}`;
       const policy = FetchPolicy.cacheAndNetwork;
       const options = {method: 'GET'};
-      await client.request(url, options, policy);
+      return await client.request(url, options, policy);
     },
     [query, client],
   );

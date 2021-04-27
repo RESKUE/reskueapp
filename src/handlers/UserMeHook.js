@@ -9,7 +9,7 @@ export default function useUserMe() {
     const url = `${Config.APP_REST_BASE_URL}/user/me`;
     const options = {method: 'GET'};
     const policy = FetchPolicy.cacheAndNetwork;
-    await client.request(url, options, policy);
+    return await client.request(url, options, policy);
   }, [client]);
 
   return {result, requestUserMe};
