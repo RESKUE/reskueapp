@@ -1,10 +1,12 @@
 import React from 'react';
 import moment from 'moment';
 import {StyleSheet, View} from 'react-native';
-import {List, TouchableRipple} from 'react-native-paper';
+import {List, TouchableRipple, useTheme} from 'react-native-paper';
 import SmallChip from '../SmallChip';
 
 export default function NotificationListItem({data, extraData}) {
+  const {colors} = useTheme();
+
   return (
     <TouchableRipple key={data.id} onPress={() => extraData.onPress(data.id)}>
       <View>
@@ -12,6 +14,7 @@ export default function NotificationListItem({data, extraData}) {
           key={data.id}
           title={data.title}
           description={data.message}
+          right={getIcon}
         />
         <View style={styles.chips}>
           <SmallChip>{`Datum: ${moment(data?.sentAt).format(
@@ -24,6 +27,14 @@ export default function NotificationListItem({data, extraData}) {
       </View>
     </TouchableRipple>
   );
+
+  function getIcon(props) {
+    if (data.type === 2) {
+      // Signal that this notification is an alarm
+      return <List.Icon {...props} icon="alert" color={colors.redish} />;
+    }
+    return null;
+  }
 }
 
 const styles = StyleSheet.create({
